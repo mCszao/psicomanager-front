@@ -1,17 +1,12 @@
-import Image from "next/image";
 import Link from "next/link";
-export default function SideLinks(){
-    <header className="bg-royalBlue p-5 flex flex-col ">
-        <Image
-            className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-          <Link>
-            
+export default function SideLinks() {
+    return (
+        <section className="bg-royalBlue p-5 flex flex-col fixed w-20">
+          <Link href={"/patients"}
+          className="group rounded-lg border border-transparent p-5 transition-colors bg-royalBlue hover:border-gray-300 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
+          >
+            Pacientes
           </Link>
-      </header>
+      </section>
+    )
 }

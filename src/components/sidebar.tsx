@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 export default function SideLinks() {
     return (
         <section className="bg-royalBlue p-5 flex flex-col fixed w-20">

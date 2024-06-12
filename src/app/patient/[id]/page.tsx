@@ -34,7 +34,7 @@ const tableItems = [
 export default function Patient(props : PageProps){
     return (
     <main >
-        <section className="mt-5 ml-32  p-7 flex flex-wrap border items-center justify-around border-l-8 border-l-royalBlue border-b-0 border-t-0 border-r-0">
+        <section className=" ml-32  p-7 flex flex-wrap border items-center justify-around border-l-8 border-l-royalBlue border-b-0 border-t-0 border-r-0">
              <h1 className="text-7xl text-royalBlue font-semibold">
                 Marcos Vinicius Almeida
             </h1>

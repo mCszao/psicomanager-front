@@ -6,7 +6,7 @@ interface ItemScheduleSessionProps{
 }
 export default function ItemScheduleSession(props: ItemScheduleSessionProps) {
     return (
-        <section className="mb-32 grid text-center gap-5 lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
+        <section className="mb-32 mt-5 grid text-center gap-5 lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
                     <Link
                     href={props.data.id}
                     className="group rounded-lg border border-transparent px-5 py-4 transition-colors bg-royalBlue hover:border-gray-300 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"

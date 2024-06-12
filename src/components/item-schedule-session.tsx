@@ -5,10 +5,9 @@ interface ItemScheduleSessionProps{
     data: Schedule;
 }
 export default function ItemScheduleSession(props: ItemScheduleSessionProps) {
-    console.log(props)
     return ( 
         <Link
-        href={props.data.id}
+        href={"/schedules/"+props.data.id}
         className="group rounded-lg border border-transparent px-5 py-4 transition-colors bg-royalBlue hover:border-gray-300 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
         target="_blank"
         rel="noopener noreferrer"

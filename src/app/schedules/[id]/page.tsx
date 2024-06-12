@@ -31,10 +31,10 @@ const tableItems = [
     },
 ] 
 
-export default function Patient(props : PageProps){
+export default function Schedule(props : PageProps){
     return (
-    <main >
-        <section className=" ml-32  p-7 flex flex-wrap border items-center justify-around border-l-8 border-l-royalBlue border-b-0 border-t-0 border-r-0">
+    <main className="p-14">
+        <section className="p-7 ml-32 flex flex-wrap border items-center justify-around border-l-8 border-l-royalBlue border-b-0 border-t-0 border-r-0">
              <h1 className="text-7xl text-royalBlue font-semibold">
                 Marcos Vinicius Almeida
             </h1>
@@ -72,8 +72,8 @@ export default function Patient(props : PageProps){
             </div>
 
         </section>
-        <div className="flex gap-2 ">
-            <section className="mt-5 ml-16 max-w-[95vw] border rounded-md flex-1 flex-col shadow-lg p-5">
+        <div className="flex m-10 ">
+            <section className="mt-5 max-w-[95vw] border rounded-md flex-1 flex-col shadow-lg p-5">
                 <h2 className="text-2xl mt-5 font-semibold">
                     Acompanhamentos
                 </h2>
@@ -88,12 +88,12 @@ export default function Patient(props : PageProps){
                     </div>
                 ) )}
                 <div className="w-full table-auto text-sm text-left mt-5">
-                                        <a href="javascript:void()" className=" text-[#fff] bg-royalBlue py-1.5 px-3 hover:text-gray-500 duration-150 hover:bg-gray-50 border rounded-lg">
+                                        <a href="#" className=" text-[#fff] bg-royalBlue py-1.5 px-3 hover:text-gray-500 duration-150 hover:bg-gray-50 border rounded-lg">
                                             Adicionar acompanhamento
                                         </a>
                 </div>
             </section>
-            <section className="mt-5 ml-5 max-w-[95vw] flex-1 shadow-lg p-5 border rounded-md">
+            <section className="mt-5 ml-5 max-w-[95vw] flex-1 shadow-lg p-5 border rounded-md ">
                 <h2 className="text-2xl mt-5 font-semibold">
                 Documentos
                 </h2>
@@ -108,5 +108,6 @@ export default function Patient(props : PageProps){
                 </p>
             </section>
         </div>
-    </main>);
+    </main>
+    )
 }

@@ -1,4 +1,4 @@
 export default interface BaseResponse<T> {
-    sucess: boolean;
+    success: boolean;
     object: T;
 }

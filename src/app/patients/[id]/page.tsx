@@ -1,3 +1,6 @@
+import { fetchPatient } from "@/app/api"
+import BaseResponse from "@/interface/IBaseResponse";
+
 type PageProps = {
     params : {
         id: string
@@ -31,42 +34,65 @@ const tableItems = [
     },
 ] 
 
-export default function Patients(props : PageProps){
+interface Patient {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    birthdayDate: string;
+    address: Address[];
+}
+
+interface Address {
+    id: string;
+    street: string;
+    district: string;
+    zipcode: string;
+    complement: string | null;
+    number: string;
+    state: string;
+    abbreviation: string;
+    city: string;
+}
+
+export default async function Patients({ params } : PageProps){
+    const {success, object} = await fetchPatient(params.id) as BaseResponse<Patient>;
+    
     return (
     <main className="p-14">
         <section className="p-7 ml-32 flex flex-wrap border items-center justify-around border-l-8 border-l-royalBlue border-b-0 border-t-0 border-r-0">
              <h1 className="text-7xl text-royalBlue font-semibold">
-                Marcos Vinicius Almeida
+                {object.name}
             </h1>
             <div className="">
                 <div>
                     <h3>Informações Básicas</h3>
                     <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                        Email: marc.khk11@gmail.com
+                        Email: {object.email}
                     </p>
                     <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                        Telefone: 65 99222-4696
+                        Telefone: {object.phone}
                     </p>
                     <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                        Data de Nascimento: 24/01/2001
+                        Data de Nascimento: {object.birthdayDate}
                     </p>
                 </div>
                 <div>
                     <h3>Endereço</h3>
                     <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                        Rua: Rua 24 Q37
+                        Rua: {object.address[0]?.street}
                     </p>
                     <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                        Bairro: Jardim Florianópolis
+                        Bairro: {object.address[0]?.district}
                     </p>
                     <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                        CEP: 78055842
+                        CEP: {object.address[0]?.zipcode}
                     </p>
                     <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                        Complemento:
+                        Complemento: {object.address[0]?.complement}
                     </p>
                     <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                        Cuiabá - MT
+                    {object.address[0]?.city} - {object.address[0]?.abbreviation}
                     </p>
                 </div>      
             </div>
@@ -87,7 +113,7 @@ export default function Patients(props : PageProps){
                         </p>
                     </div>
                 ) )}
-                <div className="w-full table-auto text-sm text-left mt-5">
+                <div className="w-full table-auto text-xl text-left mt-5">
                                         <a href="#" className=" text-[#fff] bg-royalBlue py-1.5 px-3 hover:text-gray-500 duration-150 hover:bg-gray-50 border rounded-lg">
                                             Adicionar acompanhamento
                                         </a>

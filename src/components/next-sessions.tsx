@@ -1,7 +1,7 @@
 import BaseResponse from "@/interface/IBaseResponse";
 import { Schedule } from "@/interface/ISchedule";
 import ItemScheduleSession from "./item-schedule-session";
-import fetchSchedules  from "@/app/api/consults";
+import {fetchSchedules}  from "@/app/api/consults";
 
 
 

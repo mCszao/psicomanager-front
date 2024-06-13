@@ -55,7 +55,7 @@ interface Address {
     city: string;
 }
 
-export default async function Patients({ params } : PageProps){
+export default async function Page({ params } : PageProps){
     const {success, object} = await fetchPatient(params.id) as BaseResponse<Patient>;
     
     return (

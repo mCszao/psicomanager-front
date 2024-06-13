@@ -1,3 +1,7 @@
+import { fetchSchedule } from "@/app/api"
+import BaseResponse from "@/interface/IBaseResponse"
+import Session  from "@/interface/ISchedule"
+
 type PageProps = {
     params : {
         id: string
@@ -31,81 +35,44 @@ const tableItems = [
     },
 ] 
 
-export default function Schedule(props : PageProps){
+export default async function Page({ params } : PageProps){
+    const { object } = await fetchSchedule(params.id) as BaseResponse<Session>
     return (
     <main className="p-14">
-        <section className="p-7 ml-32 flex flex-wrap border items-center justify-around border-l-8 border-l-royalBlue border-b-0 border-t-0 border-r-0">
+        <section className="p-7 ml-32 flex flex-wrap border items-center justify-around border-l-8 border-l-royalBlue border-b-0border-t-0 border-r-0">
              <h1 className="text-7xl text-royalBlue font-semibold">
-                Marcos Vinicius Almeida
+                {object.patient?.name}
             </h1>
-            <div className="">
-                <div>
-                    <h3>Informações Básicas</h3>
-                    <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                        Email: marc.khk11@gmail.com
-                    </p>
-                    <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                        Telefone: 65 99222-4696
-                    </p>
-                    <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                        Data de Nascimento: 24/01/2001
-                    </p>
-                </div>
-                <div>
-                    <h3>Endereço</h3>
-                    <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                        Rua: Rua 24 Q37
-                    </p>
-                    <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                        Bairro: Jardim Florianópolis
-                    </p>
-                    <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                        CEP: 78055842
-                    </p>
-                    <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                        Complemento:
-                    </p>
-                    <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                        Cuiabá - MT
-                    </p>
-                </div>      
+            <div className="text-md flex gap-2 flex-wra;">
+                <span className="bg-green-100 text-green-800 font-medium text-center me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                    {object.stage}
+                </span>
+                <span className="bg-blue-100 text-blue-800 font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
+                    <svg className="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
+                    </svg>
+                    {object.dateStart}
+                </span>
+                <span className="bg-gray-100 text-gray-800 font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-500 ">
+                    <svg className="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
+                    </svg>
+                    {object.dateEnd}
+                </span>
             </div>
 
         </section>
-        <div className="flex m-10 ">
-            <section className="mt-5 max-w-[95vw] border rounded-md flex-1 flex-col shadow-lg p-5">
+        <div className="flex m-10 w-full">
+            <section className="mt-5 max-w-full border rounded-md flex-1 flex-col shadow-lg p-5">
                 <h2 className="text-2xl mt-5 font-semibold">
-                    Acompanhamentos
+                    Anotações
                 </h2>
-                {tableItems.map((item, index) => (
-                    <div key={index} className="border border-royalBlue bg hover:bg-royalBlue hover:text-white rounded-md mt-2 p-2 cursor-pointer">
-                        <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                            Data: {item.date}
-                        </p>
-                        <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                            Status: {item.status}
-                        </p>
-                    </div>
-                ) )}
-                <div className="w-full table-auto text-sm text-left mt-5">
+                <textarea name="annotations" className="w-full p-10 text-2xl"/>
+                <div className="w-full table-auto text-xl text-left mt-5">
                                         <a href="#" className=" text-[#fff] bg-royalBlue py-1.5 px-3 hover:text-gray-500 duration-150 hover:bg-gray-50 border rounded-lg">
-                                            Adicionar acompanhamento
+                                            Salvar Anotação
                                         </a>
                 </div>
-            </section>
-            <section className="mt-5 ml-5 max-w-[95vw] flex-1 shadow-lg p-5 border rounded-md ">
-                <h2 className="text-2xl mt-5 font-semibold">
-                Documentos
-                </h2>
-                <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                    Email: marc.khk11@gmail.com
-                </p>
-                <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                    Telefone: 65 99222-4696
-                </p>
-                <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                    Data de Nascimento: 24/01/2001
-                </p>
             </section>
         </div>
     </main>

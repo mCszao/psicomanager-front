@@ -1,12 +1,12 @@
 import BaseResponse from "@/interface/IBaseResponse";
-import { Schedule } from "@/interface/ISchedule";
+import Session  from "@/interface/ISchedule";
 import ItemScheduleSession from "./item-schedule-session";
 import {fetchSchedules}  from "@/app/api/consults";
 
 
 
 export default async function NextSessions(){
-      let response = await fetchSchedules() as BaseResponse<Schedule[]>;      
+      let response = await fetchSchedules() as BaseResponse<Session[]>;      
     return (
         <div className="flex w-full min-h-screen flex-wrap p-24 pt-10 gap-5 text-[#fff]">
             <h2 className="text-3xl font-semibold text-royalBlue">Próximas Consultas</h2>

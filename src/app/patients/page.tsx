@@ -1,6 +1,5 @@
 import { fetchPatients } from "@/app/api/index";
 import BaseResponse from "@/interface/IBaseResponse";
-import { PatientResume } from "@/interface/IPatientResume";
 import { Cake } from "lucide-react";
 import Link from "next/link";
 export default async function Page(){

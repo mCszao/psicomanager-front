@@ -69,9 +69,9 @@ export default async function Page({ params } : PageProps){
                 </h2>
                 <textarea name="annotations" className="w-full p-10 text-2xl"/>
                 <div className="w-full table-auto text-xl text-left mt-5">
-                                        <a href="#" className=" text-[#fff] bg-royalBlue py-1.5 px-3 hover:text-gray-500 duration-150 hover:bg-gray-50 border rounded-lg">
-                                            Salvar Anotação
-                                        </a>
+                    <a href="#" className=" text-[#fff] bg-royalBlue py-1.5 px-3 hover:text-gray-500 duration-150 hover:bg-gray-50 border rounded-lg">
+                        Salvar Anotação
+                    </a>
                 </div>
             </section>
         </div>

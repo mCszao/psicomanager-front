@@ -1,5 +1,6 @@
 import { fetchPatient } from "@/app/api"
 import BaseResponse from "@/interface/IBaseResponse";
+import Patient from "@/interface/IPatient";
 
 type PageProps = {
     params : {
@@ -33,27 +34,6 @@ const tableItems = [
         status: "Active",
     },
 ] 
-
-interface Patient {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-    birthdayDate: string;
-    address: Address[];
-}
-
-interface Address {
-    id: string;
-    street: string;
-    district: string;
-    zipcode: string;
-    complement: string | null;
-    number: string;
-    state: string;
-    abbreviation: string;
-    city: string;
-}
 
 export default async function Page({ params } : PageProps){
     const {success, object} = await fetchPatient(params.id) as BaseResponse<Patient>;

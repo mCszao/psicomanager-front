@@ -1,9 +1,15 @@
-const baseUrl = "http://localhost:8080/schedules"
-const baseHeader = {Authorization : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwc2ljb21hbmFnZXItYXV0aC1sb2dpbiIsInN1YiI6ImtlbHppbmhhIiwiZXhwIjoxNzE4MTg4NzA3fQ.Pr3MwpyvDGjDTy0TP089wdLZit_pEPglX89vyE1V4M8"}
+const baseUrl = "http://localhost:8080/schedules";
 
-export default async function fetchSchedules(){
-    let response = await fetch(baseUrl, {headers: baseHeader});
+export async function fetchSchedules(){
+    let response = await fetch(baseUrl);
     let json = await response.json();
     
+    return json;
+}
+
+export async function fetchSchedule(scheduleId: string){
+    let response = await fetch(baseUrl+"/"+scheduleId);
+    let json = await response.json();
+
     return json;
 }

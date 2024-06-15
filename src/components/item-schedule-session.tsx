@@ -1,10 +1,13 @@
 import Session  from "@/interface/ISchedule";
+import { getFormattedWeekDay, changeScore, getFormattedHour } from "@/util/DateUtils";
+import stageObjectBuilder from "@/util/stageObjectBuilder";
 import Link from "next/link";
 
 interface ItemScheduleSessionProps{
     data: Session;
 }
 export default function ItemScheduleSession(props: ItemScheduleSessionProps) {
+    const { ptStage } = stageObjectBuilder(props.data.stage);
     return ( 
         <Link
         href={"/schedules/"+props.data.id}
@@ -17,12 +20,15 @@ export default function ItemScheduleSession(props: ItemScheduleSessionProps) {
             -&gt;
             </span>
         </h2>
-        <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            {/* 24/05/2024 - Sexta Feira, 19h */}
-            {props.data.dateStart}
+        <p className="m-0 max-w-[30ch] text-lg opacity-50">
+            {getFormattedWeekDay(props.data.dateStart)}
         </p>
         <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            {props.data.stage}
+            {/* 24/05/2024 - Sexta Feira, 19h */}
+            {changeScore(props.data.dateStart)} - {getFormattedHour(props.data.dateStart)}
+        </p>
+        <p className="mt-5 max-w-[30ch] text-sm opacity-50">
+            {ptStage}
         </p>
         </Link>
     )

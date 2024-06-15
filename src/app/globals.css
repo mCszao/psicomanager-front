@@ -31,3 +31,7 @@ body {
     text-wrap: balance;
   }
 }
+
+abbr[title] {
+  text-decoration: none !important;
+}

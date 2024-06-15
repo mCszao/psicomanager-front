@@ -1,5 +1,4 @@
-import { Address } from "cluster";
-
+import Address from "./IAddress";
 export default interface Patient {
     id: string;
     name: string;

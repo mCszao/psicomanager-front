@@ -1,7 +1,7 @@
 const baseUrl = "http://localhost:8080/patients"
 
 export async function fetchPatients(){
-    let response = await fetch(baseUrl);
+    let response = await fetch(baseUrl+"/resume");
     let json = await response.json();
     return json;
 }

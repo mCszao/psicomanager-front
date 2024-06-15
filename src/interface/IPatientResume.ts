@@ -1,5 +1,6 @@
 export interface PatientResume {
     id: string;
     name: string;
-    phone: string;
+    birthdayDate: string;
+    email: string;
 }

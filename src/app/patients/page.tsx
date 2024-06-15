@@ -1,4 +1,4 @@
-import { fetchPatients } from "@/app/api/index";
+import { fetchPatients } from "@/api/index";
 import BaseResponse from "@/interface/IBaseResponse";
 import Patient from "@/interface/IPatient";
 import { PatientResume } from "@/interface/IPatientResume";

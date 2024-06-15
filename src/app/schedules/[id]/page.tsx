@@ -3,6 +3,9 @@ import BaseResponse from "@/interface/IBaseResponse"
 import Session  from "@/interface/ISchedule"
 import { getFormattedDateToSchedule } from "@/util/DateUtils"
 import stageObjectBuilder from "@/util/stageObjectBuilder"
+import metadataFactory from "@/util/metadataFactory"
+
+export const metadata = metadataFactory("Informações da sessão");
 
 type PageProps = {
     params : {

@@ -4,6 +4,10 @@ import Patient from "@/interface/IPatient";
 import { PatientResume } from "@/interface/IPatientResume";
 import { Cake } from "lucide-react";
 import Link from "next/link";
+import metadataFactory from "@/util/metadataFactory";
+
+export const metadata = metadataFactory("Lista de pacientes");
+
 export default async function Page(){
     let response = await fetchPatients() as BaseResponse<PatientResume[]>; 
     return (

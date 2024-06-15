@@ -1,6 +1,9 @@
-import { fetchPatient } from "@/api"
+import { fetchPatient } from "@/api";
 import BaseResponse from "@/interface/IBaseResponse";
 import Patient from "@/interface/IPatient";
+import metadataFactory from "@/util/metadataFactory";
+
+export const metadata = metadataFactory("Prontuário");
 
 type PageProps = {
     params : {

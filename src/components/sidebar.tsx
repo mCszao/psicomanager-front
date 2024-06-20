@@ -43,7 +43,7 @@ export default function SideLinks() {
             <BookOpenCheck color="white"/>
           </Link>
           {isOpen && (
-            <CreateSessionDialog/>
+            <CreateSessionDialog externalFunc={handleAddSession}/>
           )}
       </section>
     )

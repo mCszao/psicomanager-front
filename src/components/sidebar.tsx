@@ -4,50 +4,34 @@ import Link from "next/link";
 import { useState } from "react";
 import CreateSessionDialog from "./create-session-dialog";
 import CreatePatientDialog from "./create-patient-dialog";
+import SideButton from "./side-button";
+import SideLink from "./side-link";
 
 export default function SideLinks() {
     const [isOpenSession, setOpenSession] = useState(false);
     const [isOpenPatient, setOpenPatient] = useState(false);
     function handleAddSession(){
       setOpenSession(!isOpenSession);
+      setOpenPatient(false);
     }
 
     function handleAddPatient(){
       setOpenPatient(!isOpenPatient);
+      setOpenSession(false);
     }
     return (
         <section className="bg-royalBlue p-2 flex flex-col fixed m-r-5 w-20 h-full z-50">
-          <button onClick={handleAddSession}
-          className="rounded-lg border border-transparent transition-colors p-5 hover:border-gray-300"
-          >
-            <CalendarPlus color="white"/>
-          </button>
-          <button onClick={handleAddPatient}
-          className="rounded-lg border border-transparent transition-colors p-5 hover:border-gray-300"
-          >
-            <SmilePlus color="white"/>
-          </button>
-          <Link href={"/"}
-          className="rounded-lg border border-transparent transition-colors p-5 hover:border-gray-300"
-          >
-            <Home color="white"/>
-          </Link>
-          <Link href={"/patients"}
-          className="rounded-lg border border-transparent transition-colors p-5 hover:border-gray-300"
-          >
-            <UsersRound color="white"/>
-          </Link>
-          <Link href={"/reports"}
-          className="rounded-lg border border-transparent transition-colors p-5 hover:border-gray-300"
-          >
-            <BookOpenCheck color="white"/>
-          </Link>
-          {isOpenSession && (
-            <CreateSessionDialog externalFunc={handleAddSession}/>
-          )}
-          {isOpenPatient && (
-            <CreatePatientDialog externalFunc={handleAddPatient}/>
-          )}
-      </section>
+            <SideButton icon={CalendarPlus} onClick={handleAddSession}/>
+            <SideButton icon={SmilePlus} onClick={handleAddPatient}/>
+            <SideLink path="/" icon={Home}/>
+            <SideLink path="/patients" icon={UsersRound}/>
+            <SideLink path="/reports" icon={BookOpenCheck}/>
+            {isOpenSession && (
+              <CreateSessionDialog externalFunc={handleAddSession}/>
+            )}
+            {isOpenPatient && (
+              <CreatePatientDialog externalFunc={handleAddPatient}/>
+            )}
+        </section>
     )
 }

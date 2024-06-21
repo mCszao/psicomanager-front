@@ -2,18 +2,18 @@
 import { UsersRound, Home, BookOpenCheck, CalendarPlus, SmilePlus } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import Dialog from "./ui/dialog";
-import DialogHeader from "./ui/dialog-header";
 import CreateSessionDialog from "./create-session-dialog";
+import CreatePatientDialog from "./create-patient-dialog";
 
 export default function SideLinks() {
-    const [isOpen, setOpen] = useState(true);
+    const [isOpenSession, setOpenSession] = useState(false);
+    const [isOpenPatient, setOpenPatient] = useState(false);
     function handleAddSession(){
-      setOpen(!isOpen);
+      setOpenSession(!isOpenSession);
     }
 
     function handleAddPatient(){
-      alert("Clicou para adicionar novo paciente")
+      setOpenPatient(!isOpenPatient);
     }
     return (
         <section className="bg-royalBlue p-2 flex flex-col fixed m-r-5 w-20 h-full z-50">
@@ -42,8 +42,11 @@ export default function SideLinks() {
           >
             <BookOpenCheck color="white"/>
           </Link>
-          {isOpen && (
+          {isOpenSession && (
             <CreateSessionDialog externalFunc={handleAddSession}/>
+          )}
+          {isOpenPatient && (
+            <CreatePatientDialog externalFunc={handleAddPatient}/>
           )}
       </section>
     )

@@ -1,6 +1,5 @@
 'use client'
 import { UsersRound, Home, BookOpenCheck, CalendarPlus, SmilePlus } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
 import CreateSessionDialog from "./create-session-dialog";
 import CreatePatientDialog from "./create-patient-dialog";

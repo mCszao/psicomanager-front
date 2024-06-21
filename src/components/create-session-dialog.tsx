@@ -1,3 +1,4 @@
+import { X } from "lucide-react";
 import BaseForm from "./ui/base-form";
 import ButtonSubmit from "./ui/button-submit";
 import Dialog from "./ui/dialog";
@@ -11,17 +12,17 @@ type Props = {
 
 export default function CreateSessionDialog( { externalFunc } : Props) {
     return (
-        <Dialog closeFunc={externalFunc}>
-            <DialogHeader title="Nova sessão" textButton="X" functionButton={externalFunc}/>
+        <Dialog>
+            <DialogHeader title="Nova sessão" textButton={<X/>} functionButton={externalFunc}/>
             <BaseForm>
                 <LabelContainer title="Paciente" labelFor="patient">
-                    <Input props={{type: "text", id: "patient"}}/>
+                    <Input type="text" id="patient" />
                 </LabelContainer>
                 <LabelContainer title="Data de Início" labelFor="initDate">
-                    <Input props={{type: "date", id: "initDate"}}/>
+                    <Input type="datetime-local" id="initDate"/>
                 </LabelContainer>
                 <LabelContainer title="Data Final" labelFor="endDate">
-                    <Input props={{type: "date", id: "endDate"}}/>
+                    <Input type="datetime-local" id="endDate"/>
                 </LabelContainer>
                 <ButtonSubmit title="Adicionar sessão"/>
             </BaseForm>

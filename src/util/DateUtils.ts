@@ -35,3 +35,10 @@ export function getFormattedHour(date: string) {
   let minutes = dateObject.getMinutes() > 0 ? dateObject.getMinutes() : "";
   return hour +"h"+minutes
 }
+
+export function reverseDate(date: string){
+  let arrayStr: string[] = date.split("-");
+  let newDate = arrayStr.reverse()
+  
+  return newDate.join("-");
+}

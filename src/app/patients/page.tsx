@@ -1,4 +1,4 @@
-import { fetchPatients } from "@/api/index";
+import { getPatients } from "@/services/api"; 
 import BaseResponse from "@/interface/IBaseResponse";
 import Patient from "@/interface/IPatient";
 import { PatientResume } from "@/interface/IPatientResume";
@@ -9,7 +9,7 @@ import metadataFactory from "@/util/metadataFactory";
 export const metadata = metadataFactory("Lista de pacientes");
 
 export default async function Page(){
-    let response = await fetchPatients() as BaseResponse<PatientResume[]>; 
+    let response = await getPatients() as BaseResponse<PatientResume[]>; 
     return (
             <nav className="flex flex-col p-24 font-sans text-base font-normal gap-3 text-blue-gray-700 text-gray-700 w-full">
                 {response.object && response.object?.map((patient) : any => (

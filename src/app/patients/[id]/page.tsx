@@ -1,4 +1,4 @@
-import { fetchPatient } from "@/api";
+import { getPatient } from "@/services/api"; 
 import BaseResponse from "@/interface/IBaseResponse";
 import Patient from "@/interface/IPatient";
 import metadataFactory from "@/util/metadataFactory";
@@ -39,7 +39,7 @@ const tableItems = [
 ] 
 
 export default async function Page({ params } : PageProps){
-    const {success, object} = await fetchPatient(params.id) as BaseResponse<Patient>;
+    const {success, object} = await getPatient(params.id) as BaseResponse<Patient>;
     
     return (
     <main className="p-14">

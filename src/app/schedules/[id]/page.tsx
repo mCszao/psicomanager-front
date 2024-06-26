@@ -1,4 +1,4 @@
-import { fetchSchedule } from "@/api"
+import { getSchedule } from "@/services/api" 
 import BaseResponse from "@/interface/IBaseResponse"
 import Session  from "@/interface/ISchedule"
 import { getFormattedDateToSchedule } from "@/util/DateUtils"
@@ -41,7 +41,7 @@ const tableItems = [
 ] 
 
 export default async function Page({ params } : PageProps){
-    const { object } = await fetchSchedule(params.id) as BaseResponse<Session>
+    const { object } = await getSchedule(params.id) as BaseResponse<Session>
     const stageProps = stageObjectBuilder(object.stage);
     return (
     <main className="p-14">

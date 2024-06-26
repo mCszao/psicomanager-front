@@ -42,3 +42,27 @@ export function reverseDate(date: string){
   
   return newDate.join("-");
 }
+
+export function addDoubleOrNullOnSchedule(data: ScheduleDTO){
+  data.dateStart = data.dateStart.concat(":00");
+  data.dateEnd = (data.dateEnd == "") ? null : data.dateEnd?.concat(":00");
+}
+
+export function getFormattSchedule(data: ScheduleDTO){
+  addDoubleOrNullOnSchedule(data);
+  let dateStart = formattDate(data.dateStart);
+  let dateEnd = formattDate(data.dateEnd);
+  let newObject = {} as any;
+  newObject.patientId = data.patientId;
+  newObject.dateStart = dateStart;
+  if(data.dateEnd != null) newObject.dateEnd = dateEnd
+
+  return newObject;
+}
+
+export function formattDate(date: string | null | undefined){
+  if(date == null) return;
+  let splitted = date.split("T");
+  let formattDate = reverseDate(splitted[0]);
+  return formattDate.concat(" ", splitted[1]);
+}

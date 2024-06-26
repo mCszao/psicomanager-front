@@ -7,22 +7,19 @@ import LabelContainer from "./ui/label-container";
 import Input from "./ui/input";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Dialog from "./ui/dialog";
-interface PatientDTO  {
-    name: string;
-    email: string;
-    cpf: string;
-    phone: string;
-    birthdayDate: string;
-    zipcode: string;
-}
+import { PatientDTO } from "@/app/types/patient.dto";
+import { registerPatient } from "@/services/api";
+import { reverseDate } from "@/util/DateUtils";
+
 type Props = {
     externalFunc: () => void;
 }
 
 export default function CreatePatientDialog( { externalFunc } : Props) {
     const {register, handleSubmit} = useForm<PatientDTO>();
-    function submit(data: any){
-        console.log(data)
+    function submit<SubmitHandler>(data: PatientDTO){
+        data.birthdayDate = reverseDate(data.birthdayDate);
+        registerPatient(data);
     }
 
     return (

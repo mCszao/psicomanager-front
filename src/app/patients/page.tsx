@@ -1,6 +1,5 @@
 import { getPatients } from "@/services/api"; 
 import BaseResponse from "@/interface/IBaseResponse";
-import Patient from "@/interface/IPatient";
 import { PatientResume } from "@/interface/IPatientResume";
 import { Cake } from "lucide-react";
 import Link from "next/link";

@@ -1,4 +1,4 @@
-export type PatientDTO = {
+type PatientDTO = {
     name: string;
     email: string;
     cpf: string;
@@ -6,3 +6,5 @@ export type PatientDTO = {
     birthdayDate: string;
     zipcode: string;
 }
+
+export default PatientDTO;

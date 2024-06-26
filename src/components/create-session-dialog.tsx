@@ -6,6 +6,8 @@ import DialogHeader from "./ui/dialog-header";
 import Input from "./ui/input";
 import LabelContainer from "./ui/label-container";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { getFormattSchedule } from "@/util/DateUtils";
+import { registerSchedule } from "@/services/api";
 
 type Props = {
     externalFunc: () => void;
@@ -13,15 +15,17 @@ type Props = {
 
 export default function CreateSessionDialog( { externalFunc } : Props) {
     const {register, handleSubmit } = useForm();
-    function submit(data: any) {
-        console.log(data)
+    function submit<SubmitHandler>(data: any) {
+        const schedule = getFormattSchedule(data);
+        console.log(schedule);
+        registerSchedule(schedule);
     }
     return (
         <Dialog>
             <DialogHeader title="Nova sessão" textButton={<X/>} functionButton={externalFunc}/>
             <BaseForm onSubmit={handleSubmit(submit)}>
                 <LabelContainer title="Paciente" labelFor="patient">
-                    <Input type="text" id="patient" {...register('patient')}/>
+                    <Input type="text" id="patient" {...register('patientId')}/>
                 </LabelContainer>
                 <LabelContainer title="Data de Início" labelFor="dateStart" >
                     <Input type="datetime-local" id="dateStart" {...register('dateStart')}/>

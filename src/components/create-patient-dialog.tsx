@@ -7,7 +7,7 @@ import LabelContainer from "./ui/label-container";
 import Input from "./ui/input";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Dialog from "./ui/dialog";
-import { PatientDTO } from "@/app/types/patient.dto";
+import PatientDTO from "@/app/types/patient.dto";
 import { registerPatient } from "@/services/api";
 import { reverseDate } from "@/util/DateUtils";
 

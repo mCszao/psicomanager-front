@@ -13,3 +13,12 @@ export async function getSchedule(scheduleId: string){
 
     return json;
 }
+
+export async function registerSchedule(schedule: ScheduleDTO){
+    await fetch(baseUrl+"/register", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},  
+        body: JSON.stringify(schedule)
+    })
+
+}

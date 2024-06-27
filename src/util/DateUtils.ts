@@ -1,3 +1,5 @@
+import ScheduleDTO from "@/app/types/schedule.dto";
+
 const optionsWeekDay: Intl.DateTimeFormatOptions  = {
     weekday: 'long',
   };

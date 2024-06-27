@@ -1,4 +1,4 @@
-import { PatientDTO } from "@/app/types/patient.dto";
+import PatientDTO from "@/app/types/patient.dto";
 
 const baseUrl = "http://localhost:8080/patients"
 
@@ -15,10 +15,10 @@ export async function getPatient(patientId:string){
 }
 
 export async function registerPatient(patient: PatientDTO){
-    await fetch(baseUrl+"/register", {
+    let response = await fetch(baseUrl+"/register", {
         method: "POST",
         headers: {"Content-Type": "application/json"},  
         body: JSON.stringify(patient)
     })
-
+    return response.json();
 }

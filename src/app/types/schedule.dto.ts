@@ -3,3 +3,5 @@ type ScheduleDTO = {
     dateStart: string;
     dateEnd?: string | null;
 }
+
+export default ScheduleDTO;

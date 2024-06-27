@@ -10,16 +10,29 @@ import Dialog from "./ui/dialog";
 import PatientDTO from "@/app/types/patient.dto";
 import { registerPatient } from "@/services/api";
 import { reverseDate } from "@/util/DateUtils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createPatientSchema } from "@/services/validation/patient.schema";
+
+
 
 type Props = {
     externalFunc: () => void;
 }
 
+
+
 export default function CreatePatientDialog( { externalFunc } : Props) {
-    const {register, handleSubmit} = useForm<PatientDTO>();
-    function submit<SubmitHandler>(data: PatientDTO){
+    const {register, handleSubmit, formState: { errors }} = useForm<PatientDTO>({
+        resolver: zodResolver(createPatientSchema)
+    });
+    async function submit<SubmitHandler>(data: PatientDTO){
         data.birthdayDate = reverseDate(data.birthdayDate);
-        registerPatient(data);
+        const { success, object } = await registerPatient(data) as any;
+        if(object?.success) {
+            alert('Cadastro realizado com sucesso');
+            return;
+        }
+        alert(object);
     }
 
     return (
@@ -28,21 +41,26 @@ export default function CreatePatientDialog( { externalFunc } : Props) {
             <BaseForm onSubmit={handleSubmit(submit)}>
                 <LabelContainer title="Nome" labelFor="name">
                     <Input type="text"  {...register('name')} />
+                    {errors?.name && <span>{errors.name.message}</span>}
                 </LabelContainer>
                 <LabelContainer title="E-mail" labelFor="email">
-                    <Input type="email" id="email"  {...register('email')}/>
+                    <Input type="text" id="email"  {...register('email')}/>
+                    {errors?.email && <span>{errors.email.message}</span>}
                 </LabelContainer>
                 <LabelContainer title="CPF" labelFor="cpf">
                     <Input type="number" id="cpf"  {...register('cpf')}/>
+                    {errors?.cpf && <span>{errors.cpf.message}</span>}
                 </LabelContainer>
                 <LabelContainer title="Telefone" labelFor="phone">
                     <Input type="text" id="phone"  {...register('phone')}/>
+                    {errors?.phone && <span>{errors.phone.message}</span>}
                 </LabelContainer>
                 <LabelContainer title="Data de Nascimento" labelFor="birthdayDate" >
                     <Input type="date" id="birthdayDate"  {...register('birthdayDate')}/>
                 </LabelContainer>
                 <LabelContainer title="CEP" labelFor="zipcode"  >
                     <Input type="number" id="zipcode" {...register('zipcode')}/>
+                    {errors?.zipcode && <span>{errors.zipcode.message}</span>}
                 </LabelContainer>
                 <ButtonSubmit title="Adicionar paciente"/>
             </BaseForm>

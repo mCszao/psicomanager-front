@@ -8,14 +8,19 @@ import LabelContainer from "./ui/label-container";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { getFormattSchedule } from "@/util/DateUtils";
 import { registerSchedule } from "@/services/api";
+import ScheduleDTO from "@/app/types/schedule.dto";
+import { createScheduleSchema } from "@/services/validation/schedule.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type Props = {
     externalFunc: () => void;
 }
 
 export default function CreateSessionDialog( { externalFunc } : Props) {
-    const {register, handleSubmit } = useForm();
-    function submit<SubmitHandler>(data: any) {
+    const {register, handleSubmit, formState : { errors } } = useForm<ScheduleDTO>({
+        resolver: zodResolver(createScheduleSchema)
+    });
+    function submit<SubmitHandler>(data: ScheduleDTO) {
         const schedule = getFormattSchedule(data);
         console.log(schedule);
         registerSchedule(schedule);
@@ -26,9 +31,11 @@ export default function CreateSessionDialog( { externalFunc } : Props) {
             <BaseForm onSubmit={handleSubmit(submit)}>
                 <LabelContainer title="Paciente" labelFor="patient">
                     <Input type="text" id="patient" {...register('patientId')}/>
+                    {errors?.patientId && <span>{errors.patientId.message}</span>}
                 </LabelContainer>
                 <LabelContainer title="Data de Início" labelFor="dateStart" >
                     <Input type="datetime-local" id="dateStart" {...register('dateStart')}/>
+                    {errors?.dateStart && <span>{errors.dateStart.message}</span>}
                 </LabelContainer>
                 <LabelContainer title="Data Final" labelFor="dateEnd">
                     <Input type="datetime-local" id="dateEnd"  {...register('dateEnd')}/>

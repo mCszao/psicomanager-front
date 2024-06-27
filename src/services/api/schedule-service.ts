@@ -1,3 +1,5 @@
+import ScheduleDTO from "@/app/types/schedule.dto";
+
 const baseUrl = "http://localhost:8080/schedules";
 
 export async function getSchedules(){

@@ -13,7 +13,8 @@ const optionsBase: Intl.DateTimeFormatOptions  = {
 const lang: string = 'pt-BR';
 
 function DateBuilder(date: string){
-    return new Date(date);
+    let convert = convertDate(date);
+    return new Date(convert);
 }
 export function getFormattedDateToSchedule(date:string) {
   const dateObject = DateBuilder(date);
@@ -28,11 +29,18 @@ export function getFormattedWeekDay(date: string) {
 
 export function changeScore(date: string) {
   const dateObject = DateBuilder(date);
-  return dateObject.toLocaleDateString(lang);
+  return dateObject.toLocaleDateString(lang,);
+}
+
+function convertDate(date: string) {
+  let splited = reverseDate(date.split(' ')[0]);
+  let convert = splited.split("-").join("/");
+  return convert;
 }
 
 export function getFormattedHour(date: string) {
-  const dateObject = DateBuilder(date);
+  let converted = convertDate(date);
+  const dateObject = new Date(converted.concat(' ',date.split(' ')[1]));
   let hour = dateObject.getHours();
   let minutes = dateObject.getMinutes() > 0 ? dateObject.getMinutes() : "";
   return hour +"h"+minutes

@@ -20,10 +20,15 @@ export default function CreateSessionDialog( { externalFunc } : Props) {
     const {register, handleSubmit, formState : { errors } } = useForm<ScheduleDTO>({
         resolver: zodResolver(createScheduleSchema)
     });
-    function submit<SubmitHandler>(data: ScheduleDTO) {
+    async function submit<SubmitHandler>(data: ScheduleDTO) {
         const schedule = getFormattSchedule(data);
         console.log(schedule);
-        registerSchedule(schedule);
+        const { object } = await registerSchedule(schedule) as any;
+        if(typeof object == 'string') {
+            alert(object);
+            return;
+        }
+        Object.values(object).forEach((value): any => alert(value))
     }
     return (
         <Dialog>

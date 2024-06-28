@@ -27,12 +27,12 @@ export default function CreatePatientDialog( { externalFunc } : Props) {
     });
     async function submit<SubmitHandler>(data: PatientDTO){
         data.birthdayDate = reverseDate(data.birthdayDate);
-        const { success, object } = await registerPatient(data) as any;
-        if(object?.success) {
-            alert('Cadastro realizado com sucesso');
+        const { object } = await registerPatient(data) as any;
+        if(typeof object == 'string') {
+            alert(object);
             return;
         }
-        alert(object);
+        Object.values(object).forEach((value): any => alert(value))
     }
 
     return (

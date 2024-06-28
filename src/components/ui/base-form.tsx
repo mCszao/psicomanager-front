@@ -1,7 +1,7 @@
+import BaseContainerProps from "@/interface/IBaseContainerProps";
 import { FormHTMLAttributes } from "react";
 
-interface BaseFormProps extends FormHTMLAttributes<HTMLFormElement>{
-    children: React.ReactNode;
+interface BaseFormProps extends FormHTMLAttributes<HTMLFormElement>, BaseContainerProps{
 }
 
 export default function BaseForm({ children, ...props }: BaseFormProps) {

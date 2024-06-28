@@ -17,10 +17,11 @@ export async function getSchedule(scheduleId: string){
 }
 
 export async function registerSchedule(schedule: ScheduleDTO){
-    await fetch(baseUrl+"/register", {
+    let response = await fetch(baseUrl+"/register", {
         method: "POST",
         headers: {"Content-Type": "application/json"},  
         body: JSON.stringify(schedule)
     })
 
+    return response.json();
 }

@@ -1,6 +1,7 @@
-type Props = {
+import BaseContainerProps from "@/interface/IBaseContainerProps";
+
+type Props = BaseContainerProps & {
     title: string;
-    children: React.ReactNode;
     labelFor?: string;
 }
 

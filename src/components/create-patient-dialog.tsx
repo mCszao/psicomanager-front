@@ -11,7 +11,7 @@ import { registerPatient } from "@/services/api";
 import { reverseDate } from "@/util/DateUtils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createPatientSchema } from "@/services/validation/patient.schema";
-import { useState } from "react";
+
 
 
 type Props = {
@@ -21,14 +21,9 @@ type Props = {
 
 
 export default function CreatePatientDialog( { externalFunc } : Props) {
-    const [isOpen, setOpen] = useState(false);
     const {register, handleSubmit, formState: { errors }} = useForm<PatientDTO>({
         resolver: zodResolver(createPatientSchema)
     });
-
-    function controllModal() {
-        setOpen(!isOpen);
-    }
     async function submit<SubmitHandler>(data: PatientDTO){
         data.birthdayDate = reverseDate(data.birthdayDate);
         const { object } = await registerPatient(data) as any;
@@ -45,7 +40,6 @@ export default function CreatePatientDialog( { externalFunc } : Props) {
             <BaseForm onSubmit={handleSubmit(submit)}>
                 <LabelContainer title="Nome" labelFor="name">
                     <Input type="text" id="name" {...register('name')} disabled={true}/>
-                    <UserPlus onClick={controllModal}/>
                     {errors?.name && <span className="block">{errors.name.message}</span>}
                 </LabelContainer>
                 <LabelContainer title="E-mail" labelFor="email">
@@ -69,11 +63,6 @@ export default function CreatePatientDialog( { externalFunc } : Props) {
                 </LabelContainer>
                 <ButtonSubmit title="Adicionar paciente"/>
             </BaseForm>
-           {isOpen && (
-                <Dialog>
-                    <DialogHeader title="Pesquisar paciente" textButton={<X/>} functionButton={externalFunc}/>
-                </Dialog>
-           )}
         </Dialog>
     )
 }

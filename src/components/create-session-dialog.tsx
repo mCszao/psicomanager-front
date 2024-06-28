@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { X, UserPlus } from "lucide-react";
 import BaseForm from "./ui/base-form";
 import ButtonSubmit from "./ui/button-submit";
 import Dialog from "./ui/dialog";
@@ -11,6 +11,7 @@ import { registerSchedule } from "@/services/api";
 import ScheduleDTO from "@/app/types/schedule.dto";
 import { createScheduleSchema } from "@/services/validation/schedule.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 
 type Props = {
     externalFunc: () => void;
@@ -20,6 +21,10 @@ export default function CreateSessionDialog( { externalFunc } : Props) {
     const {register, handleSubmit, formState : { errors } } = useForm<ScheduleDTO>({
         resolver: zodResolver(createScheduleSchema)
     });
+    const [isOpen, setOpen] = useState(false);
+    function controllModal() {
+        setOpen(!isOpen);
+    }
     async function submit<SubmitHandler>(data: ScheduleDTO) {
         const schedule = getFormattSchedule(data);
         console.log(schedule);
@@ -36,6 +41,7 @@ export default function CreateSessionDialog( { externalFunc } : Props) {
             <BaseForm onSubmit={handleSubmit(submit)}>
                 <LabelContainer title="Paciente" labelFor="patient">
                     <Input type="text" id="patient" {...register('patientId')}/>
+                    <UserPlus onClick={controllModal}/>
                     {errors?.patientId && <span>{errors.patientId.message}</span>}
                 </LabelContainer>
                 <LabelContainer title="Data de Início" labelFor="dateStart" >
@@ -47,6 +53,11 @@ export default function CreateSessionDialog( { externalFunc } : Props) {
                 </LabelContainer>
                 <ButtonSubmit title="Adicionar sessão"/>
             </BaseForm>
+            {isOpen && (
+                <Dialog>
+                    <DialogHeader title="Pesquisar paciente" textButton={<X/>} functionButton={externalFunc}/>
+                </Dialog>
+           )}
         </Dialog>
     )
 }

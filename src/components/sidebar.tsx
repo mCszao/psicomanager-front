@@ -5,6 +5,7 @@ import CreateSessionDialog from "./create-session-dialog";
 import CreatePatientDialog from "./create-patient-dialog";
 import SideButton from "./side-button";
 import SideLink from "./side-link";
+import { PatientSelectedProvider } from "@/contexts/PatientSelectedContext";
 
 export default function SideLinks() {
     const [isOpenSession, setOpenSession] = useState(false);
@@ -25,9 +26,11 @@ export default function SideLinks() {
             <SideLink path="/" icon={Home}/>
             <SideLink path="/patients" icon={UsersRound}/>
             <SideLink path="/reports" icon={BookOpenCheck}/>
-            {isOpenSession && (
-              <CreateSessionDialog externalFunc={handleAddSession}/>
-            )}
+            <PatientSelectedProvider>
+              {isOpenSession && (
+                <CreateSessionDialog externalFunc={handleAddSession}/>
+              )}
+            </PatientSelectedProvider>
             {isOpenPatient && (
               <CreatePatientDialog externalFunc={handleAddPatient}/>
             )}

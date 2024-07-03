@@ -12,8 +12,9 @@ import { registerSchedule } from "@/services/api";
 import ScheduleDTO from "@/app/types/schedule.dto";
 import { createScheduleSchema } from "@/services/validation/schedule.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import DialogPatientList from "./dialog-patients-list";
+import { PatientSelectedContext } from "@/contexts/PatientSelectedContext";
 
 type Props = {
     externalFunc: () => void;
@@ -23,13 +24,13 @@ export default function CreateSessionDialog( { externalFunc } : Props) {
     const {register, handleSubmit, formState : { errors } } = useForm<ScheduleDTO>({
         resolver: zodResolver(createScheduleSchema)
     });
+    const patientSelectedContext = useContext(PatientSelectedContext);
     const [isOpen, setOpen] = useState(false);
     async function controllModal() {
         setOpen(!isOpen);
     }
     async function submit<SubmitHandler>(data: ScheduleDTO) {
-        const schedule = getFormattSchedule(data);
-        console.log(schedule);
+        const schedule = getFormattSchedule(data, patientSelectedContext?.patient?.id);
         const { object } = await registerSchedule(schedule) as any;
         if(typeof object == 'string') {
             alert(object);
@@ -37,27 +38,28 @@ export default function CreateSessionDialog( { externalFunc } : Props) {
         }
         Object.values(object).forEach((value): any => alert(value))
     }
+
     return (
-        <Dialog>
-            <DialogHeader title="Nova sessão" textButton={<X/>} functionButton={externalFunc}/>
-            <BaseForm onSubmit={handleSubmit(submit)}>
-                <LabelContainer title="Paciente" labelFor="patient">
-                    <Input type="text" id="patient" {...register('patientId')} disabled={true}/>
-                    <UserPlus onClick={controllModal}/>
-                    {errors?.patientId && <span>{errors.patientId.message}</span>}
-                </LabelContainer>
-                <LabelContainer title="Data de Início" labelFor="dateStart" >
-                    <Input type="datetime-local" id="dateStart" {...register('dateStart')}/>
-                    {errors?.dateStart && <span>{errors.dateStart.message}</span>}
-                </LabelContainer>
-                <LabelContainer title="Data Final" labelFor="dateEnd">
-                    <Input type="datetime-local" id="dateEnd"  {...register('dateEnd')}/>
-                </LabelContainer>
-                <ButtonSubmit title="Adicionar sessão"/>
-            </BaseForm>
-            {isOpen && (
-              <DialogPatientList externalFunc={() => alert('isso veio de fora')}/>
-           )}
-        </Dialog>
+            <Dialog>
+                <DialogHeader title="Nova sessão" textButton={<X/>} functionButton={externalFunc}/>
+                <BaseForm onSubmit={handleSubmit(submit)}>
+                    <LabelContainer title="Paciente" labelFor="patient">
+                        <Input type="text" id="patient" value={patientSelectedContext?.patient?.name ?? "Sem nome"} {...register('patientId')} disabled={true} />
+                        <UserPlus className="cursor-pointer pl-2" onClick={controllModal}/>
+                        {errors?.patientId && <span>{errors.patientId.message}</span>}
+                    </LabelContainer>
+                    <LabelContainer title="Data de Início" labelFor="dateStart" >
+                        <Input type="datetime-local" id="dateStart" {...register('dateStart')}/>
+                        {errors?.dateStart && <span>{errors.dateStart.message}</span>}
+                    </LabelContainer>
+                    <LabelContainer title="Data Final" labelFor="dateEnd">
+                        <Input type="datetime-local" id="dateEnd"  {...register('dateEnd')}/>
+                    </LabelContainer>
+                    <ButtonSubmit title="Adicionar sessão"/>
+                </BaseForm>
+                {isOpen && (
+                <DialogPatientList externalFunc={controllModal}/>
+            )}
+            </Dialog>    
     )
 }

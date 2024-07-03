@@ -1,14 +1,16 @@
 import PatientDTO from "@/app/types/patient.dto";
+import BaseResponse from "@/interface/IBaseResponse";
+import { PatientResume } from "@/interface/IPatientResume";
 
 const baseUrl = "http://localhost:8080/patients"
 
-export async function getPatients(){
+export async function getPatients(): Promise<BaseResponse<PatientResume[]>>{
     let response = await fetch(baseUrl+"/resume");
     let json = await response.json();
     return json;
 }
 
-export async function getPatient(patientId:string){
+export async function getPatient(patientId:string): Promise<BaseResponse<PatientResume>>{
     let response = await fetch(baseUrl+"/"+patientId);
     let json = await response.json();
     return json;    

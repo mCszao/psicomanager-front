@@ -39,7 +39,7 @@ export default function CreatePatientDialog( { externalFunc } : Props) {
             <DialogHeader title="Novo paciente" textButton={<X/>} functionButton={externalFunc}/>
             <BaseForm onSubmit={handleSubmit(submit)}>
                 <LabelContainer title="Nome" labelFor="name">
-                    <Input type="text" id="name" {...register('name')} disabled={true}/>
+                    <Input type="text" id="name" {...register('name')}/>
                     {errors?.name && <span className="block">{errors.name.message}</span>}
                 </LabelContainer>
                 <LabelContainer title="E-mail" labelFor="email">

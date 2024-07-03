@@ -1,3 +1,4 @@
+
 import { X, UserPlus } from "lucide-react";
 import BaseForm from "./ui/base-form";
 import ButtonSubmit from "./ui/button-submit";
@@ -12,6 +13,7 @@ import ScheduleDTO from "@/app/types/schedule.dto";
 import { createScheduleSchema } from "@/services/validation/schedule.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import DialogPatientList from "./dialog-patients-list";
 
 type Props = {
     externalFunc: () => void;
@@ -22,7 +24,7 @@ export default function CreateSessionDialog( { externalFunc } : Props) {
         resolver: zodResolver(createScheduleSchema)
     });
     const [isOpen, setOpen] = useState(false);
-    function controllModal() {
+    async function controllModal() {
         setOpen(!isOpen);
     }
     async function submit<SubmitHandler>(data: ScheduleDTO) {
@@ -40,7 +42,7 @@ export default function CreateSessionDialog( { externalFunc } : Props) {
             <DialogHeader title="Nova sessão" textButton={<X/>} functionButton={externalFunc}/>
             <BaseForm onSubmit={handleSubmit(submit)}>
                 <LabelContainer title="Paciente" labelFor="patient">
-                    <Input type="text" id="patient" {...register('patientId')}/>
+                    <Input type="text" id="patient" {...register('patientId')} disabled={true}/>
                     <UserPlus onClick={controllModal}/>
                     {errors?.patientId && <span>{errors.patientId.message}</span>}
                 </LabelContainer>
@@ -54,9 +56,7 @@ export default function CreateSessionDialog( { externalFunc } : Props) {
                 <ButtonSubmit title="Adicionar sessão"/>
             </BaseForm>
             {isOpen && (
-                <Dialog>
-                    <DialogHeader title="Pesquisar paciente" textButton={<X/>} functionButton={externalFunc}/>
-                </Dialog>
+              <DialogPatientList externalFunc={() => alert('isso veio de fora')}/>
            )}
         </Dialog>
     )

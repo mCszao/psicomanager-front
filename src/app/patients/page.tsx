@@ -21,7 +21,7 @@ export default async function Page(){
                       </ContainerH6>
                       <ContainerH6>
                           <Cake/> 
-                          {patient.birthdayDate} 
+                          {patient.birthdayDate ?? 'Não informado'} 
                       </ContainerH6>
                     </Link>
                    </abbr>

@@ -58,16 +58,11 @@ export function addDoubleOrNullOnSchedule(data: ScheduleDTO){
   data.dateEnd = (data.dateEnd == "") ? null : data.dateEnd?.concat(":00");
 }
 
-export function getFormattSchedule(data: ScheduleDTO, patientId: string | undefined){
+export function getFormattDates(data: ScheduleDTO){
   addDoubleOrNullOnSchedule(data);
   let dateStart = formattDate(data.dateStart);
   let dateEnd = formattDate(data.dateEnd);
-  let newObject = {} as any;
-  newObject.patientId = patientId ?? data.patientId;
-  newObject.dateStart = dateStart;
-  if(data.dateEnd != null) newObject.dateEnd = dateEnd
-
-  return newObject;
+  return { dateStart, dateEnd };  
 }
 
 export function formattDate(date: string | null | undefined){

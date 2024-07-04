@@ -11,7 +11,7 @@ export default function ItemScheduleSession(props: ItemScheduleSessionProps) {
     return ( 
         <Link
         href={"/schedules/"+props.data.id}
-        className="group rounded-lg border border-transparent px-5 py-4 h-1/3 transition-colors bg-royalBlue hover:border-gray-300 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
+        className="group rounded-lg border border-transparent px-5 py-4 h-full transition-colors bg-royalBlue hover:border-gray-300 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
         rel="noopener noreferrer"
         >
         <h2 className="mb-3 text-2xl font-semibold">

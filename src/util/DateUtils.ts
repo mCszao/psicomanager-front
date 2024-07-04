@@ -16,13 +16,13 @@ function DateBuilder(date: string){
     let convert = convertDate(date);
     return new Date(convert);
 }
-export function getFormattedDateToSchedule(date:string) {
+export function getFormatedDateToSchedule(date:string) {
   const dateObject = DateBuilder(date);
   let extendDate = dateObject.toLocaleDateString(lang, optionsBase);
   return `${extendDate} às ${date.split(" ")[1]}`
 }
 
-export function getFormattedWeekDay(date: string) {
+export function getFormatedWeekDay(date: string) {
   const dateObject = DateBuilder(date);
   return dateObject.toLocaleDateString(lang, optionsWeekDay);
 }
@@ -38,7 +38,7 @@ function convertDate(date: string) {
   return convert;
 }
 
-export function getFormattedHour(date: string) {
+export function getFormatedHour(date: string) {
   let converted = convertDate(date);
   const dateObject = new Date(converted.concat(' ',date.split(' ')[1]));
   let hour = dateObject.getHours();
@@ -58,16 +58,16 @@ export function addDoubleOrNullOnSchedule(data: ScheduleDTO){
   data.dateEnd = (data.dateEnd == "") ? null : data.dateEnd?.concat(":00");
 }
 
-export function getFormattDates(data: ScheduleDTO){
+export function getFormatDates(data: ScheduleDTO){
   addDoubleOrNullOnSchedule(data);
-  let dateStart = formattDate(data.dateStart);
-  let dateEnd = formattDate(data.dateEnd);
+  let dateStart = formatDate(data.dateStart);
+  let dateEnd = formatDate(data.dateEnd);
   return { dateStart, dateEnd };  
 }
 
-export function formattDate(date: string | null | undefined){
+export function formatDate(date: string | null | undefined){
   if(date == null) return;
   let splitted = date.split("T");
-  let formattDate = reverseDate(splitted[0]);
-  return formattDate.concat(" ", splitted[1]);
+  let formatDate = reverseDate(splitted[0]);
+  return formatDate.concat(" ", splitted[1]);
 }

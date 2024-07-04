@@ -1,5 +1,5 @@
 import Session  from "@/interface/ISchedule";
-import { getFormattedWeekDay, changeScore, getFormattedHour } from "@/util/DateUtils";
+import { getFormatedWeekDay, changeScore, getFormatedHour } from "@/util/DateUtils";
 import stageObjectBuilder from "@/util/stageObjectBuilder";
 import Link from "next/link";
 
@@ -18,11 +18,11 @@ export default function ItemScheduleSession(props: ItemScheduleSessionProps) {
             {props.data.patient?.name}
         </h2>
         <p className="m-0 max-w-[30ch] text-lg opacity-50">
-            {getFormattedWeekDay(props.data.dateStart)}
+            {getFormatedWeekDay(props.data.dateStart)}
         </p>
         <p className="m-0 max-w-[30ch] text-sm opacity-50">
             {/* 24/05/2024 - Sexta Feira, 19h */}
-            {changeScore(props.data.dateStart)} - {getFormattedHour(props.data.dateStart)}
+            {changeScore(props.data.dateStart)} - {getFormatedHour(props.data.dateStart)}
         </p>
         <p className="mt-5 max-w-[30ch] text-sm opacity-50">
             {ptStage}

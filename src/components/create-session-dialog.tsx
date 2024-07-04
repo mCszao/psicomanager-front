@@ -7,7 +7,6 @@ import DialogHeader from "./ui/dialog-header";
 import Input from "./ui/input";
 import LabelContainer from "./ui/label-container";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { getFormattSchedule } from "@/util/DateUtils";
 import { registerSchedule } from "@/services/api";
 import ScheduleDTO from "@/app/types/schedule.dto";
 import { createScheduleSchema } from "@/services/validation/schedule.schema";
@@ -15,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useState } from "react";
 import DialogPatientList from "./dialog-patients-list";
 import { PatientSelectedContext } from "@/contexts/PatientSelectedContext";
+import ScheduleFactory from "@/util/ScheduleFactory";
 
 type Props = {
     externalFunc: () => void;
@@ -30,7 +30,7 @@ export default function CreateSessionDialog( { externalFunc } : Props) {
         setOpen(!isOpen);
     }
     async function submit<SubmitHandler>(data: ScheduleDTO) {
-        const schedule = getFormattSchedule(data, patientSelectedContext?.patient?.id);
+        const schedule = ScheduleFactory(data, patientSelectedContext?.patient?.id);
         const { object } = await registerSchedule(schedule) as any;
         if(typeof object == 'string') {
             alert(object);
@@ -44,7 +44,7 @@ export default function CreateSessionDialog( { externalFunc } : Props) {
                 <DialogHeader title="Nova sessão" textButton={<X/>} functionButton={externalFunc}/>
                 <BaseForm onSubmit={handleSubmit(submit)}>
                     <LabelContainer title="Paciente" labelFor="patient">
-                        <Input type="text" id="patient" value={patientSelectedContext?.patient?.name ?? "Sem nome"} {...register('patientId')} disabled={true} />
+                        <Input type="text" id="patient" value={patientSelectedContext?.patient?.name ?? "Sem paciente vinculado"} {...register('patientId')} />
                         <UserPlus className="cursor-pointer pl-2" onClick={controllModal}/>
                         {errors?.patientId && <span>{errors.patientId.message}</span>}
                     </LabelContainer>

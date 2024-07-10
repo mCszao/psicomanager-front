@@ -26,6 +26,8 @@ export default function CreatePatientDialog( { externalFunc } : Props) {
     });
     async function submit<SubmitHandler>(data: PatientDTO){
         data.birthdayDate = reverseDate(data.birthdayDate);
+        data.address = { zipcode : data.zipcode };
+        console.log(data);
         const { object } = await registerPatient(data) as any;
         if(typeof object == 'string') {
             alert(object);

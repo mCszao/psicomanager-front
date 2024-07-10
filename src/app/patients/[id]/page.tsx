@@ -77,7 +77,12 @@ export default async function Page({ params } : PageProps){
                     <p className="m-1 max-w-[30ch] text-sm opacity-50">
                     {object.address[0]?.city} - {object.address[0]?.abbreviation}
                     </p>
-                </div>      
+                </div>  
+                <div className="w-full table-auto text-2xl text-left mt-5">
+                <a target="_blank" href={`http://localhost:8080/documents/generate-contract?patientId=${object.id}`} className=" text-[#fff] bg-royalBlue py-1.5 px-3 hover:text-gray-500 duration-150 hover:bg-gray-50 border rounded-lg">
+                    Gerar contrato
+                </a>
+        </div>    
             </div>
 
         </section>
@@ -96,11 +101,7 @@ export default async function Page({ params } : PageProps){
                         </p>
                     </div>
                 ) )}
-                <div className="w-full table-auto text-xl text-left mt-5">
-                                        <a href="#" className=" text-[#fff] bg-royalBlue py-1.5 px-3 hover:text-gray-500 duration-150 hover:bg-gray-50 border rounded-lg">
-                                            Adicionar acompanhamento
-                                        </a>
-                </div>
+                
             </section>
             <section className="mt-5 ml-5 max-w-[95vw] flex-1 shadow-lg p-5 border rounded-md ">
                 <h2 className="text-2xl mt-5 font-semibold">
@@ -115,7 +116,9 @@ export default async function Page({ params } : PageProps){
                 <p className="m-1 max-w-[30ch] text-sm opacity-50">
                     Data de Nascimento: 24/01/2001
                 </p>
+                
             </section>
+            
         </div>
     </main>
     )

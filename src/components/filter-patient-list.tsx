@@ -6,18 +6,13 @@ import { PatientResume } from "@/interface/IPatientResume";
 import Link from "next/link";
 import { Cake } from "lucide-react";
 import { useState } from "react";
+import { useFilter } from "@/hooks/useFilter";
 type Props = {
     data : BaseResponse<PatientResume[]>
 }
 export default function FilterPatientList({ data }: Props) {
     const [search, setSearch] = useState<string>('');
-    const filteredPatients =
-    (search.length != 0 && data != null)
-        ? data?.object.filter((patient) => {
-              const regex = new RegExp(search, 'i');
-              return patient?.['name'].match(regex);
-          })
-        : [];
+    const filteredPatients = useFilter(search, data?.object, 'name');
     
     return (
         <nav className="flex flex-col p-24 font-sans text-base font-normal gap-3 text-blue-gray-700 text-gray-700 w-full">

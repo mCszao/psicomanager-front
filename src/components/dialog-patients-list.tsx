@@ -7,6 +7,7 @@ import { X } from "lucide-react";
 import { PatientResume } from "@/interface/IPatientResume";
 import { useEffect, useState, useContext } from "react";
 import { PatientSelectedContext } from "@/contexts/PatientSelectedContext";
+import { useFilter } from "@/hooks/useFilter";
 
 type Props = {
     externalFunc: () => void;
@@ -24,14 +25,7 @@ export default function DialogPatientList({ externalFunc }: Props) {
         fetchData();
       }, [])
       const patientSelectedContext = useContext(PatientSelectedContext);
-      const filteredPatients =
-        (search.length != 0 && patients != null)
-            ? patients.filter((patient) => {
-                  const regex = new RegExp(search, 'i');
-                  return patient?.['name'].match(regex);
-              })
-            : [];
-
+      const filteredPatients = useFilter(search, patients, 'name');
       function selectPatient(patient: PatientResume) {
         patientSelectedContext?.setPatient(patient);
       }

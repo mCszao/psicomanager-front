@@ -11,7 +11,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className+" relative"}>
+      <body className={inter.className+" relative bg-gray-50 dark:bg-gray-900"}>
         <SideLinks></SideLinks>
         {children}</body>
     </html>

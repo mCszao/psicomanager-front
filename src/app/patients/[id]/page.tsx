@@ -2,6 +2,7 @@ import { getPatient } from "@/services/api";
 import BaseResponse from "@/interface/IBaseResponse";
 import Patient from "@/interface/IPatient";
 import metadataFactory from "@/util/metadataFactory";
+import { Download, File, FolderOpen } from "lucide-react";
 
 export const metadata = metadataFactory("Prontuário");
 
@@ -79,8 +80,8 @@ export default async function Page({ params } : PageProps){
                     </p>
                 </div>  
                 <div className="w-full table-auto text-2xl text-left mt-5">
-                <a target="_blank" href={`http://localhost:8080/documents/generate-contract?patientId=${object.id}`} className=" text-[#fff] bg-royalBlue py-1.5 px-3 hover:text-gray-500 duration-150 hover:bg-gray-50 border rounded-lg">
-                    Gerar contrato
+                <a href={`http://localhost:8080/documents/generate-contract?patientId=${object.id}`} className=" flex items-center gap-3 text-[#fff] bg-royalBlue py-1.5 px-3 hover:text-gray-500 duration-150 hover:bg-gray-50 border rounded-lg">
+                    <Download /> Gerar contrato
                 </a>
         </div>    
             </div>
@@ -91,31 +92,33 @@ export default async function Page({ params } : PageProps){
                 <h2 className="text-2xl mt-5 font-semibold">
                     Acompanhamentos
                 </h2>
-                {tableItems.map((item, index) => (
+                {object.schedules === undefined || object.schedules.length === 0 ? <h2 className="flex justify-center items-center gap-3 text-xl mt-5 font-semibold">Sem acompanhamentos</h2> : object.schedules?.map((item, index) => (
                     <div key={index} className="border border-royalBlue bg hover:bg-royalBlue hover:text-white rounded-md mt-2 p-2 cursor-pointer">
                         <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                            Data: {item.date}
+                            Data: {item.dateStart}
                         </p>
                         <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                            Status: {item.status}
+                            Status: {item.stage}
                         </p>
                     </div>
                 ) )}
                 
             </section>
             <section className="mt-5 ml-5 max-w-[95vw] flex-1 shadow-lg p-5 border rounded-md ">
-                <h2 className="text-2xl mt-5 font-semibold">
-                Documentos
+                <h2 className="flex items-center gap-3 text-2xl mt-5 font-semibold">
+                <FolderOpen /> Documentos
                 </h2>
-                <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                    Email: marc.khk11@gmail.com
-                </p>
-                <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                    Telefone: 65 99222-4696
-                </p>
-                <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                    Data de Nascimento: 24/01/2001
-                </p>
+                {object.documents === undefined || object.documents.length === 0 ? <h2 className="flex justify-center items-center gap-3 text-xl mt-5 font-semibold">Sem documentos</h2> : object.documents?.map((item, index) => (
+                    <a href={`http://localhost:8080/documents/download/${item.id}`} key={index} className="border block p-2 cursor-pointer hover:scale-y-105">
+                        <File />
+                        <p className="m-1 max-w-[30ch] text-sm opacity-50">
+                E        {item.name}
+                        </p>
+                        <p className="m-1 max-w-[30ch] text-sm opacity-50">
+                            {item.type}
+                        </p>
+                    </a>
+                ) )}
                 
             </section>
             

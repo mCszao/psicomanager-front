@@ -1,4 +1,4 @@
-import ScheduleDTO from "@/app/types/schedule.dto";
+import ScheduleDTO from "@/types/schedule.dto";
 import { getFormatDates } from "./DateUtils";
 
 export default function ScheduleFactory(data: ScheduleDTO, patientId: string | undefined) {

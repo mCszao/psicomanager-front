@@ -8,7 +8,7 @@ import Input from "./ui/input";
 import LabelContainer from "./ui/label-container";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { registerSchedule } from "@/services/api";
-import ScheduleDTO from "@/app/types/schedule.dto";
+import ScheduleDTO from "@/types/schedule.dto";
 import { createScheduleSchema } from "@/services/validation/schedule.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useState } from "react";

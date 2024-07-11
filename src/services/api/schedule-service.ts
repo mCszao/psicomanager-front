@@ -1,4 +1,4 @@
-import ScheduleDTO from "@/app/types/schedule.dto";
+import ScheduleDTO from "@/types/schedule.dto";
 
 const baseUrl = "http://localhost:8080/schedules";
 

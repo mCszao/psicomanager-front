@@ -1,5 +1,6 @@
-import PatientDTO from "@/app/types/patient.dto";
+import PatientDTO from "@/types/patient.dto";
 import BaseResponse from "@/interface/IBaseResponse";
+import Patient from "@/interface/IPatient";
 import { PatientResume } from "@/interface/IPatientResume";
 
 const baseUrl = "http://localhost:8080/patients"
@@ -10,7 +11,7 @@ export async function getPatients(): Promise<BaseResponse<PatientResume[]>>{
     return json;
 }
 
-export async function getPatient(patientId:string): Promise<BaseResponse<PatientResume>>{
+export async function getPatient(patientId:string): Promise<BaseResponse<Patient>>{
     let response = await fetch(baseUrl+"/"+patientId);
     let json = await response.json();
     return json;    

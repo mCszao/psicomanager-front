@@ -2,7 +2,11 @@ import { getPatient } from "@/services/api";
 import BaseResponse from "@/interface/IBaseResponse";
 import Patient from "@/interface/IPatient";
 import metadataFactory from "@/util/metadataFactory";
-import { Download, File, FolderOpen } from "lucide-react";
+import { Download } from "lucide-react";
+import PatientScheduleList from "@/components/patient-schedule-list";
+import PatientScheduleItem from "@/components/patient-schedule-item";
+import PatientDocumentList from "@/components/patient-document-list";
+import PatientDocumentItem from "@/components/patient-document-item";
 
 export const metadata = metadataFactory("Prontuário");
 
@@ -11,36 +15,11 @@ type PageProps = {
         id: string
     }
 }
-const tableItems = [
-    {
-        name: "Solo learn app",
-        date: "Oct 9, 2023",
-        status: "Active",
-    },
-    {
-        name: "Window wrapper",
-        date: "Oct 12, 2023",
-        status: "Active",
-    },
-    {
-        name: "Unity loroin",
-        date: "Oct 22, 2023",
-        status: "Archived",
-    },
-    {
-        name: "Background remover",
-        date: "Jan 5, 2023",
-        status: "Active",
-    },
-    {
-        name: "Colon tiger",
-        date: "Jan 6, 2023",
-        status: "Active",
-    },
-] 
 
 export default async function Page({ params } : PageProps){
     const {success, object} = await getPatient(params.id) as BaseResponse<Patient>;
+    
+
     
     return (
     <main className="p-14">
@@ -88,39 +67,16 @@ export default async function Page({ params } : PageProps){
 
         </section>
         <div className="flex m-10 ">
-            <section className="mt-5 max-w-[95vw] border rounded-md flex-1 flex-col shadow-lg p-5">
-                <h2 className="text-2xl mt-5 font-semibold">
-                    Acompanhamentos
-                </h2>
+            <PatientScheduleList>
                 {object.schedules === undefined || object.schedules.length === 0 ? <h2 className="flex justify-center items-center gap-3 text-xl mt-5 font-semibold">Sem acompanhamentos</h2> : object.schedules?.map((item, index) => (
-                    <div key={index} className="border border-royalBlue bg hover:bg-royalBlue hover:text-white rounded-md mt-2 p-2 cursor-pointer">
-                        <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                            Data: {item.dateStart}
-                        </p>
-                        <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                            Status: {item.stage}
-                        </p>
-                    </div>
-                ) )}
-                
-            </section>
-            <section className="mt-5 ml-5 max-w-[95vw] flex-1 shadow-lg p-5 border rounded-md ">
-                <h2 className="flex items-center gap-3 text-2xl mt-5 font-semibold">
-                <FolderOpen /> Documentos
-                </h2>
+                    <PatientScheduleItem key={index} schedule={item}/>
+                ) )}     
+            </PatientScheduleList>
+            <PatientDocumentList>
                 {object.documents === undefined || object.documents.length === 0 ? <h2 className="flex justify-center items-center gap-3 text-xl mt-5 font-semibold">Sem documentos</h2> : object.documents?.map((item, index) => (
-                    <a href={`http://localhost:8080/documents/download/${item.id}`} key={index} className="border block p-2 cursor-pointer hover:scale-y-105">
-                        <File />
-                        <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                E        {item.name}
-                        </p>
-                        <p className="m-1 max-w-[30ch] text-sm opacity-50">
-                            {item.type}
-                        </p>
-                    </a>
+                    <PatientDocumentItem key={index} document={item}/>
                 ) )}
-                
-            </section>
+            </PatientDocumentList>
             
         </div>
     </main>

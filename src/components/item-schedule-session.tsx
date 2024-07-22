@@ -1,12 +1,12 @@
-import Session  from "@/interface/ISchedule";
+import Schedule  from "@/interface/ISchedule";
 import { getFormatedWeekDay, changeScore, getFormatedHour } from "@/util/DateUtils";
 import stageObjectBuilder from "@/util/stageObjectBuilder";
 import Link from "next/link";
 
 interface ItemScheduleSessionProps{
-    data: Session;
+    data: Schedule;
 }
-export default function ItemScheduleSession(props: ItemScheduleSessionProps) {
+export default function ItemScheduleSchedule(props: ItemScheduleSessionProps) {
     const { ptStage } = stageObjectBuilder(props.data.stage);
     return ( 
         <Link

@@ -1,3 +1,4 @@
+import Schedule from "@/interface/ISchedule";
 import ScheduleDTO from "@/types/schedule.dto";
 
 const optionsWeekDay: Intl.DateTimeFormatOptions  = {
@@ -71,3 +72,21 @@ export function formatDate(date: string | null | undefined){
   let formatDate = reverseDate(splitted[0]);
   return formatDate.concat(" ", splitted[1]);
 }
+
+export function compareDate(a: Schedule , b: Schedule){
+  const newA = DateTimeBuilder(a?.dateEnd).getTime();
+  const newB = DateTimeBuilder(b?.dateEnd).getTime();
+
+  if(newA < newB) return 1;
+  if(newA > newB) return -1;
+  return 0;
+}
+
+function DateTimeBuilder(date: string ){
+  const dateAndTimeArr = date.split(" ");
+  const dateArr = dateAndTimeArr[0].split("-");
+  const timeArr = dateAndTimeArr[1].split(":")
+
+  return new Date(dateArr[2],dateArr[1], dateArr[0], timeArr[0], timeArr[1], timeArr[2]);
+}
+

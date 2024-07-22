@@ -7,6 +7,7 @@ import PatientScheduleList from "@/components/patient-schedule-list";
 import PatientScheduleItem from "@/components/patient-schedule-item";
 import PatientDocumentList from "@/components/patient-document-list";
 import PatientDocumentItem from "@/components/patient-document-item";
+import { compareDate } from "@/util/DateUtils";
 
 export const metadata = metadataFactory("Prontuário");
 
@@ -18,7 +19,7 @@ type PageProps = {
 
 export default async function Page({ params } : PageProps){
     const {success, object} = await getPatient(params.id) as BaseResponse<Patient>;
-    
+    object?.schedules.sort((a, b) => compareDate(a,b));
 
     
     return (

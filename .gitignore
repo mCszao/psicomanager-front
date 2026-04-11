@@ -1,40 +1,79 @@
-node_modules
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
+# ========================
+# Dependencies
+# ========================
+node_modules/
 /.pnp
 .pnp.js
 .yarn/install-state.gz
 
-node_modules
-node_modules
-
-# testing
-/coverage
-
-# next.js
+# ========================
+# Next.js
+# ========================
 /.next/
 /out/
-
-# production
 /build
-package.json
-# misc
-.DS_Store
-*.pem
 
-# debug
+# ========================
+# Environment variables
+# ========================
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+
+# ========================
+# TypeScript
+# ========================
+*.tsbuildinfo
+next-env.d.ts
+
+# ========================
+# Testing
+# ========================
+/coverage
+
+# ========================
+# Logs
+# ========================
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.log
 
-# local env files
-.env*.local
+# ========================
+# OS
+# ========================
+.DS_Store
+Thumbs.db
+desktop.ini
 
-# vercel
+# ========================
+# IDE
+# ========================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# ========================
+# Certificates & secrets
+# ========================
+*.pem
+*.key
+*.cert
+
+# ========================
+# Vercel
+# ========================
 .vercel
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# ========================
+# Claude Code
+# ========================
+.claude/worktrees/

@@ -18,6 +18,7 @@ import CreateSessionDialog from "./create-session-dialog";
 import CreatePatientDialog from "./create-patient-dialog";
 import SideButton from "./side-button";
 import SideLink from "./side-link";
+import ThemeSelector from "./theme-selector";
 import { PatientSelectedProvider } from "@/contexts/PatientSelectedContext";
 
 export default function SideLinks() {
@@ -71,6 +72,7 @@ export default function SideLinks() {
             <div className="flex flex-col pb-4 border-t border-white/10 pt-2">
                 <SideLink path="/help" icon={HelpCircle} label="Ajuda" implemented={false} />
                 <SideLink path="/settings" icon={Settings} label="Configurações" implemented={false} />
+                <ThemeSelector />
                 <div className="my-2 mx-4 border-t border-white/10" />
                 <SideButton icon={LogOut} label="Sair" onClick={handleLogout} variant="danger" />
             </div>

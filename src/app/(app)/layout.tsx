@@ -8,7 +8,9 @@ export default function AppLayout({
   return (
     <>
       <SideLinks />
-      {children}
+      <main className="pl-20 min-h-screen">
+        {children}
+      </main>
     </>
   );
 }

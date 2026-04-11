@@ -16,8 +16,9 @@ export function useAuth() {
     const signInForm = useForm<SignInDTO>({ resolver: zodResolver(signInSchema) });
     const signUpForm = useForm<SignUpDTO>({ resolver: zodResolver(signUpSchema) });
 
-    function saveSession(token: string) {
+    function saveSession(token: string, username: string) {
         document.cookie = `authToken=${token}; path=/`;
+        document.cookie = `username=${username}; path=/`;
         router.push("/");
     }
 
@@ -27,7 +28,7 @@ export function useAuth() {
             alert(typeof response.object === "string" ? response.object : "Credenciais inválidas");
             return;
         }
-        saveSession(response.object.token);
+        saveSession(response.object.token, data.username);
     }
 
     async function onSignUp(data: SignUpDTO) {
@@ -36,7 +37,7 @@ export function useAuth() {
             alert(typeof response.object === "string" ? response.object : "Erro ao criar conta");
             return;
         }
-        saveSession(response.object.token);
+        saveSession(response.object.token, data.username);
     }
 
     return { isRegistering, setIsRegistering, signInForm, signUpForm, onSignIn, onSignUp };

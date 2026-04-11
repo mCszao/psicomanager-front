@@ -26,11 +26,17 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         const html = document.documentElement;
-        if (mode === 'dark') html.classList.add('dark');
-        else html.classList.remove('dark');
-
-        document.body.style.backgroundColor = mode === 'custom' ? customColor : '';
-
+        if (mode === 'dark') {
+            html.classList.add('dark');
+            html.style.removeProperty('--color-surface');
+        } else {
+            html.classList.remove('dark');
+            if (mode === 'custom') {
+                html.style.setProperty('--color-surface', customColor);
+            } else {
+                html.style.removeProperty('--color-surface');
+            }
+        }
         localStorage.setItem('theme-mode', mode);
     }, [mode, customColor]);
 

@@ -2,36 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Light theme (default) ──────────────────────────────────────────────── */
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --color-surface:           #ffffff;
+  --color-surface-raised:    #f9fafb;   /* gray-50  */
+  --color-surface-sunken:    #f3f4f6;   /* gray-100 */
+  --color-surface-hover:     #e5e7eb;   /* gray-200 */
+
+  --color-content-primary:   #111827;   /* gray-900 */
+  --color-content-secondary: #6b7280;   /* gray-500 */
+  --color-content-disabled:  #9ca3af;   /* gray-400 */
+
+  --color-border-default:    #e5e7eb;   /* gray-200 */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
+/* ── Dark theme ─────────────────────────────────────────────────────────── */
+.dark {
+  --color-surface:           #111827;   /* gray-900 */
+  --color-surface-raised:    #1f2937;   /* gray-800 */
+  --color-surface-sunken:    #374151;   /* gray-700 */
+  --color-surface-hover:     #4b5563;   /* gray-600 */
 
-body {
-  /* color: #fff; */
-  /* background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb)); */
-}
+  --color-content-primary:   #f9fafb;   /* gray-50  */
+  --color-content-secondary: #9ca3af;   /* gray-400 */
+  --color-content-disabled:  #6b7280;   /* gray-500 */
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+  --color-border-default:    #374151;   /* gray-700 */
 }
 
 abbr[title] {
   text-decoration: none !important;
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
 }

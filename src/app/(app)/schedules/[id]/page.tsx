@@ -45,9 +45,9 @@ export default async function Page({ params } : PageProps){
                 <h2 className="text-2xl mt-5 font-semibold">
                     Anotações
                 </h2>
-                <textarea name="annotations" className="w-full p-10 text-2xl"/>
+                <textarea name="annotations" className="w-full p-10 text-2xl bg-surface-sunken text-content-primary border border-border-default rounded-lg focus:ring-royalBlue focus:border-royalBlue"/>
                 <div className="w-full table-auto text-xl text-left mt-5">
-                    <a href="#" className=" text-[#fff] bg-royalBlue py-1.5 px-3 hover:text-gray-500 duration-150 hover:bg-gray-50 border rounded-lg">
+                    <a href="#" className="text-white bg-royalBlue py-1.5 px-3 hover:opacity-90 duration-150 border border-royalBlue rounded-lg">
                         Salvar Anotação
                     </a>
                 </div>

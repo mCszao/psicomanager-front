@@ -18,19 +18,19 @@ export default function WeekView({ sessions, weekStart, today }: WeekViewProps) 
     );
 
     return (
-        <div className="flex flex-col h-full overflow-hidden border border-gray-100 dark:border-gray-800 rounded-xl">
+        <div className="flex flex-col h-full overflow-hidden border border-border-default rounded-xl">
             <div
-                className="grid shrink-0 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900"
+                className="grid shrink-0 border-b border-border-default bg-surface-raised"
                 style={{ gridTemplateColumns: '3.5rem repeat(7, 1fr)' }}
             >
                 <div />
                 {weekDays.map((day, i) => {
                     const isToday = isSameDay(day, today);
                     return (
-                        <div key={i} className="py-2 text-center border-l border-gray-100 dark:border-gray-800">
-                            <p className="text-xs font-semibold text-gray-400 uppercase">{WEEKDAYS[day.getDay()]}</p>
+                        <div key={i} className="py-2 text-center border-l border-border-default">
+                            <p className="text-xs font-semibold text-content-secondary uppercase">{WEEKDAYS[day.getDay()]}</p>
                             <p className={`text-lg font-bold mt-0.5 mx-auto w-9 h-9 flex items-center justify-center rounded-full
-                                ${isToday ? 'bg-royalBlue text-white' : 'text-gray-700 dark:text-gray-200'}`}>
+                                ${isToday ? 'bg-royalBlue text-white' : 'text-content-primary'}`}>
                                 {day.getDate()}
                             </p>
                         </div>
@@ -52,12 +52,12 @@ export default function WeekView({ sessions, weekStart, today }: WeekViewProps) 
                     {weekDays.map((day, di) => (
                         <div
                             key={di}
-                            className={`relative border-l border-gray-100 dark:border-gray-800
-                                ${isSameDay(day, today) ? 'bg-blue-50/50 dark:bg-blue-950/10' : ''}`}
+                            className={`relative border-l border-border-default
+                                ${isSameDay(day, today) ? 'bg-royalBlue/5' : ''}`}
                             style={{ height: HOURS.length * HOUR_HEIGHT }}
                         >
                             {HOURS.map(h => (
-                                <div key={h} className="absolute w-full border-t border-gray-100 dark:border-gray-800"
+                                <div key={h} className="absolute w-full border-t border-border-default"
                                     style={{ top: (h - FIRST_HOUR) * HOUR_HEIGHT }} />
                             ))}
                             {sessionsByDay[di].map(s => {

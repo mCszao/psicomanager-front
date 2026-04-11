@@ -52,7 +52,7 @@ export default function MonthView({ sessions, viewMonth, viewYear, today, select
                                 className={`relative flex flex-col items-center justify-start pt-2 rounded-xl text-sm font-medium transition-colors border
                                     ${isSelected ? 'bg-royalBlue text-white border-royalBlue'
                                     : isToday    ? 'border-royalBlue text-royalBlue bg-blue-50 dark:bg-blue-950/20'
-                                    : 'border-transparent hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'}`}
+                                    : 'border-transparent hover:bg-surface-raised text-content-primary'}`}
                             >
                                 <span>{day}</span>
                                 {hasSessions && (

@@ -13,43 +13,43 @@ type Props = {
     externalFunc: () => void;
 }
 
+const patientItemClass = "p-4 block leading-tight transition-all outline-none text-xl text-start rounded-xl cursor-pointer text-content-primary bg-surface-raised border border-border-default hover:bg-royalBlue hover:text-white hover:border-royalBlue shadow-sm";
+
 export default function DialogPatientList({ externalFunc }: Props) {
-    const [patients, setPatients]= useState<PatientResume[] | null>(null);
-    const [search, setSearch] = useState<string>('');
+    const [patients, setPatients] = useState<PatientResume[] | null>(null);
+    const [search, setSearch]     = useState<string>('');
 
     useEffect(() => {
         async function fetchData() {
-            const { success, object } = await getPatients() as BaseResponse<PatientResume[]>;
+            const { object } = await getPatients() as BaseResponse<PatientResume[]>;
             setPatients(object);
         }
         fetchData();
-      }, [])
-      const patientSelectedContext = useContext(PatientSelectedContext);
-      const filteredPatients = useFilter(search, patients, 'name');
-      function selectPatient(patient: PatientResume) {
+    }, []);
+
+    const patientSelectedContext = useContext(PatientSelectedContext);
+    const filteredPatients       = useFilter(search, patients, 'name');
+    const list                   = search.length === 0 ? patients : filteredPatients;
+
+    function selectPatient(patient: PatientResume) {
         patientSelectedContext?.setPatient(patient);
-      }
+    }
 
     return (
         <Dialog>
-            <DialogHeader title="Pesquisar paciente" textButton={<X/>} functionButton={externalFunc}/>
-            <Input placeholder="Digite o nome do paciente" onChange={(e) => setSearch(e.target.value) }/>
-            <nav className="p-4">
-                {search.length === 0 ? 
-                    patients?.map((patient) : any => (
-                    <abbr onClick={() => selectPatient(patient)} key={patient.id} title={patient.email} className="p-5 block leading-tight transition-all outline-none  text-xl text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-900 focus:bg-blue-gray-500 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900 group bg-white hover:bg-royalBlue shadow-md  rounded-xl bg-clip-border cursor-pointer">
-                    {patient.name}
-                    </abbr>
-                ))
-                :
-                    filteredPatients?.map((patient) : any => (
-                    <abbr onClick={() => selectPatient(patient)} key={patient.id} title={patient.email} className="p-5 block leading-tight transition-all outline-none  text-xl text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-900 focus:bg-blue-gray-500 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900 group bg-white hover:bg-royalBlue shadow-md  rounded-xl bg-clip-border cursor-pointer">
-                    {patient.name}
-                    </abbr>
-                ))
-            }
-                
-            </nav>
+            <DialogHeader title="Pesquisar paciente" textButton={<X />} functionButton={externalFunc} />
+            <div className="p-4">
+                <Input placeholder="Digite o nome do paciente" onChange={(e) => setSearch(e.target.value)} />
+                <nav className="mt-3 flex flex-col gap-2">
+                    {list?.map((patient) => (
+                        <abbr key={patient.id} title={patient.email}>
+                            <div onClick={() => selectPatient(patient)} className={patientItemClass}>
+                                {patient.name}
+                            </div>
+                        </abbr>
+                    ))}
+                </nav>
+            </div>
         </Dialog>
     )
 }

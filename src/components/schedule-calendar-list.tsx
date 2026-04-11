@@ -31,7 +31,7 @@ export default function ListView({ sessions }: ListViewProps) {
                     <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 capitalize">
                         {date.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
                     </p>
-                    <ul className="flex flex-col rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden divide-y divide-gray-100 dark:divide-gray-800">
+                    <ul className="flex flex-col rounded-xl border border-border-default overflow-hidden divide-y divide-border-default">
                         {items.map(s => {
                             const { ptStage, color } = stageObjectBuilder(s.stage);
                             const start = parseDate(s.dateStart);
@@ -39,12 +39,12 @@ export default function ListView({ sessions }: ListViewProps) {
                             return (
                                 <li key={s.id}>
                                     <Link href={`/schedules/${s.id}`}
-                                        className="flex items-center gap-4 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                        className="flex items-center gap-4 px-4 py-3 hover:bg-surface-raised transition-colors">
                                         <div className="w-1 self-stretch rounded-full bg-royalBlue shrink-0" />
-                                        <p className="flex-1 font-semibold text-sm text-gray-800 dark:text-gray-100 truncate min-w-0">
+                                        <p className="flex-1 font-semibold text-sm text-content-primary truncate min-w-0">
                                             {s.patient?.name}
                                         </p>
-                                        <span className="text-sm text-gray-500 dark:text-gray-400 shrink-0">
+                                        <span className="text-sm text-content-secondary shrink-0">
                                             {end ? `${formatTime(start)} - ${formatTime(end)}` : formatTime(start)}
                                         </span>
                                         <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium shrink-0 ${STAGE_STYLES[color ?? 'yellow']}`}>

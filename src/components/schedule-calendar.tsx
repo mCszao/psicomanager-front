@@ -61,33 +61,33 @@ export default function ScheduleCalendar({ sessions, views = ['month', 'week', '
             <div className="flex items-center gap-3 mb-5 shrink-0 flex-wrap">
                 <div className="flex items-center gap-1">
                     {view !== 'list' && (
-                        <button onClick={prevPeriod} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-600">
+                        <button onClick={prevPeriod} className="p-1.5 rounded-lg hover:bg-surface-hover transition-colors text-content-secondary">
                             <ChevronLeft size={18} />
                         </button>
                     )}
-                    <button onClick={goToToday} className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-medium text-gray-700 dark:text-gray-200">
+                    <button onClick={goToToday} className="text-sm px-3 py-1.5 rounded-lg border border-border-default hover:bg-surface-raised transition-colors font-medium text-content-primary">
                         Hoje
                     </button>
                     {view !== 'list' && (
-                        <button onClick={nextPeriod} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-600">
+                        <button onClick={nextPeriod} className="p-1.5 rounded-lg hover:bg-surface-hover transition-colors text-content-secondary">
                             <ChevronRight size={18} />
                         </button>
                     )}
-                    <span className="font-semibold text-base text-gray-700 dark:text-gray-200 capitalize ml-2">
+                    <span className="font-semibold text-base text-content-primary capitalize ml-2">
                         {periodLabel}
                     </span>
                 </div>
 
                 {views.length > 1 && (
-                    <div className="ml-auto flex rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden text-sm">
+                    <div className="ml-auto flex rounded-lg border border-border-default overflow-hidden text-sm">
                         {views.map(v => (
                             <button
                                 key={v}
                                 onClick={() => setView(v)}
-                                className={`px-4 py-1.5 font-medium transition-colors border-r last:border-r-0 border-gray-200 dark:border-gray-700
+                                className={`px-4 py-1.5 font-medium transition-colors border-r last:border-r-0 border-border-default
                                     ${view === v
                                         ? 'bg-royalBlue text-white'
-                                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
+                                        : 'text-content-secondary hover:bg-surface-raised'}`}
                             >
                                 {VIEW_LABELS[v]}
                             </button>

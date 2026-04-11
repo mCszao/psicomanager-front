@@ -10,10 +10,15 @@ function getUsername(): string {
 export default function Greeting() {
     const hour = new Date().getHours();
     const username = getUsername();
+    const segments = buildGreeting(hour, username);
 
     return (
-        <p className="text-lg text-gray-500 dark:text-gray-400">
-            {buildGreeting(hour, username)}
+        <p className="text-3xl font-light text-gray-600 dark:text-gray-300">
+            {segments.map((segment, i) =>
+                segment.highlight
+                    ? <span key={i} className="font-semibold text-royalBlue">{segment.text}</span>
+                    : <span key={i}>{segment.text}</span>
+            )}
         </p>
     );
 }

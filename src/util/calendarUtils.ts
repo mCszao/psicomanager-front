@@ -1,0 +1,40 @@
+export const WEEKDAYS     = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+export const MONTHS       = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+export const MONTHS_SHORT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+export const FIRST_HOUR  = 7;
+export const LAST_HOUR   = 21;
+export const HOUR_HEIGHT = 64;
+export const HOURS       = Array.from({ length: LAST_HOUR - FIRST_HOUR + 1 }, (_, i) => i + FIRST_HOUR);
+
+export const STAGE_STYLES: Record<string, string> = {
+    blue:   'bg-blue-100 text-blue-700 border-blue-200',
+    green:  'bg-green-100 text-green-700 border-green-200',
+    red:    'bg-red-100 text-red-700 border-red-200',
+    dark:   'bg-gray-100 text-gray-700 border-gray-200',
+    yellow: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+};
+
+export function parseDate(dateStr: string): Date {
+    const [datePart, timePart = '00:00:00'] = dateStr.split(' ');
+    const [day, month, year] = datePart.split('-').map(Number);
+    const [h, m, s = 0] = timePart.split(':').map(Number);
+    return new Date(year, month - 1, day, h, m, s);
+}
+
+export function isSameDay(a: Date, b: Date): boolean {
+    return a.getDate() === b.getDate()
+        && a.getMonth() === b.getMonth()
+        && a.getFullYear() === b.getFullYear();
+}
+
+export function getWeekStart(date: Date): Date {
+    const d = new Date(date);
+    d.setDate(d.getDate() - d.getDay());
+    d.setHours(0, 0, 0, 0);
+    return d;
+}
+
+export function formatTime(d: Date): string {
+    return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+}

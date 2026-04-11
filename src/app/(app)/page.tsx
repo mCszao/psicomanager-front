@@ -5,10 +5,14 @@ export const metadata = metadataFactory("Página Inicial");
 
 export default function Home() {
   return (
-    <main className="w-full pt-10 pl-24">
-      <Greeting />
-      <h2 className="text-3xl font-semibold text-royalBlue mt-1">Próximas Consultas</h2>
-      <NextSessions/>
-    </main>
+    <div className="flex flex-col h-screen px-8 pt-8 pb-6 overflow-hidden">
+      <div className="shrink-0 mb-5">
+        <Greeting />
+        <h2 className="text-3xl font-semibold text-royalBlue mt-2">Próximas Consultas</h2>
+      </div>
+      <div className="flex-1 min-h-0">
+        <NextSessions views={['month', 'week']} />
+      </div>
+    </div>
   );
 }

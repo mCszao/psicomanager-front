@@ -1,11 +1,33 @@
-const greetings = [
-    { from: 5,  to: 12, message: (name: string) => `Tenha uma manhã produtiva, ${name}!` },
-    { from: 12, to: 18, message: (name: string) => `Espero que sua tarde esteja sendo incrível, ${name}!` },
-    { from: 18, to: 24, message: (name: string) => `Boa noite, ${name}! Espero que seu dia tenha sido ótimo.` },
-    { from: 0,  to: 5,  message: (name: string) => `Ainda acordado, ${name}? Cuide-se!` },
-];
+export interface GreetingSegment {
+    text: string;
+    highlight: boolean;
+}
 
-export function buildGreeting(hour: number, username: string): string {
-    const period = greetings.find(({ from, to }) => hour >= from && hour < to);
-    return period ? period.message(username) : `Olá, ${username}!`;
+export function buildGreeting(hour: number, username: string): GreetingSegment[] {
+    if (hour >= 5 && hour < 12) return [
+        { text: 'Tenha uma ', highlight: false },
+        { text: 'manhã', highlight: true },
+        { text: ' produtiva, ', highlight: false },
+        { text: username, highlight: true },
+        { text: '!', highlight: false },
+    ];
+    if (hour >= 12 && hour < 18) return [
+        { text: 'Espero que sua ', highlight: false },
+        { text: 'tarde', highlight: true },
+        { text: ' esteja sendo incrível, ', highlight: false },
+        { text: username, highlight: true },
+        { text: '!', highlight: false },
+    ];
+    if (hour >= 18 && hour < 24) return [
+        { text: 'Boa ', highlight: false },
+        { text: 'noite', highlight: true },
+        { text: ', ', highlight: false },
+        { text: username, highlight: true },
+        { text: '! Espero que seu dia tenha sido ótimo.', highlight: false },
+    ];
+    return [
+        { text: 'Ainda acordado, ', highlight: false },
+        { text: username, highlight: true },
+        { text: '? Cuide-se!', highlight: false },
+    ];
 }

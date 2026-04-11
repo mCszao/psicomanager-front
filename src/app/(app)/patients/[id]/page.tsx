@@ -1,4 +1,4 @@
-import { getPatient } from "@/services/api"; 
+import { getPatient } from "@/services/api";
 import BaseResponse from "@/interface/IBaseResponse";
 import Patient from "@/interface/IPatient";
 import metadataFactory from "@/util/metadataFactory";
@@ -21,7 +21,6 @@ export default async function Page({ params } : PageProps){
     const {success, object} = await getPatient(params.id) as BaseResponse<Patient>;
     object?.schedules.sort((a, b) => compareDate(a,b));
 
-    
     return (
     <main className="p-14">
         <section className="p-7 ml-32 flex flex-wrap border items-center justify-around border-l-8 border-l-royalBlue border-b-0 border-t-0 border-r-0">
@@ -58,27 +57,25 @@ export default async function Page({ params } : PageProps){
                     <p className="m-1 max-w-[30ch] text-sm opacity-50">
                     {object.address[0]?.city} - {object.address[0]?.abbreviation}
                     </p>
-                </div>  
+                </div>
                 <div className="w-full table-auto text-2xl text-left mt-5">
-                <a href={`http://localhost:8080/documents/generate-contract?patientId=${object.id}`} className=" flex items-center gap-3 text-[#fff] bg-royalBlue py-1.5 px-3 hover:text-gray-500 duration-150 hover:bg-gray-50 border rounded-lg">
-                    <Download /> Gerar contrato
-                </a>
-        </div>    
+                    <a href={`http://localhost:8080/documents/generate-contract?patientId=${object.id}`} className=" flex items-center gap-3 text-[#fff] bg-royalBlue py-1.5 px-3 hover:text-gray-500 duration-150 hover:bg-gray-50 border rounded-lg">
+                        <Download /> Gerar contrato
+                    </a>
+                </div>
             </div>
-
         </section>
         <div className="flex m-10 ">
             <PatientScheduleList>
                 {object.schedules === undefined || object.schedules.length === 0 ? <h2 className="flex justify-center items-center gap-3 text-xl mt-5 font-semibold">Sem acompanhamentos</h2> : object.schedules?.map((item, index) => (
                     <PatientScheduleItem key={index} schedule={item}/>
-                ) )}     
+                ) )}
             </PatientScheduleList>
             <PatientDocumentList>
                 {object.documents === undefined || object.documents.length === 0 ? <h2 className="flex justify-center items-center gap-3 text-xl mt-5 font-semibold">Sem documentos</h2> : object.documents?.map((item, index) => (
                     <PatientDocumentItem key={index} document={item}/>
                 ) )}
             </PatientDocumentList>
-            
         </div>
     </main>
     )

@@ -1,4 +1,4 @@
-import { getSchedule } from "@/services/api" 
+import { getSchedule } from "@/services/api"
 import BaseResponse from "@/interface/IBaseResponse"
 import Session  from "@/interface/ISchedule"
 import { getFormatedDateToSchedule } from "@/util/DateUtils"
@@ -39,7 +39,6 @@ export default async function Page({ params } : PageProps){
                     {getFormatedDateToSchedule(object.dateEnd)}
                 </span>
             </div>
-
         </section>
         <div className="flex m-10 w-full">
             <section className="mt-5 max-w-full border rounded-md flex-1 flex-col shadow-lg p-5">

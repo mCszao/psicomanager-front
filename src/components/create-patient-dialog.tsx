@@ -28,12 +28,15 @@ export default function CreatePatientDialog( { externalFunc } : Props) {
         data.birthdayDate = reverseDate(data.birthdayDate);
         data.address = { zipcode : data.zipcode };
         console.log(data);
-        const { object } = await registerPatient(data) as any;
-        if(typeof object == 'string') {
-            alert(object);
+        const response = await registerPatient(data) as any;
+        if (!response.success) {
+            const message = typeof response.object === 'string'
+                ? response.object
+                : Object.values(response.object).map(String).join('\n');
+            alert(message);
             return;
         }
-        Object.values(object).forEach((value): any => alert(value))
+        externalFunc();
     }
 
     return (

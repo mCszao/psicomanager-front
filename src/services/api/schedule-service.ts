@@ -18,3 +18,7 @@ export function registerSchedule(schedule: ScheduleDTO) {
 export function concludeSession(scheduleId: string): Promise<BaseResponse<string>> {
     return patch(`/schedules/${scheduleId}/conclude`);
 }
+
+export function cancelSession(scheduleId: string): Promise<BaseResponse<string>> {
+    return patch(`/schedules/${scheduleId}/cancel`);
+}

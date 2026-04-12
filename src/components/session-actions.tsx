@@ -55,12 +55,12 @@ export default function SessionActions({ scheduleId, stage }: SessionActionsProp
                                 Marcar falta
                             </button>
                             <button
-                                disabled
-                                title="Em breve"
+                                onClick={() => setPendingAction('cancel')}
+                                disabled={loading}
                                 className="flex items-center gap-2 w-full px-4 py-2.5 rounded-lg text-red-600 border border-red-200 text-sm font-medium hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <XCircle size={16} />
-                                Cancelar sessão
+                                {loading ? "Processando..." : "Cancelar sessão"}
                             </button>
                             <p className="text-xs text-content-disabled text-center mt-1">
                                 Funcionalidades em desenvolvimento

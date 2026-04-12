@@ -16,6 +16,15 @@ export const STAGE_STYLES: Record<string, string> = {
     orange: 'bg-orange-100 text-orange-700 border-orange-200',
 };
 
+export const STAGE_CARD_STYLES: Record<string, string> = {
+    blue:   'bg-blue-500 hover:bg-blue-600 text-white',
+    green:  'bg-green-500 hover:bg-green-600 text-white',
+    red:    'bg-red-500 hover:bg-red-600 text-white',
+    dark:   'bg-gray-500 hover:bg-gray-600 text-white',
+    yellow: 'bg-yellow-400 hover:bg-yellow-500 text-yellow-900',
+    orange: 'bg-orange-500 hover:bg-orange-600 text-white',
+};
+
 export const TYPE_STYLES: Record<string, string> = {
     indigo: 'bg-indigo-100 text-indigo-700 border-indigo-200',
     teal:   'bg-teal-100 text-teal-700 border-teal-200',

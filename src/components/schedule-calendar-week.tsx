@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { WeekViewProps } from "@/interface/ICalendar";
-import { FIRST_HOUR, HOUR_HEIGHT, HOURS, WEEKDAYS, formatTime, isSameDay, parseDate } from "@/util/calendarUtils";
+import { FIRST_HOUR, HOUR_HEIGHT, HOURS, STAGE_CARD_STYLES, WEEKDAYS, formatTime, isSameDay, parseDate } from "@/util/calendarUtils";
 import { useWeekView } from "@/hooks/useWeekView";
+import stageObjectBuilder from "@/util/stageObjectBuilder";
 import attendanceTypeObjectBuilder from "@/util/attendanceTypeObjectBuilder";
 
 const TYPE_DOT: Record<string, string> = {
@@ -63,12 +64,14 @@ export default function WeekView({ sessions, weekStart, today }: WeekViewProps) 
                                 const duration = end ? (end.getTime() - start.getTime()) / 3_600_000 : 1;
                                 const height   = Math.max(duration * HOUR_HEIGHT, 28);
                                 const { color: typeColor, ptType } = attendanceTypeObjectBuilder(s.type);
+                                const { color } = stageObjectBuilder(s.stage);
+                                const cardStyle = STAGE_CARD_STYLES[color ?? 'yellow'];
                                 return (
                                     <Link
                                         key={s.id}
                                         href={`/schedules/${s.id}`}
                                         title={`${s.patient?.name} — ${ptType}`}
-                                        className="absolute left-0.5 right-0.5 bg-royalBlue text-white rounded-lg px-2 py-1 overflow-hidden hover:opacity-90 transition-opacity z-10"
+                                        className={`absolute left-0.5 right-0.5 rounded-lg px-2 py-1 overflow-hidden transition-colors z-10 ${cardStyle}`}
                                         style={{ top: topPx, height }}
                                     >
                                         <div className="flex items-center gap-1 leading-tight">

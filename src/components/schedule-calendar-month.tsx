@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { MonthViewProps } from "@/interface/ICalendar";
-import { MONTHS, STAGE_STYLES, TYPE_STYLES, WEEKDAYS, formatTime, parseDate } from "@/util/calendarUtils";
+import { MONTHS, STAGE_CARD_STYLES, STAGE_STYLES, TYPE_STYLES, WEEKDAYS, formatTime, parseDate } from "@/util/calendarUtils";
 import { useMonthView } from "@/hooks/useMonthView";
 import stageObjectBuilder from "@/util/stageObjectBuilder";
 import attendanceTypeObjectBuilder from "@/util/attendanceTypeObjectBuilder";
@@ -54,16 +54,20 @@ export default function MonthView({ sessions, viewMonth, viewYear, today, select
                     : (
                         <ul className="flex flex-col gap-2">
                             {selectedSessions.map(s => {
-                                const { ptStage, color }          = stageObjectBuilder(s.stage);
+                                const { ptStage, color }           = stageObjectBuilder(s.stage);
                                 const { ptType, color: typeColor } = attendanceTypeObjectBuilder(s.type);
-                                const start    = parseDate(s.dateStart);
-                                const end      = s.dateEnd ? parseDate(s.dateEnd) : null;
+                                const start     = parseDate(s.dateStart);
+                                const end       = s.dateEnd ? parseDate(s.dateEnd) : null;
                                 const timeRange = end
                                     ? `${formatTime(start)} – ${formatTime(end)}`
                                     : formatTime(start);
+                                const cardStyle = STAGE_CARD_STYLES[color ?? 'yellow'];
                                 return (
                                     <li key={s.id}>
-                                        <Link href={`/schedules/${s.id}`} className="flex flex-col bg-royalBlue text-white rounded-xl px-4 py-3 hover:opacity-90 transition-opacity">
+                                        <Link
+                                            href={`/schedules/${s.id}`}
+                                            className={`flex flex-col rounded-xl px-4 py-3 transition-opacity ${cardStyle}`}
+                                        >
                                             <span className="font-semibold text-sm truncate">{s.patient?.name}</span>
                                             <span className="text-xs opacity-75 mt-0.5">{timeRange}</span>
                                             <div className="flex items-center gap-1.5 mt-2 flex-wrap">

@@ -2,8 +2,8 @@ export const WEEKDAYS     = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 export const MONTHS       = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 export const MONTHS_SHORT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
-export const FIRST_HOUR  = 7;
-export const LAST_HOUR   = 21;
+export const FIRST_HOUR  = 0;
+export const LAST_HOUR   = 23;
 export const HOUR_HEIGHT = 64;
 export const HOURS       = Array.from({ length: LAST_HOUR - FIRST_HOUR + 1 }, (_, i) => i + FIRST_HOUR);
 

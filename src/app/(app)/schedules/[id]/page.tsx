@@ -28,10 +28,10 @@ export default async function Page({ params }: PageProps) {
         : formatTime(start);
 
     return (
-        <div className="flex flex-col h-screen px-8 pt-8 pb-6 overflow-hidden">
+        <div className="flex flex-col h-screen px-8 pt-8 pb-6 overflow-hidden gap-5">
 
             {/* Header */}
-            <div className="shrink-0 mb-6 flex items-start justify-between gap-6 pb-6 border-b border-border-default">
+            <div className="shrink-0 rounded-2xl border border-border-default shadow-lg bg-surface-default px-5 py-4 flex items-start justify-between gap-6">
                 <div className="border-l-4 border-royalBlue pl-4">
                     <div className="flex items-center gap-3 flex-wrap">
                         <Link
@@ -60,10 +60,10 @@ export default async function Page({ params }: PageProps) {
             </div>
 
             {/* Body */}
-            <div className="flex-1 min-h-0 flex gap-6">
+            <div className="flex-1 min-h-0 flex gap-5">
 
                 {/* Left — Annotations */}
-                <div className="flex-1 flex flex-col border border-border-default rounded-xl shadow-sm overflow-hidden">
+                <div className="flex-1 flex flex-col rounded-2xl border border-border-default shadow-lg bg-surface-default overflow-hidden">
                     <div className="flex items-center px-5 py-4 border-b border-border-default bg-surface-raised shrink-0">
                         <h2 className="flex items-center gap-2 text-base font-semibold text-content-primary">
                             <FileText size={18} /> Anotações
@@ -82,10 +82,10 @@ export default async function Page({ params }: PageProps) {
                 </div>
 
                 {/* Right — Details + Actions */}
-                <div className="w-72 shrink-0 flex flex-col gap-4 overflow-y-auto">
+                <div className="w-72 shrink-0 flex flex-col gap-5 overflow-y-auto">
 
                     {/* Details card */}
-                    <div className="border border-border-default rounded-xl shadow-sm overflow-hidden">
+                    <div className="rounded-2xl border border-border-default shadow-lg bg-surface-default overflow-hidden">
                         <div className="px-5 py-4 border-b border-border-default bg-surface-raised shrink-0">
                             <h2 className="text-base font-semibold text-content-primary">Detalhes</h2>
                         </div>

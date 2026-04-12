@@ -22,10 +22,10 @@ export default async function Page({ params }: PageProps) {
     const addr = object.address?.[0];
 
     return (
-        <div className="flex flex-col h-screen px-8 pt-8 pb-6 overflow-hidden">
+        <div className="flex flex-col h-screen px-8 pt-8 pb-6 overflow-hidden gap-5">
 
             {/* Header */}
-            <div className="shrink-0 mb-6 flex items-start justify-between gap-6 pb-6 border-b border-border-default">
+            <div className="shrink-0 rounded-2xl border border-border-default shadow-lg bg-surface-default px-5 py-4 flex items-start justify-between gap-6">
                 <div className="flex items-start gap-4 border-l-4 border-royalBlue pl-4">
                     <div>
                         <h1 className="text-3xl font-bold text-royalBlue leading-tight">{object.name}</h1>
@@ -66,7 +66,7 @@ export default async function Page({ params }: PageProps) {
             </div>
 
             {/* Body */}
-            <div className="flex-1 min-h-0 grid grid-cols-2 gap-6">
+            <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
                 <PatientScheduleList>
                     {!object.schedules?.length ? (
                         <div className="flex flex-col items-center justify-center gap-2 py-12 text-content-secondary">

@@ -1,36 +1,16 @@
 "use client";
 
-import { useMemo } from "react";
 import Link from "next/link";
 import { MonthViewProps } from "@/interface/ICalendar";
-import { MONTHS, STAGE_STYLES, TYPE_STYLES, WEEKDAYS, isSameDay, parseDate, formatTime } from "@/util/calendarUtils";
+import { MONTHS, STAGE_STYLES, TYPE_STYLES, WEEKDAYS, formatTime, parseDate } from "@/util/calendarUtils";
+import { useMonthView } from "@/hooks/useMonthView";
 import stageObjectBuilder from "@/util/stageObjectBuilder";
 import attendanceTypeObjectBuilder from "@/util/attendanceTypeObjectBuilder";
 
 export default function MonthView({ sessions, viewMonth, viewYear, today, selectedDay, onSelectDay }: MonthViewProps) {
-    const sessionsByDay = useMemo(() => {
-        const map: Record<number, typeof sessions> = {};
-        sessions.forEach(s => {
-            const d = parseDate(s.dateStart);
-            if (d.getMonth() === viewMonth && d.getFullYear() === viewYear) {
-                map[d.getDate()] = [...(map[d.getDate()] ?? []), s];
-            }
-        });
-        return map;
-    }, [sessions, viewMonth, viewYear]);
-
-    const firstWeekday = new Date(viewYear, viewMonth, 1).getDay();
-    const daysInMonth  = new Date(viewYear, viewMonth + 1, 0).getDate();
-    const cells: (number | null)[] = [
-        ...Array(firstWeekday).fill(null),
-        ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
-    ];
-    while (cells.length % 7 !== 0) cells.push(null);
-
-    const todayInView    = today.getMonth() === viewMonth && today.getFullYear() === viewYear;
-    const selectedDayNum = selectedDay && isSameDay(selectedDay, new Date(viewYear, viewMonth, selectedDay.getDate()))
-        ? selectedDay.getDate() : null;
-    const selectedSessions = selectedDayNum ? (sessionsByDay[selectedDayNum] ?? []) : [];
+    const { sessionsByDay, cells, todayInView, selectedDayNum, selectedSessions } = useMonthView({
+        sessions, viewMonth, viewYear, today, selectedDay,
+    });
 
     return (
         <div className="flex gap-6 h-full">
@@ -74,10 +54,10 @@ export default function MonthView({ sessions, viewMonth, viewYear, today, select
                     : (
                         <ul className="flex flex-col gap-2">
                             {selectedSessions.map(s => {
-                                const { ptStage, color } = stageObjectBuilder(s.stage);
+                                const { ptStage, color }          = stageObjectBuilder(s.stage);
                                 const { ptType, color: typeColor } = attendanceTypeObjectBuilder(s.type);
-                                const start = parseDate(s.dateStart);
-                                const end   = s.dateEnd ? parseDate(s.dateEnd) : null;
+                                const start    = parseDate(s.dateStart);
+                                const end      = s.dateEnd ? parseDate(s.dateEnd) : null;
                                 const timeRange = end
                                     ? `${formatTime(start)} – ${formatTime(end)}`
                                     : formatTime(start);

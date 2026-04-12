@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ScheduleCalendarProps, ViewMode } from "@/interface/ICalendar";
-import { MONTHS, MONTHS_SHORT, getWeekStart } from "@/util/calendarUtils";
+import { useScheduleCalendar } from "@/hooks/useScheduleCalendar";
 import MonthView from "./schedule-calendar-month";
 import WeekView from "./schedule-calendar-week";
 import ListView from "./schedule-calendar-list";
@@ -15,46 +14,15 @@ const VIEW_LABELS: Record<ViewMode, string> = {
 };
 
 export default function ScheduleCalendar({ sessions, views = ['month', 'week', 'list'] }: ScheduleCalendarProps) {
-    const today = new Date();
-    const [view, setView]               = useState<ViewMode>(views[0]);
-    const [viewMonth, setViewMonth]     = useState(today.getMonth());
-    const [viewYear, setViewYear]       = useState(today.getFullYear());
-    const [weekStart, setWeekStart]     = useState(getWeekStart(today));
-    const [selectedDay, setSelectedDay] = useState<Date | null>(today);
-
-    function prevPeriod() {
-        if (view !== 'week') {
-            if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1); }
-            else setViewMonth(m => m - 1);
-        } else {
-            setWeekStart(d => { const n = new Date(d); n.setDate(n.getDate() - 7); return n; });
-        }
-    }
-
-    function nextPeriod() {
-        if (view !== 'week') {
-            if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1); }
-            else setViewMonth(m => m + 1);
-        } else {
-            setWeekStart(d => { const n = new Date(d); n.setDate(n.getDate() + 7); return n; });
-        }
-    }
-
-    function goToToday() {
-        setViewMonth(today.getMonth());
-        setViewYear(today.getFullYear());
-        setWeekStart(getWeekStart(today));
-        setSelectedDay(today);
-    }
-
-    const periodLabel = useMemo(() => {
-        if (view !== 'week') return `${MONTHS[viewMonth]} ${viewYear}`;
-        const end = new Date(weekStart);
-        end.setDate(end.getDate() + 6);
-        if (weekStart.getMonth() === end.getMonth())
-            return `${weekStart.getDate()}–${end.getDate()} de ${MONTHS[weekStart.getMonth()]} ${weekStart.getFullYear()}`;
-        return `${weekStart.getDate()} ${MONTHS_SHORT[weekStart.getMonth()]} – ${end.getDate()} ${MONTHS_SHORT[end.getMonth()]} ${end.getFullYear()}`;
-    }, [view, viewMonth, viewYear, weekStart]);
+    const {
+        today,
+        view, setView,
+        viewMonth, viewYear,
+        weekStart,
+        selectedDay, setSelectedDay,
+        prevPeriod, nextPeriod, goToToday,
+        periodLabel,
+    } = useScheduleCalendar(views);
 
     return (
         <div className="flex flex-col h-full">

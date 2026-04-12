@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
 import Link from "next/link";
 import { WeekViewProps } from "@/interface/ICalendar";
 import { FIRST_HOUR, HOUR_HEIGHT, HOURS, WEEKDAYS, formatTime, isSameDay, parseDate } from "@/util/calendarUtils";
+import { useWeekView } from "@/hooks/useWeekView";
 import attendanceTypeObjectBuilder from "@/util/attendanceTypeObjectBuilder";
 
 const TYPE_DOT: Record<string, string> = {
@@ -12,16 +12,7 @@ const TYPE_DOT: Record<string, string> = {
 };
 
 export default function WeekView({ sessions, weekStart, today }: WeekViewProps) {
-    const weekDays = Array.from({ length: 7 }, (_, i) => {
-        const d = new Date(weekStart);
-        d.setDate(d.getDate() + i);
-        return d;
-    });
-
-    const sessionsByDay = useMemo(() =>
-        weekDays.map(day => sessions.filter(s => isSameDay(parseDate(s.dateStart), day))),
-        [sessions, weekStart]
-    );
+    const { weekDays, sessionsByDay } = useWeekView({ sessions, weekStart });
 
     return (
         <div className="flex flex-col h-full overflow-hidden border border-border-default rounded-xl">
@@ -58,8 +49,7 @@ export default function WeekView({ sessions, weekStart, today }: WeekViewProps) 
                     {weekDays.map((day, di) => (
                         <div
                             key={di}
-                            className={`relative border-l border-border-default
-                                ${isSameDay(day, today) ? 'bg-royalBlue/5' : ''}`}
+                            className={`relative border-l border-border-default ${isSameDay(day, today) ? 'bg-royalBlue/5' : ''}`}
                             style={{ height: HOURS.length * HOUR_HEIGHT }}
                         >
                             {HOURS.map(h => (

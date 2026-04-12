@@ -1,9 +1,13 @@
 import { z } from "zod";
+import { AttendanceTypeEnum } from "@/types/schedule.dto";
+
+const attendanceTypeValues: [AttendanceTypeEnum, ...AttendanceTypeEnum[]] = ['PRESENTIAL', 'REMOTE'];
 
 export const createScheduleSchema = z.object({
     patientId: z.string().nullable(),
     dateStart: z.string().min(1, 'A data de início é obrigatória'),
     dateEnd: z.string().nullable().optional(),
+    type: z.enum(attendanceTypeValues, { required_error: 'A modalidade é obrigatória' }),
 }).refine(
     (data) => {
         if (!data.dateEnd || data.dateEnd === '') return true;

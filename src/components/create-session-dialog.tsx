@@ -1,6 +1,6 @@
 "use client";
 
-import { X, UserPlus } from "lucide-react";
+import { X, UserPlus, Building2, Monitor } from "lucide-react";
 import BaseForm from "./ui/base-form";
 import ButtonSubmit from "./ui/button-submit";
 import Dialog from "./ui/dialog";
@@ -9,14 +9,22 @@ import Input from "./ui/input";
 import LabelContainer from "./ui/label-container";
 import DialogPatientList from "./dialog-patients-list";
 import { useCreateSession } from "@/hooks/useCreateSession";
+import { AttendanceTypeEnum } from "@/types/schedule.dto";
 
 type Props = {
     externalFunc: () => void;
 }
 
+const ATTENDANCE_OPTIONS: { value: AttendanceTypeEnum; label: string; icon: React.ReactNode }[] = [
+    { value: 'PRESENTIAL', label: 'Presencial', icon: <Building2 size={15} /> },
+    { value: 'REMOTE',     label: 'Remoto',     icon: <Monitor size={15} /> },
+];
+
 export default function CreateSessionDialog({ externalFunc }: Props) {
     const { form, submit, selectedPatient, isPatientListOpen, togglePatientList } = useCreateSession({ onSuccess: externalFunc });
-    const { register, handleSubmit, formState: { errors } } = form;
+    const { register, handleSubmit, watch, setValue, formState: { errors } } = form;
+
+    const selectedType = watch('type');
 
     return (
         <Dialog>
@@ -44,6 +52,26 @@ export default function CreateSessionDialog({ externalFunc }: Props) {
                         </button>
                     </div>
                     {errors.patientId && <span className="block text-xs text-red-500 mt-1">{errors.patientId.message}</span>}
+                </LabelContainer>
+
+                <LabelContainer title="Modalidade *" labelFor="type">
+                    <div className="flex rounded-lg border border-border-default overflow-hidden text-sm">
+                        {ATTENDANCE_OPTIONS.map(({ value, label, icon }) => (
+                            <button
+                                key={value}
+                                type="button"
+                                onClick={() => setValue('type', value, { shouldValidate: true })}
+                                className={`flex-1 flex items-center justify-center gap-2 py-2.5 font-medium transition-colors border-r last:border-r-0 border-border-default
+                                    ${selectedType === value
+                                        ? 'bg-royalBlue text-white'
+                                        : 'text-content-secondary hover:bg-surface-raised'}`}
+                            >
+                                {icon}
+                                {label}
+                            </button>
+                        ))}
+                    </div>
+                    {errors.type && <span className="block text-xs text-red-500 mt-1">{errors.type.message}</span>}
                 </LabelContainer>
 
                 <LabelContainer title="Data de início *" labelFor="dateStart">

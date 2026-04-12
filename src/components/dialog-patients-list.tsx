@@ -33,6 +33,7 @@ export default function DialogPatientList({ externalFunc }: Props) {
 
     function selectPatient(patient: PatientResume) {
         patientSelectedContext?.setPatient(patient);
+        externalFunc();
     }
 
     return (

@@ -3,7 +3,8 @@ import BaseResponse from "@/interface/IBaseResponse";
 import Schedule from "@/interface/ISchedule";
 import metadataFactory from "@/util/metadataFactory";
 import stageObjectBuilder from "@/util/stageObjectBuilder";
-import { parseDate, formatTime, STAGE_STYLES, MONTHS } from "@/util/calendarUtils";
+import attendanceTypeObjectBuilder from "@/util/attendanceTypeObjectBuilder";
+import { parseDate, formatTime, STAGE_STYLES, TYPE_STYLES, MONTHS } from "@/util/calendarUtils";
 import { FileText, Clock } from "lucide-react";
 import Link from "next/link";
 import SessionActions from "@/components/session-actions";
@@ -17,6 +18,7 @@ type PageProps = {
 export default async function Page({ params }: PageProps) {
     const { object } = await getSchedule(params.id) as BaseResponse<Schedule>;
     const { ptStage, color } = stageObjectBuilder(object.stage);
+    const { ptType, color: typeColor } = attendanceTypeObjectBuilder(object.type);
 
     const start    = parseDate(object.dateStart);
     const end      = object.dateEnd ? parseDate(object.dateEnd) : null;
@@ -38,6 +40,9 @@ export default async function Page({ params }: PageProps) {
                         >
                             {object.patient?.name}
                         </Link>
+                        <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${TYPE_STYLES[typeColor]}`}>
+                            {ptType}
+                        </span>
                         <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${STAGE_STYLES[color ?? 'yellow']}`}>
                             {ptStage}
                         </span>
@@ -93,6 +98,12 @@ export default async function Page({ params }: PageProps) {
                                 >
                                     {object.patient?.name}
                                 </Link>
+                            </div>
+                            <div className="flex items-center justify-between gap-2">
+                                <span className="text-content-secondary shrink-0">Modalidade</span>
+                                <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${TYPE_STYLES[typeColor]}`}>
+                                    {ptType}
+                                </span>
                             </div>
                             <div className="flex items-center justify-between gap-2">
                                 <span className="text-content-secondary shrink-0">Status</span>

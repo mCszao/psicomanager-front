@@ -3,8 +3,9 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { ListViewProps } from "@/interface/ICalendar";
-import { STAGE_STYLES, formatTime, isSameDay, parseDate } from "@/util/calendarUtils";
+import { STAGE_STYLES, TYPE_STYLES, formatTime, isSameDay, parseDate } from "@/util/calendarUtils";
 import stageObjectBuilder from "@/util/stageObjectBuilder";
+import attendanceTypeObjectBuilder from "@/util/attendanceTypeObjectBuilder";
 
 export default function ListView({ sessions }: ListViewProps) {
     const grouped = useMemo(() => {
@@ -34,6 +35,7 @@ export default function ListView({ sessions }: ListViewProps) {
                     <ul className="flex flex-col rounded-xl border border-border-default overflow-hidden divide-y divide-border-default">
                         {items.map(s => {
                             const { ptStage, color } = stageObjectBuilder(s.stage);
+                            const { ptType, color: typeColor } = attendanceTypeObjectBuilder(s.type);
                             const start = parseDate(s.dateStart);
                             const end   = s.dateEnd ? parseDate(s.dateEnd) : null;
                             return (
@@ -46,6 +48,9 @@ export default function ListView({ sessions }: ListViewProps) {
                                         </p>
                                         <span className="text-sm text-content-secondary shrink-0">
                                             {end ? `${formatTime(start)} - ${formatTime(end)}` : formatTime(start)}
+                                        </span>
+                                        <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium shrink-0 ${TYPE_STYLES[typeColor]}`}>
+                                            {ptType}
                                         </span>
                                         <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium shrink-0 ${STAGE_STYLES[color ?? 'yellow']}`}>
                                             {ptStage}

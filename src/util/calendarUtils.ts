@@ -16,6 +16,11 @@ export const STAGE_STYLES: Record<string, string> = {
     orange: 'bg-orange-100 text-orange-700 border-orange-200',
 };
 
+export const TYPE_STYLES: Record<string, string> = {
+    indigo: 'bg-indigo-100 text-indigo-700 border-indigo-200',
+    teal:   'bg-teal-100 text-teal-700 border-teal-200',
+};
+
 export function parseDate(dateStr: string): Date {
     const [datePart, timePart = '00:00:00'] = dateStr.split(' ');
     const [day, month, year] = datePart.split('-').map(Number);

@@ -3,8 +3,9 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { MonthViewProps } from "@/interface/ICalendar";
-import { MONTHS, STAGE_STYLES, WEEKDAYS, isSameDay, parseDate, formatTime } from "@/util/calendarUtils";
+import { MONTHS, STAGE_STYLES, TYPE_STYLES, WEEKDAYS, isSameDay, parseDate, formatTime } from "@/util/calendarUtils";
 import stageObjectBuilder from "@/util/stageObjectBuilder";
+import attendanceTypeObjectBuilder from "@/util/attendanceTypeObjectBuilder";
 
 export default function MonthView({ sessions, viewMonth, viewYear, today, selectedDay, onSelectDay }: MonthViewProps) {
     const sessionsByDay = useMemo(() => {
@@ -74,15 +75,25 @@ export default function MonthView({ sessions, viewMonth, viewYear, today, select
                         <ul className="flex flex-col gap-2">
                             {selectedSessions.map(s => {
                                 const { ptStage, color } = stageObjectBuilder(s.stage);
+                                const { ptType, color: typeColor } = attendanceTypeObjectBuilder(s.type);
                                 const start = parseDate(s.dateStart);
+                                const end   = s.dateEnd ? parseDate(s.dateEnd) : null;
+                                const timeRange = end
+                                    ? `${formatTime(start)} – ${formatTime(end)}`
+                                    : formatTime(start);
                                 return (
                                     <li key={s.id}>
                                         <Link href={`/schedules/${s.id}`} className="flex flex-col bg-royalBlue text-white rounded-xl px-4 py-3 hover:opacity-90 transition-opacity">
                                             <span className="font-semibold text-sm truncate">{s.patient?.name}</span>
-                                            <span className="text-xs opacity-75 mt-0.5">{formatTime(start)}</span>
-                                            <span className={`mt-2 self-start text-xs px-2 py-0.5 rounded-full border font-medium ${STAGE_STYLES[color ?? 'yellow']}`}>
-                                                {ptStage}
-                                            </span>
+                                            <span className="text-xs opacity-75 mt-0.5">{timeRange}</span>
+                                            <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+                                                <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${TYPE_STYLES[typeColor]}`}>
+                                                    {ptType}
+                                                </span>
+                                                <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${STAGE_STYLES[color ?? 'yellow']}`}>
+                                                    {ptStage}
+                                                </span>
+                                            </div>
                                         </Link>
                                     </li>
                                 );

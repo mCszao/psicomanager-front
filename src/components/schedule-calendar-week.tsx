@@ -4,6 +4,12 @@ import { useMemo } from "react";
 import Link from "next/link";
 import { WeekViewProps } from "@/interface/ICalendar";
 import { FIRST_HOUR, HOUR_HEIGHT, HOURS, WEEKDAYS, formatTime, isSameDay, parseDate } from "@/util/calendarUtils";
+import attendanceTypeObjectBuilder from "@/util/attendanceTypeObjectBuilder";
+
+const TYPE_DOT: Record<string, string> = {
+    indigo: 'bg-indigo-300',
+    teal:   'bg-teal-300',
+};
 
 export default function WeekView({ sessions, weekStart, today }: WeekViewProps) {
     const weekDays = Array.from({ length: 7 }, (_, i) => {
@@ -66,14 +72,19 @@ export default function WeekView({ sessions, weekStart, today }: WeekViewProps) 
                                 const topPx    = (start.getHours() + start.getMinutes() / 60 - FIRST_HOUR) * HOUR_HEIGHT;
                                 const duration = end ? (end.getTime() - start.getTime()) / 3_600_000 : 1;
                                 const height   = Math.max(duration * HOUR_HEIGHT, 28);
+                                const { color: typeColor, ptType } = attendanceTypeObjectBuilder(s.type);
                                 return (
                                     <Link
                                         key={s.id}
                                         href={`/schedules/${s.id}`}
+                                        title={`${s.patient?.name} — ${ptType}`}
                                         className="absolute left-0.5 right-0.5 bg-royalBlue text-white rounded-lg px-2 py-1 overflow-hidden hover:opacity-90 transition-opacity z-10"
                                         style={{ top: topPx, height }}
                                     >
-                                        <p className="text-xs font-semibold truncate leading-tight">{s.patient?.name}</p>
+                                        <div className="flex items-center gap-1 leading-tight">
+                                            <span className={`w-2 h-2 rounded-full shrink-0 ${TYPE_DOT[typeColor]}`} />
+                                            <p className="text-xs font-semibold truncate">{s.patient?.name}</p>
+                                        </div>
                                         <p className="text-xs opacity-75">{formatTime(start)}</p>
                                     </Link>
                                 );

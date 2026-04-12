@@ -1,7 +1,8 @@
 import Schedule from "@/interface/ISchedule";
 import Link from "next/link";
-import { parseDate, formatTime, STAGE_STYLES } from "@/util/calendarUtils";
+import { parseDate, formatTime, STAGE_STYLES, TYPE_STYLES } from "@/util/calendarUtils";
 import stageObjectBuilder from "@/util/stageObjectBuilder";
+import attendanceTypeObjectBuilder from "@/util/attendanceTypeObjectBuilder";
 
 interface PatientScheduleItemProps {
     schedule: Schedule;
@@ -9,6 +10,7 @@ interface PatientScheduleItemProps {
 
 export default function PatientScheduleItem({ schedule }: PatientScheduleItemProps) {
     const { ptStage, color } = stageObjectBuilder(schedule.stage);
+    const { ptType, color: typeColor } = attendanceTypeObjectBuilder(schedule.type);
     const start = parseDate(schedule.dateStart);
 
     return (
@@ -22,6 +24,9 @@ export default function PatientScheduleItem({ schedule }: PatientScheduleItemPro
                 </p>
                 <p className="text-xs text-content-secondary">{formatTime(start)}</p>
             </div>
+            <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium shrink-0 ${TYPE_STYLES[typeColor]}`}>
+                {ptType}
+            </span>
             <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium shrink-0 ${STAGE_STYLES[color ?? 'yellow']}`}>
                 {ptStage}
             </span>

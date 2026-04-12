@@ -4,33 +4,34 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Upload } from "lucide-react";
 import { uploadDocument } from "@/services/api";
+import { useToast } from "@/contexts/ToastContext";
 
 interface PatientUploadButtonProps {
     patientId: string;
 }
 
 export default function PatientUploadButton({ patientId }: PatientUploadButtonProps) {
-    const inputRef          = useRef<HTMLInputElement>(null);
-    const router            = useRouter();
+    const inputRef = useRef<HTMLInputElement>(null);
+    const router   = useRouter();
+    const toast    = useToast();
     const [loading, setLoading] = useState(false);
-    const [error, setError]     = useState<string | null>(null);
 
     async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
         if (!file) return;
 
         setLoading(true);
-        setError(null);
 
         try {
             const res = await uploadDocument(patientId, file);
             if (res.success) {
+                toast.success('Documento enviado com sucesso!');
                 router.refresh();
             } else {
-                setError('Erro ao enviar o arquivo.');
+                toast.error('Erro ao enviar o arquivo.');
             }
         } catch {
-            setError('Erro ao enviar o arquivo.');
+            toast.error('Erro ao enviar o arquivo.');
         } finally {
             setLoading(false);
             if (inputRef.current) inputRef.current.value = '';
@@ -56,9 +57,6 @@ export default function PatientUploadButton({ patientId }: PatientUploadButtonPr
                 }
                 {loading ? 'Enviando…' : 'Upload'}
             </button>
-            {error && (
-                <p className="text-xs text-red-500">{error}</p>
-            )}
         </div>
     );
 }

@@ -1,15 +1,7 @@
 'use client';
 
 import { X } from "lucide-react";
-
-interface ConfirmDialogProps {
-    title: string;
-    description: string;
-    confirmLabel: string;
-    confirmClassName: string;
-    onConfirm: () => void;
-    onCancel: () => void;
-}
+import { ConfirmDialogProps } from "@/interface/ISessionActions";
 
 export default function ConfirmDialog({
     title,

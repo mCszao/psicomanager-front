@@ -4,7 +4,7 @@ import BaseResponse from "@/interface/IBaseResponse";
 import ContainerH6 from "./ui/container-h6";
 import { PatientResume } from "@/interface/IPatientResume";
 import Link from "next/link";
-import { Cake } from "lucide-react";
+import { Cake, UserX } from "lucide-react";
 import { useState } from "react";
 import { useFilter } from "@/hooks/useFilter";
 
@@ -19,15 +19,34 @@ export default function FilterPatientList({ data }: Props) {
     const filteredPatients = useFilter(search, data?.object, 'name');
     const list = search.length > 0 ? filteredPatients : data.object;
 
+    const isEmpty        = !data?.object || data.object.length === 0;
+    const noSearchResult = !isEmpty && search.length > 0 && filteredPatients.length === 0;
+
     return (
-        <nav className="flex flex-col p-24 font-sans text-base font-normal gap-3 text-content-primary w-full">
+        <nav className="flex flex-col px-0 font-sans text-base font-normal gap-3 text-content-primary w-full">
             <input
                 type="text"
                 className="bg-surface-sunken border border-border-default text-content-primary placeholder:text-content-disabled text-sm rounded-lg focus:ring-royalBlue focus:border-royalBlue block w-full p-2.5"
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Digite o nome do paciente"
             />
-            {list?.map((patient: any) => (
+
+            {isEmpty && (
+                <div className="flex flex-col items-center justify-center gap-3 py-20 text-content-secondary">
+                    <UserX size={48} strokeWidth={1.5} />
+                    <p className="text-base font-medium">Nenhum paciente cadastrado.</p>
+                    <p className="text-sm">Adicione um paciente para começar.</p>
+                </div>
+            )}
+
+            {noSearchResult && (
+                <div className="flex flex-col items-center justify-center gap-3 py-20 text-content-secondary">
+                    <UserX size={48} strokeWidth={1.5} />
+                    <p className="text-base font-medium">Nenhum paciente encontrado para &quot;{search}&quot;.</p>
+                </div>
+            )}
+
+            {!isEmpty && !noSearchResult && list?.map((patient: any) => (
                 <abbr key={patient.id} title={patient.email}>
                     <Link href={"/patients/" + patient.id} role="button" className={patientLinkClass}>
                         <ContainerH6>{patient.name}</ContainerH6>

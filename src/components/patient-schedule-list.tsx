@@ -1,14 +1,20 @@
-import BaseContainerProps from "@/interface/IBaseContainerProps";
+import { CalendarDays } from "lucide-react";
 
-interface PatientScheduleListProps extends BaseContainerProps {}
+interface PatientScheduleListProps {
+    children: React.ReactNode;
+}
 
-export default function PatientScheduleList({ children} : PatientScheduleListProps) {
+export default function PatientScheduleList({ children }: PatientScheduleListProps) {
     return (
-        <section className="mt-5 max-w-[95vw] border rounded-md flex-1 flex-col shadow-lg p-5">
-            <h2 className="text-2xl mt-5 font-semibold">
-                Acompanhamentos
-            </h2>
-            {children}
+        <section className="flex flex-col border border-border-default rounded-xl shadow-sm overflow-hidden">
+            <div className="flex items-center px-5 py-4 border-b border-border-default bg-surface-raised shrink-0">
+                <h2 className="flex items-center gap-2 text-base font-semibold text-content-primary">
+                    <CalendarDays size={18} /> Acompanhamentos
+                </h2>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2">
+                {children}
+            </div>
         </section>
-    )
+    );
 }

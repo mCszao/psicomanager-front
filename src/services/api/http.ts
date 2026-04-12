@@ -55,3 +55,17 @@ export async function del<T>(path: string): Promise<T> {
     });
     return parseResponse<T>(response);
 }
+
+export async function postMultipart<T>(path: string, formData: FormData): Promise<T> {
+    const token = await getToken();
+    const response = await fetch(BASE_URL + path, {
+        method: 'POST',
+        headers: {
+            // Content-Type is intentionally omitted — the browser sets it automatically
+            // with the correct multipart boundary when body is FormData.
+            ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: formData,
+    });
+    return parseResponse<T>(response);
+}

@@ -25,6 +25,10 @@ export default function stageObjectBuilder(stage: String): StageObject {
             object.color = "dark";
             object.ptStage = "REMARCADO"
             break;
+        case 'ABSENT':
+            object.color = "orange";
+            object.ptStage = "FALTA"
+            break;
         default:
             object.color = "yellow"
             object.ptStage = "Status não catalogado"

@@ -13,6 +13,7 @@ export const STAGE_STYLES: Record<string, string> = {
     red:    'bg-red-100 text-red-700 border-red-200',
     dark:   'bg-gray-100 text-gray-700 border-gray-200',
     yellow: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+    orange: 'bg-orange-100 text-orange-700 border-orange-200',
 };
 
 export function parseDate(dateStr: string): Date {

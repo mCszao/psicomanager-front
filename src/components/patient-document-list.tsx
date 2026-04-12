@@ -1,15 +1,23 @@
-import BaseContainerProps from "@/interface/IBaseContainerProps";
 import { FolderOpen } from "lucide-react";
+import PatientUploadButton from "./patient-upload-button";
 
-interface PatientDocumentListProps extends BaseContainerProps {}
+interface PatientDocumentListProps {
+    patientId: string;
+    children: React.ReactNode;
+}
 
-export default function PatientDocumentList( { children }: PatientDocumentListProps) {
+export default function PatientDocumentList({ children, patientId }: PatientDocumentListProps) {
     return (
-        <section className="mt-5 ml-5 max-w-[95vw] flex-1 shadow-lg p-5 border rounded-md ">
-            <h2 className="flex items-center gap-3 text-2xl mt-5 font-semibold">
-            <FolderOpen /> Documentos
-            </h2>
-            {children}
+        <section className="flex flex-col border border-border-default rounded-xl shadow-sm overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border-default bg-surface-raised shrink-0">
+                <h2 className="flex items-center gap-2 text-base font-semibold text-content-primary">
+                    <FolderOpen size={18} /> Documentos
+                </h2>
+                <PatientUploadButton patientId={patientId} />
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2">
+                {children}
+            </div>
         </section>
-    )
+    );
 }

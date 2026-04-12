@@ -1,58 +1,121 @@
-import { getSchedule } from "@/services/api"
-import BaseResponse from "@/interface/IBaseResponse"
-import Session  from "@/interface/ISchedule"
-import { getFormatedDateToSchedule } from "@/util/DateUtils"
-import stageObjectBuilder from "@/util/stageObjectBuilder"
-import metadataFactory from "@/util/metadataFactory"
+import { getSchedule } from "@/services/api";
+import BaseResponse from "@/interface/IBaseResponse";
+import Schedule from "@/interface/ISchedule";
+import metadataFactory from "@/util/metadataFactory";
+import stageObjectBuilder from "@/util/stageObjectBuilder";
+import { parseDate, formatTime, STAGE_STYLES, MONTHS } from "@/util/calendarUtils";
+import { FileText, Clock } from "lucide-react";
+import Link from "next/link";
+import SessionActions from "@/components/session-actions";
 
 export const metadata = metadataFactory("Informações da sessão");
 
 type PageProps = {
-    params : {
-        id: string
-    }
+    params: { id: string }
 }
 
-export default async function Page({ params } : PageProps){
-    const { object } = await getSchedule(params.id) as BaseResponse<Session>
-    const stageProps = stageObjectBuilder(object.stage);
+export default async function Page({ params }: PageProps) {
+    const { object } = await getSchedule(params.id) as BaseResponse<Schedule>;
+    const { ptStage, color } = stageObjectBuilder(object.stage);
+
+    const start    = parseDate(object.dateStart);
+    const end      = object.dateEnd ? parseDate(object.dateEnd) : null;
+    const fullDate = `${start.getDate()} de ${MONTHS[start.getMonth()]} de ${start.getFullYear()}`;
+    const timeRange = end
+        ? `${formatTime(start)} – ${formatTime(end)}`
+        : formatTime(start);
+
     return (
-    <main className="p-14">
-        <section className="p-7 ml-32 flex flex-wrap border items-center justify-around border-l-8 border-l-royalBlue border-b-0border-t-0 border-r-0">
-             <h1 className="text-7xl text-royalBlue font-semibold">
-                {object.patient?.name}
-            </h1>
-            <div className="text-md flex gap-2 flex-wra;">
-                <span className={`bg-${stageProps.color}-100 text-${stageProps.color}-800 font-medium text-center me-2 px-2.5 py-0.5 rounded dark:bg-${stageProps.color}-900 dark:text-${stageProps.color}-300`}>
-                    {stageProps.ptStage}
-                </span>
-                <span className="bg-blue-100 text-blue-800 font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
-                    <svg className="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
-                    </svg>
-                    {getFormatedDateToSchedule(object.dateStart)}
-                </span>
-                <span className="bg-gray-100 text-gray-800 font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-500 ">
-                    <svg className="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
-                    </svg>
-                    {getFormatedDateToSchedule(object.dateEnd)}
-                </span>
-            </div>
-        </section>
-        <div className="flex m-10 w-full">
-            <section className="mt-5 max-w-full border rounded-md flex-1 flex-col shadow-lg p-5">
-                <h2 className="text-2xl mt-5 font-semibold">
-                    Anotações
-                </h2>
-                <textarea name="annotations" className="w-full p-10 text-2xl bg-surface-sunken text-content-primary border border-border-default rounded-lg focus:ring-royalBlue focus:border-royalBlue"/>
-                <div className="w-full table-auto text-xl text-left mt-5">
-                    <a href="#" className="text-white bg-royalBlue py-1.5 px-3 hover:opacity-90 duration-150 border border-royalBlue rounded-lg">
-                        Salvar Anotação
-                    </a>
+        <div className="flex flex-col h-screen px-8 pt-8 pb-6 overflow-hidden">
+
+            {/* Header */}
+            <div className="shrink-0 mb-6 flex items-start justify-between gap-6 pb-6 border-b border-border-default">
+                <div className="border-l-4 border-royalBlue pl-4">
+                    <div className="flex items-center gap-3 flex-wrap">
+                        <Link
+                            href={`/patients/${object.patient?.id}`}
+                            className="text-3xl font-bold text-royalBlue hover:underline leading-tight"
+                        >
+                            {object.patient?.name}
+                        </Link>
+                        <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${STAGE_STYLES[color ?? 'yellow']}`}>
+                            {ptStage}
+                        </span>
+                    </div>
+                    <div className="flex items-center gap-4 mt-2 text-sm text-content-secondary flex-wrap">
+                        <span className="flex items-center gap-1.5 capitalize">
+                            {fullDate}
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                            <Clock size={14} className="shrink-0" />
+                            {timeRange}
+                        </span>
+                    </div>
                 </div>
-            </section>
+            </div>
+
+            {/* Body */}
+            <div className="flex-1 min-h-0 flex gap-6">
+
+                {/* Left — Annotations */}
+                <div className="flex-1 flex flex-col border border-border-default rounded-xl shadow-sm overflow-hidden">
+                    <div className="flex items-center px-5 py-4 border-b border-border-default bg-surface-raised shrink-0">
+                        <h2 className="flex items-center gap-2 text-base font-semibold text-content-primary">
+                            <FileText size={18} /> Anotações
+                        </h2>
+                    </div>
+                    <div className="flex-1 flex flex-col p-4 gap-3 min-h-0">
+                        <textarea
+                            name="annotations"
+                            placeholder="Registre as anotações desta sessão…"
+                            className="flex-1 resize-none bg-surface-sunken text-content-primary placeholder:text-content-disabled border border-border-default rounded-lg p-4 text-sm focus:ring-royalBlue focus:border-royalBlue outline-none"
+                        />
+                        <button className="self-end text-sm px-4 py-2 rounded-lg bg-royalBlue text-white hover:opacity-90 transition-opacity font-medium">
+                            Salvar anotação
+                        </button>
+                    </div>
+                </div>
+
+                {/* Right — Details + Actions */}
+                <div className="w-72 shrink-0 flex flex-col gap-4 overflow-y-auto">
+
+                    {/* Details card */}
+                    <div className="border border-border-default rounded-xl shadow-sm overflow-hidden">
+                        <div className="px-5 py-4 border-b border-border-default bg-surface-raised shrink-0">
+                            <h2 className="text-base font-semibold text-content-primary">Detalhes</h2>
+                        </div>
+                        <div className="p-4 flex flex-col gap-3 text-sm">
+                            <div className="flex items-center justify-between gap-2">
+                                <span className="text-content-secondary shrink-0">Paciente</span>
+                                <Link
+                                    href={`/patients/${object.patient?.id}`}
+                                    className="text-royalBlue hover:underline font-medium truncate"
+                                >
+                                    {object.patient?.name}
+                                </Link>
+                            </div>
+                            <div className="flex items-center justify-between gap-2">
+                                <span className="text-content-secondary shrink-0">Status</span>
+                                <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${STAGE_STYLES[color ?? 'yellow']}`}>
+                                    {ptStage}
+                                </span>
+                            </div>
+                            <div className="flex items-center justify-between gap-2">
+                                <span className="text-content-secondary shrink-0">Data</span>
+                                <span className="text-content-primary font-medium capitalize">{fullDate}</span>
+                            </div>
+                            <div className="flex items-center justify-between gap-2">
+                                <span className="text-content-secondary shrink-0">Horário</span>
+                                <span className="text-content-primary font-medium">{timeRange}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Actions */}
+                    <SessionActions stage={object.stage as string} />
+
+                </div>
+            </div>
         </div>
-    </main>
-    )
+    );
 }

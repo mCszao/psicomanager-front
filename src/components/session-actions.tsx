@@ -47,12 +47,12 @@ export default function SessionActions({ scheduleId, stage }: SessionActionsProp
                                 Reagendar
                             </button>
                             <button
-                                disabled
-                                title="Em breve"
+                                onClick={() => setPendingAction('absent')}
+                                disabled={loading}
                                 className="flex items-center gap-2 w-full px-4 py-2.5 rounded-lg bg-orange-50 text-orange-700 border border-orange-200 text-sm font-medium hover:bg-orange-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <UserX size={16} />
-                                Marcar falta
+                                {loading ? "Processando..." : "Marcar falta"}
                             </button>
                             <button
                                 onClick={() => setPendingAction('cancel')}

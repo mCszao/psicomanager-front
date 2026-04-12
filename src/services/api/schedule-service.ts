@@ -22,3 +22,7 @@ export function concludeSession(scheduleId: string): Promise<BaseResponse<string
 export function cancelSession(scheduleId: string): Promise<BaseResponse<string>> {
     return patch(`/schedules/${scheduleId}/cancel`);
 }
+
+export function markAsAbsent(scheduleId: string): Promise<BaseResponse<string>> {
+    return patch(`/schedules/${scheduleId}/absent`);
+}

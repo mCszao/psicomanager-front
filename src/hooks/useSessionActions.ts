@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { concludeSession, cancelSession } from "@/services/api";
+import { concludeSession, cancelSession, markAsAbsent } from "@/services/api";
 import { useToast } from "@/contexts/ToastContext";
 import { extractApiError } from "@/util/feedback";
 import { PendingAction } from "@/types/session-action.types";
@@ -35,6 +35,16 @@ export function useSessionActions(scheduleId: string, stage: string) {
                 const response = await cancelSession(scheduleId);
                 if (response.success) {
                     toast.success("Sessão cancelada com sucesso!");
+                    router.refresh();
+                } else {
+                    toast.error(extractApiError(response));
+                }
+            }
+
+            if (pendingAction === 'absent') {
+                const response = await markAsAbsent(scheduleId);
+                if (response.success) {
+                    toast.success("Falta registrada com sucesso!");
                     router.refresh();
                 } else {
                     toast.error(extractApiError(response));

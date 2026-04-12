@@ -56,6 +56,14 @@ export async function del<T>(path: string): Promise<T> {
     return parseResponse<T>(response);
 }
 
+export async function patch<T>(path: string): Promise<T> {
+    const response = await fetch(BASE_URL + path, {
+        method: 'PATCH',
+        headers: await buildHeaders(),
+    });
+    return parseResponse<T>(response);
+}
+
 export async function postMultipart<T>(path: string, formData: FormData): Promise<T> {
     const token = await getToken();
     const response = await fetch(BASE_URL + path, {

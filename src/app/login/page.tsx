@@ -20,7 +20,7 @@ export default function LoginPage() {
                         </h1>
 
                         {!isRegistering ? (
-                            <form className="space-y-4 md:space-y-6" onSubmit={signInForm.handleSubmit(onSignIn)}>
+                            <form method="post" className="space-y-4 md:space-y-6" onSubmit={signInForm.handleSubmit(onSignIn)}>
                                 <div>
                                     <label htmlFor="username" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Usuário</label>
                                     <input type="text" id="username" placeholder="Seu usuário" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" {...signInForm.register("username")} />
@@ -42,7 +42,7 @@ export default function LoginPage() {
                                 </p>
                             </form>
                         ) : (
-                            <form className="space-y-4 md:space-y-6" onSubmit={signUpForm.handleSubmit(onSignUp)}>
+                            <form method="post" className="space-y-4 md:space-y-6" onSubmit={signUpForm.handleSubmit(onSignUp)}>
                                 <div>
                                     <label htmlFor="username-register" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Usuário</label>
                                     <input type="text" id="username-register" placeholder="Seu usuário" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" {...signUpForm.register("username")} />

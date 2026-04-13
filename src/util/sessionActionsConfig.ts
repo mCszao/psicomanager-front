@@ -1,6 +1,6 @@
 import { ConfirmConfigMap } from "@/interface/ISessionActions";
 
-export const CLOSED_STAGES: string[] = ['CANCELLED', 'CONCLUDED', 'ABSENT'];
+export const CLOSED_STAGES: string[] = ['CANCELLED', 'CONCLUDED', 'ABSENT', 'RESCHEDULED'];
 
 export const CONFIRM_CONFIG: ConfirmConfigMap = {
     conclude: {

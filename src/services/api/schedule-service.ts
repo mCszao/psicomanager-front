@@ -26,3 +26,7 @@ export function cancelSession(scheduleId: string): Promise<BaseResponse<string>>
 export function markAsAbsent(scheduleId: string): Promise<BaseResponse<string>> {
     return patch(`/schedules/${scheduleId}/absent`);
 }
+
+export function rescheduleSession(scheduleId: string, dateStart: string, dateEnd?: string): Promise<BaseResponse<string>> {
+    return patch(`/schedules/${scheduleId}/reschedule`, { dateStart, ...(dateEnd && { dateEnd }) });
+}

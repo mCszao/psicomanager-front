@@ -56,10 +56,12 @@ export async function del<T>(path: string): Promise<T> {
     return parseResponse<T>(response);
 }
 
-export async function patch<T>(path: string): Promise<T> {
+export async function patch<T>(path: string, body?: unknown): Promise<T> {
+    const hasBody = body !== undefined;
     const response = await fetch(BASE_URL + path, {
         method: 'PATCH',
-        headers: await buildHeaders(),
+        headers: await buildHeaders(hasBody),
+        ...(hasBody && { body: JSON.stringify(body) }),
     });
     return parseResponse<T>(response);
 }

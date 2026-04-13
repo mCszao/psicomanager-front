@@ -123,7 +123,7 @@ export default async function Page({ params }: PageProps) {
                     </div>
 
                     {/* Actions */}
-                    <SessionActions scheduleId={object.id} stage={object.stage as string} />
+                    <SessionActions scheduleId={object.id} stage={object.stage as string} dateEnd={object.dateEnd} rescheduledTo={object.rescheduledTo} />
 
                 </div>
             </div>

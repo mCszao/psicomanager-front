@@ -1,4 +1,5 @@
 import { PendingAction } from "@/types/session-action.types";
+import { ScheduleRescheduledTo } from "./ISchedule";
 
 export interface ConfirmDialogProps {
     title: string;
@@ -12,6 +13,8 @@ export interface ConfirmDialogProps {
 export interface SessionActionsProps {
     scheduleId: string;
     stage: string;
+    dateEnd: string;
+    rescheduledTo?: ScheduleRescheduledTo | null;
 }
 
 export interface ConfirmActionConfig {

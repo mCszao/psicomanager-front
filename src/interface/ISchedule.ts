@@ -1,6 +1,12 @@
 import { PatientResume } from "./IPatientResume";
 import { StageEnum, AttendanceTypeEnum } from "../types/schedule.dto";
 
+export interface ScheduleRescheduledTo {
+    id: string;
+    dateStart: string;
+    dateEnd: string;
+}
+
 export default interface Schedule {
     id: string;
     dateStart: string;
@@ -9,4 +15,5 @@ export default interface Schedule {
     stage: StageEnum;
     type: AttendanceTypeEnum;
     patient: PatientResume;
+    rescheduledTo?: ScheduleRescheduledTo | null;
 }

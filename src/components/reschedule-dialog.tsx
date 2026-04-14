@@ -1,27 +1,9 @@
 'use client';
 
 import { X } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import LabelContainer from "@/components/ui/label-container";
 import Input from "@/components/ui/input";
-
-const rescheduleSchema = z.object({
-    dateStart: z.string().min(1, 'A nova data de início é obrigatória').refine(
-        (val) => new Date(val) > new Date(),
-        { message: 'A data deve ser futura' }
-    ),
-    dateEnd: z.string().nullable().optional(),
-}).refine(
-    (data) => {
-        if (!data.dateEnd || data.dateEnd === '') return true;
-        return new Date(data.dateStart) < new Date(data.dateEnd);
-    },
-    { message: 'A data de término deve ser posterior à data de início', path: ['dateEnd'] }
-);
-
-type RescheduleFormData = z.infer<typeof rescheduleSchema>;
+import { useReschedule } from "@/hooks/useReschedule";
 
 type Props = {
     onConfirm: (dateStart: string, dateEnd?: string) => void;
@@ -29,13 +11,8 @@ type Props = {
 };
 
 export default function RescheduleDialog({ onConfirm, onCancel }: Props) {
-    const { register, handleSubmit, formState: { errors } } = useForm<RescheduleFormData>({
-        resolver: zodResolver(rescheduleSchema),
-    });
-
-    function submit(data: RescheduleFormData) {
-        onConfirm(data.dateStart, data.dateEnd ?? undefined);
-    }
+    const { form, submit } = useReschedule({ onConfirm });
+    const { register, handleSubmit, formState: { errors } } = form;
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -75,7 +52,6 @@ export default function RescheduleDialog({ onConfirm, onCancel }: Props) {
                         Cancelar
                     </button>
                     <button
-                        form="reschedule-form"
                         type="submit"
                         onClick={handleSubmit(submit)}
                         className="text-sm px-4 py-2 rounded-lg font-medium transition-colors bg-royalBlue hover:opacity-90 text-white"

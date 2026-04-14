@@ -54,11 +54,36 @@ export function reverseDate(date: string){
   return newDate.join("-");
 }
 
+/**
+ * Normaliza as datas brutas de um ScheduleDTO sem mutar o objeto original.
+ *
+ * Inputs datetime-local retornam "HH:mm" — esta função adiciona ":00" para
+ * satisfazer o formato "dd-MM-yyyy HH:mm:ss" exigido pela API.
+ *
+ * @param dateStart - Data de início no formato datetime-local (yyyy-MM-ddTHH:mm)
+ * @param dateEnd   - Data de fim no mesmo formato, ou string vazia / null / undefined
+ * @returns Objeto com dateStart e dateEnd já formatados para envio à API
+ */
+export function normalizeDates(
+  dateStart: string,
+  dateEnd: string | null | undefined
+): { dateStart: string; dateEnd: string | null } {
+  const normalizedStart = formatDate(dateStart.concat(":00"))!;
+  const normalizedEnd =
+    dateEnd == null || dateEnd === ""
+      ? null
+      : formatDate(dateEnd.concat(":00")) ?? null;
+
+  return { dateStart: normalizedStart, dateEnd: normalizedEnd };
+}
+
+/** @deprecated Use normalizeDates — esta função muta o objeto recebido */
 export function addDoubleOrNullOnSchedule(data: ScheduleDTO){
   data.dateStart = data.dateStart.concat(":00");
   data.dateEnd = (data.dateEnd == "") ? null : data.dateEnd?.concat(":00");
 }
 
+/** @deprecated Use normalizeDates — esta função muta o objeto recebido via addDoubleOrNullOnSchedule */
 export function getFormatDates(data: ScheduleDTO){
   addDoubleOrNullOnSchedule(data);
   let dateStart = formatDate(data.dateStart);
@@ -89,4 +114,3 @@ function DateTimeBuilder(date: string ){
 
   return new Date(dateArr[2],dateArr[1], dateArr[0], timeArr[0], timeArr[1], timeArr[2]);
 }
-

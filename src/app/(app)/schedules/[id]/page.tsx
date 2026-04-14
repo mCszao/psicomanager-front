@@ -11,9 +11,10 @@ import {
     getStagePresentation,
     getTypePresentation
 } from "@/util/calendarUtils";
-import {FileText, Clock} from "lucide-react";
+import {Clock} from "lucide-react";
 import Link from "next/link";
 import SessionActions from "@/components/session-actions";
+import AnnotationsPanel from "@/components/annotations-panel";
 
 export const metadata = metadataFactory("Informações da sessão");
 
@@ -72,26 +73,10 @@ export default async function Page({params}: PageProps) {
             <div className="flex-1 min-h-0 flex gap-5">
 
                 {/* Left — Annotations */}
-                <div
-                    className="flex-1 flex flex-col rounded-2xl border border-border-default shadow-lg bg-surface-default overflow-hidden">
-                    <div
-                        className="flex items-center px-5 py-4 border-b border-border-default bg-surface-raised shrink-0">
-                        <h2 className="flex items-center gap-2 text-base font-semibold text-content-primary">
-                            <FileText size={18}/> Anotações
-                        </h2>
-                    </div>
-                    <div className="flex-1 flex flex-col p-4 gap-3 min-h-0">
-                        <textarea
-                            name="annotations"
-                            placeholder="Registre as anotações desta sessão…"
-                            className="flex-1 resize-none bg-surface-sunken text-content-primary placeholder:text-content-disabled border border-border-default rounded-lg p-4 text-sm focus:ring-royalBlue focus:border-royalBlue outline-none"
-                        />
-                        <button
-                            className="self-end text-sm px-4 py-2 rounded-lg bg-royalBlue text-white hover:opacity-90 transition-opacity font-medium">
-                            Salvar anotação
-                        </button>
-                    </div>
-                </div>
+                <AnnotationsPanel
+                    scheduleId={object.id}
+                    initialAnnotations={object.annotations ?? null}
+                />
 
                 {/* Right — Details + Actions */}
                 <div className="w-72 shrink-0 flex flex-col gap-5 overflow-y-auto">

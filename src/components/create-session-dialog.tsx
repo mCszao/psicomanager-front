@@ -1,6 +1,7 @@
 "use client";
 
 import { X, UserPlus, Building2, Monitor } from "lucide-react";
+import { useEffect } from "react";
 import BaseForm from "./ui/base-form";
 import ButtonSubmit from "./ui/button-submit";
 import Dialog from "./ui/dialog";
@@ -25,6 +26,22 @@ export default function CreateSessionDialog({ externalFunc }: Props) {
     const { register, handleSubmit, watch, setValue, formState: { errors } } = form;
 
     const selectedType = watch('type');
+    const dateStart    = watch('dateStart');
+    const dateEnd      = watch('dateEnd');
+
+    useEffect(() => {
+        if (!dateStart) return;
+        if (dateEnd) return; // não sobrescreve se o usuário já preencheu
+
+        const start = new Date(dateStart);
+        if (isNaN(start.getTime())) return;
+
+        const end = new Date(start.getTime() + 60 * 60 * 1000);
+        // formata para "yyyy-MM-ddTHH:mm" usando horário local (sem conversão UTC)
+        const pad = (n: number) => String(n).padStart(2, '0');
+        const formatted = `${end.getFullYear()}-${pad(end.getMonth() + 1)}-${pad(end.getDate())}T${pad(end.getHours())}:${pad(end.getMinutes())}`;
+        setValue('dateEnd', formatted, { shouldValidate: true });
+    }, [dateStart]);
 
     return (
         <Dialog>

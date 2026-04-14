@@ -1,16 +1,14 @@
 import Schedule from "@/interface/ISchedule";
 import Link from "next/link";
-import { parseDate, formatTime, STAGE_STYLES, TYPE_STYLES } from "@/util/calendarUtils";
-import stageObjectBuilder from "@/util/stageObjectBuilder";
-import attendanceTypeObjectBuilder from "@/util/attendanceTypeObjectBuilder";
+import { parseDate, formatTime, STAGE_STYLES, TYPE_STYLES, getStagePresentation, getTypePresentation } from "@/util/calendarUtils";
 
 interface PatientScheduleItemProps {
     schedule: Schedule;
 }
 
 export default function PatientScheduleItem({ schedule }: PatientScheduleItemProps) {
-    const { ptStage, color } = stageObjectBuilder(schedule.stage);
-    const { ptType, color: typeColor } = attendanceTypeObjectBuilder(schedule.type);
+    const { ptStage, color } = getStagePresentation(schedule.stage);
+    const { ptType, color: typeColor } = getTypePresentation(schedule.type);
     const start = parseDate(schedule.dateStart);
 
     return (

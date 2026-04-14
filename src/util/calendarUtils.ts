@@ -1,3 +1,5 @@
+import { StageEnum, AttendanceTypeEnum } from '@/types/schedule.dto';
+
 export const WEEKDAYS     = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 export const MONTHS       = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 export const MONTHS_SHORT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
@@ -6,6 +8,50 @@ export const FIRST_HOUR  = 0;
 export const LAST_HOUR   = 23;
 export const HOUR_HEIGHT = 64;
 export const HOURS       = Array.from({ length: LAST_HOUR - FIRST_HOUR + 1 }, (_, i) => i + FIRST_HOUR);
+
+// #region Stage
+
+export type StagePresentation = {
+    color: string;
+    ptStage: string;
+};
+
+export const STAGE_MAP: Record<StageEnum, StagePresentation> = {
+    OPENED:      { color: 'blue',   ptStage: 'ABERTO'    },
+    CONCLUDED:   { color: 'green',  ptStage: 'CONCLUIDO' },
+    CANCELLED:   { color: 'red',    ptStage: 'CANCELADO' },
+    RESCHEDULED: { color: 'dark',   ptStage: 'REMARCADO' },
+    ABSENT:      { color: 'orange', ptStage: 'FALTA'     },
+};
+
+const STAGE_FALLBACK: StagePresentation = { color: 'yellow', ptStage: 'Status não catalogado' };
+
+export function getStagePresentation(stage: StageEnum | string): StagePresentation {
+    return STAGE_MAP[stage as StageEnum] ?? STAGE_FALLBACK;
+}
+
+// #endregion
+
+// #region AttendanceType
+
+export type TypePresentation = {
+    color: string;
+    ptType: string;
+    icon: string;
+};
+
+export const TYPE_MAP: Record<AttendanceTypeEnum, TypePresentation> = {
+    PRESENTIAL: { color: 'indigo', ptType: 'PRESENCIAL', icon: '🏢' },
+    REMOTE:     { color: 'teal',   ptType: 'REMOTO',     icon: '💻' },
+};
+
+const TYPE_FALLBACK: TypePresentation = { color: 'indigo', ptType: 'PRESENCIAL', icon: '🏢' };
+
+export function getTypePresentation(type: AttendanceTypeEnum | string | undefined): TypePresentation {
+    return TYPE_MAP[type as AttendanceTypeEnum] ?? TYPE_FALLBACK;
+}
+
+// #endregion
 
 export const STAGE_STYLES: Record<string, string> = {
     blue:   'bg-blue-100 text-blue-700 border-blue-200',

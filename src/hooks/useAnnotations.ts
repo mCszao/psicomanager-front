@@ -6,6 +6,8 @@ import { saveAnnotations } from "@/services/api";
 import { useToast } from "@/contexts/ToastContext";
 import { extractApiError } from "@/util/feedback";
 
+export type TranscriptionMergeMode = "append" | "replace";
+
 /**
  * Gerencia o estado e a persistência das anotações de uma sessão.
  *
@@ -36,5 +38,20 @@ export function useAnnotations(scheduleId: string, initialText: string | null) {
         }
     }
 
-    return { text, setText, loading, handleSave };
+    /**
+     * Aplica o texto transcrito ao conteúdo atual.
+     *
+     * @param transcribed - Texto vindo da transcrição
+     * @param mode        - "append" adiciona ao final com quebra de linha;
+     *                      "replace" substitui o conteúdo inteiro
+     */
+    function applyTranscription(transcribed: string, mode: TranscriptionMergeMode) {
+        setText(prev => {
+            if (mode === "replace") return transcribed;
+            const separator = prev.trim() ? "\n\n" : "";
+            return prev + separator + transcribed;
+        });
+    }
+
+    return { text, setText, loading, handleSave, applyTranscription };
 }

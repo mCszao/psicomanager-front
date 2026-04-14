@@ -10,9 +10,25 @@ async function getToken(): Promise<string> {
 }
 
 async function parseResponse<T>(response: Response): Promise<T> {
+    if (response.status === 401) {
+        handleUnauthorized();
+    }
+
     const text = await response.text();
     if (!text) return { object: null } as T;
     return JSON.parse(text) as T;
+}
+
+/**
+ * Clears the auth cookie and redirects to the login page.
+ * Called whenever the API returns 401 (token expired or invalid).
+ */
+function handleUnauthorized(): never {
+    if (typeof window !== 'undefined') {
+        document.cookie = 'authToken=; Max-Age=0; path=/';
+        window.location.href = '/login';
+    }
+    throw new Error('Unauthorized');
 }
 
 async function buildHeaders(withBody = false): Promise<HeadersInit> {

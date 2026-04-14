@@ -66,21 +66,21 @@ export default function AnnotationsPanel({ scheduleId, initialAnnotations }: Ann
                         type="button"
                         onClick={handleMicClick}
                         title={isRecording ? "Parar gravação" : "Gravar voz"}
-                        className={`rounded-lg w-8 h-8 flex items-center justify-center transition-colors ${
+                        className={`rounded-lg flex items-center gap-1.5 px-3 h-8 transition-colors ${
                             isRecording
                                 ? "bg-red-500/10 text-red-500 hover:bg-red-500/20 animate-pulse"
                                 : "text-content-secondary hover:text-content-primary hover:bg-surface-hover"
                         }`}
                     >
                         {isRecording ? <MicOff size={15} /> : <Mic size={15} />}
-                        <span className="sr-only">{isRecording ? "Parar gravação" : "Gravar voz"}</span>
+                        <span className="text-xs font-medium">{isRecording ? "Parar" : "Gravar"}</span>
                     </button>
                 </div>
 
                 {/* Textarea + feedback */}
                 <div className="flex-1 flex flex-col p-4 gap-3 min-h-0">
 
-                    {/* Recording indicator */
+                    {/* Recording indicator */}
                     {isRecording && (
                         <div className="flex items-center gap-2 text-xs text-red-500 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2 shrink-0">
                             <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />

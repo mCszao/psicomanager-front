@@ -1,15 +1,16 @@
-import BaseResponse from "@/interface/IBaseResponse";
-import Session from "@/interface/ISchedule";
+import { ScheduleCalendarProps } from "@/interface/ICalendar";
 import ScheduleCalendar from "./schedule-calendar";
-import { getSchedules } from "@/services/api";
 
 type ViewMode = 'month' | 'week' | 'list';
 
-interface Props {
+interface Props extends ScheduleCalendarProps {
     views?: ViewMode[];
 }
 
-export default async function NextSessions({ views }: Props) {
-    const response = await getSchedules() as BaseResponse<Session[]>;
-    return <ScheduleCalendar sessions={response.object ?? []} views={views} />;
+/**
+ * Pure presentational wrapper — receives sessions as props from the Server Component page
+ * and delegates rendering to the client-side ScheduleCalendar.
+ */
+export default function NextSessions({ sessions, views }: Props) {
+    return <ScheduleCalendar sessions={sessions} views={views} />;
 }

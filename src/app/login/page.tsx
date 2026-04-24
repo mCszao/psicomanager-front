@@ -1,10 +1,13 @@
 "use client";
 
-import { BrainCog } from "lucide-react";
+import { BrainCog, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useState } from "react";
 
 export default function LoginPage() {
     const { isRegistering, setIsRegistering, signInForm, signUpForm, onSignIn, onSignUp } = useAuth();
+    const [showSignInPassword, setShowSignInPassword] = useState(false);
+    const [showSignUpPassword, setShowSignUpPassword] = useState(false);
 
     return (
         <section className="bg-gray-50 dark:bg-gray-900">
@@ -28,7 +31,12 @@ export default function LoginPage() {
                                 </div>
                                 <div>
                                     <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Senha</label>
-                                    <input type="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" {...signInForm.register("password")} />
+                                    <div className="relative">
+                                        <input type={showSignInPassword ? "text" : "password"} id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white" {...signInForm.register("password")} />
+                                        <button type="button" onClick={() => setShowSignInPassword(prev => !prev)} className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                            {showSignInPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
+                                    </div>
                                     {signInForm.formState.errors.password && <span className="text-sm text-red-500">{signInForm.formState.errors.password.message}</span>}
                                 </div>
                                 <button type="submit" className="w-full border border-transparent hover:border-gray-200 text-black bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
@@ -60,7 +68,12 @@ export default function LoginPage() {
                                 </div>
                                 <div>
                                     <label htmlFor="password-register" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Senha</label>
-                                    <input type="password" id="password-register" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" {...signUpForm.register("password")} />
+                                    <div className="relative">
+                                        <input type={showSignUpPassword ? "text" : "password"} id="password-register" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white" {...signUpForm.register("password")} />
+                                        <button type="button" onClick={() => setShowSignUpPassword(prev => !prev)} className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                            {showSignUpPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
+                                    </div>
                                     {signUpForm.formState.errors.password && <span className="text-sm text-red-500">{signUpForm.formState.errors.password.message}</span>}
                                 </div>
                                 <button type="submit" className="w-full border border-transparent hover:border-gray-200 text-black bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center">

@@ -2,18 +2,19 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-    const token = request.cookies.get('authToken')
-    const isLoginPage = request.nextUrl.pathname === '/login'
+    // authToken is an HttpOnly cookie set by the backend — readable here server-side
+    const token = request.cookies.get('authToken');
+    const isLoginPage = request.nextUrl.pathname === '/login';
 
     if (!token && !isLoginPage) {
-        return NextResponse.redirect(new URL('/login', request.url))
+        return NextResponse.redirect(new URL('/login', request.url));
     }
 
     if (token && isLoginPage) {
-        return NextResponse.redirect(new URL('/', request.url))
+        return NextResponse.redirect(new URL('/', request.url));
     }
 
-    return NextResponse.next()
+    return NextResponse.next();
 }
 
 export const config = {

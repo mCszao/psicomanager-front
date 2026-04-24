@@ -1,17 +1,37 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
+import { buildUrl, UnauthorizedError } from './http-core';
 
-async function getToken(): Promise<string> {
-    if (typeof window === 'undefined') {
-        const { cookies } = await import('next/headers');
-        return cookies().get('authToken')?.value ?? '';
+// region Session events
+
+const SESSION_EXPIRED_EVENT = 'psico:session-expired';
+
+/**
+ * Dispatches a custom event carrying the message to be shown in the toast.
+ * Any mounted AuthGuard listener will pick this up and handle the redirect.
+ */
+function dispatchSessionExpired(message: string) {
+    if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent(SESSION_EXPIRED_EVENT, { detail: { message } }));
     }
-    const match = document.cookie.match(/(?:^|;\s*)authToken=([^;]*)/);
-    return match?.[1] ?? '';
 }
+
+export { SESSION_EXPIRED_EVENT };
+
+// endregion
+
+// region Response parsing
 
 async function parseResponse<T>(response: Response): Promise<T> {
     if (response.status === 401) {
-        handleUnauthorized();
+        const text = await response.text();
+        let message = 'Sessão expirada. Faça login novamente.';
+        try {
+            const body = JSON.parse(text);
+            if (body?.object && typeof body.object === 'string') {
+                message = body.object;
+            }
+        } catch { /* ignore parse errors */ }
+
+        throw new UnauthorizedError(message);
     }
 
     const text = await response.text();
@@ -19,79 +39,121 @@ async function parseResponse<T>(response: Response): Promise<T> {
     return JSON.parse(text) as T;
 }
 
+// endregion
+
+// region Token refresh
+
 /**
- * Clears the auth cookie and redirects to the login page.
- * Called whenever the API returns 401 (token expired or invalid).
+ * Attempts POST /auth/refresh.
+ * Returns true if a new access token was successfully issued.
  */
-function handleUnauthorized(): never {
-    if (typeof window !== 'undefined') {
-        document.cookie = 'authToken=; Max-Age=0; path=/';
-        window.location.href = '/login';
+async function attemptRefresh(): Promise<boolean> {
+    try {
+        const response = await fetch(buildUrl('/auth/refresh'), {
+            method: 'POST',
+            credentials: 'include',
+        });
+        return response.ok;
+    } catch {
+        return false;
     }
-    throw new Error('Unauthorized');
 }
 
-async function buildHeaders(withBody = false): Promise<HeadersInit> {
-    const token = await getToken();
-    return {
-        ...(token && { Authorization: `Bearer ${token}` }),
-        ...(withBody && { 'Content-Type': 'application/json' }),
-    };
+/**
+ * Fires the session-expired event (which triggers toast + redirect)
+ * and throws to stop the current execution chain.
+ */
+function handleUnauthorized(message: string): never {
+    document.cookie = 'username=; Max-Age=0; path=/';
+    dispatchSessionExpired(message);
+    throw new UnauthorizedError(message);
 }
+
+// endregion
+
+// region Request executor
+
+async function executeWithRefresh<T>(requestFn: () => Promise<Response>): Promise<T> {
+    try {
+        const response = await requestFn();
+        return await parseResponse<T>(response);
+    } catch (err) {
+        if (!(err instanceof UnauthorizedError)) throw err;
+
+        const refreshed = await attemptRefresh();
+        if (!refreshed) {
+            handleUnauthorized(err.message);
+        }
+
+        // Retry with the new access token now in the cookie
+        const retryResponse = await requestFn();
+        return await parseResponse<T>(retryResponse);
+    }
+}
+
+// endregion
+
+// region HTTP methods
 
 export async function get<T>(path: string): Promise<T> {
-    const response = await fetch(BASE_URL + path, {
-        headers: await buildHeaders(),
-    });
-    return parseResponse<T>(response);
+    return executeWithRefresh(() =>
+        fetch(buildUrl(path), { credentials: 'include' })
+    );
 }
 
 export async function post<T>(path: string, body: unknown): Promise<T> {
-    const response = await fetch(BASE_URL + path, {
-        method: 'POST',
-        headers: await buildHeaders(true),
-        body: JSON.stringify(body),
-    });
-    return parseResponse<T>(response);
+    return executeWithRefresh(() =>
+        fetch(buildUrl(path), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(body),
+        })
+    );
 }
 
 export async function put<T>(path: string, body: unknown): Promise<T> {
-    const response = await fetch(BASE_URL + path, {
-        method: 'PUT',
-        headers: await buildHeaders(true),
-        body: JSON.stringify(body),
-    });
-    return parseResponse<T>(response);
+    return executeWithRefresh(() =>
+        fetch(buildUrl(path), {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(body),
+        })
+    );
 }
 
 export async function del<T>(path: string): Promise<T> {
-    const response = await fetch(BASE_URL + path, {
-        method: 'DELETE',
-        headers: await buildHeaders(),
-    });
-    return parseResponse<T>(response);
+    return executeWithRefresh(() =>
+        fetch(buildUrl(path), {
+            method: 'DELETE',
+            credentials: 'include',
+        })
+    );
 }
 
 export async function patch<T>(path: string, body?: unknown): Promise<T> {
     const hasBody = body !== undefined;
-    const response = await fetch(BASE_URL + path, {
-        method: 'PATCH',
-        headers: await buildHeaders(hasBody),
-        ...(hasBody && { body: JSON.stringify(body) }),
-    });
-    return parseResponse<T>(response);
+    return executeWithRefresh(() =>
+        fetch(buildUrl(path), {
+            method: 'PATCH',
+            credentials: 'include',
+            ...(hasBody && {
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            }),
+        })
+    );
 }
 
 export async function postMultipart<T>(path: string, formData: FormData): Promise<T> {
-    const token = await getToken();
-    const response = await fetch(BASE_URL + path, {
-        method: 'POST',
-        headers: {
-            // Content-Type is intentionally omitted — the browser sets it automatically
-            // with the correct multipart boundary when body is FormData.
-            ...(token && { Authorization: `Bearer ${token}` }),
-        },
-        body: formData,
-    });
-    return parseResponse<T>(response);
+    return executeWithRefresh(() =>
+        fetch(buildUrl(path), {
+            method: 'POST',
+            credentials: 'include',
+            body: formData,
+        })
+    );
 }
+
+// endregion

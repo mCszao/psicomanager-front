@@ -1,7 +1,7 @@
-import { getPatient } from "@/services/api";
 import BaseResponse from "@/interface/IBaseResponse";
 import Patient from "@/interface/IPatient";
 import metadataFactory from "@/util/metadataFactory";
+import { serverGet } from "@/services/api/http-server";
 import { Calendar, Download, FileX, CalendarX, Mail, MapPin, Phone } from "lucide-react";
 import PatientScheduleList from "@/components/patient-schedule-list";
 import PatientScheduleItem from "@/components/patient-schedule-item";
@@ -16,7 +16,7 @@ type PageProps = {
 }
 
 export default async function Page({ params }: PageProps) {
-    const { object } = await getPatient(params.id) as BaseResponse<Patient>;
+    const { object } = await serverGet<BaseResponse<Patient>>(`/patients/${params.id}`);
     object?.schedules?.sort((a, b) => compareDate(a, b));
 
     const addr = object.address?.[0];

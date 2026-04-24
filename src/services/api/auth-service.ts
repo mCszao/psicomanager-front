@@ -8,3 +8,7 @@ export function signIn(credentials: SignInDTO) {
 export function signUp(data: SignUpDTO) {
     return post('/auth/signUp', data);
 }
+
+export function signOut() {
+    return post('/auth/signOut', {});
+}

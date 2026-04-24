@@ -12,13 +12,14 @@ import {
     BrainCircuit,
     LogOut,
 } from "lucide-react";
-import {useState} from "react";
-import {useRouter} from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import CreateSessionDialog from "./create-session-dialog";
 import CreatePatientDialog from "./create-patient-dialog";
 import SideButton from "./side-button";
 import SideLink from "./side-link";
 import ThemeSelector from "./theme-selector";
+import { signOut } from "@/services/api";
 
 export default function SideLinks() {
     const [isOpenSession, setOpenSession] = useState(false);
@@ -35,9 +36,14 @@ export default function SideLinks() {
         setOpenSession(false);
     }
 
-    function handleLogout() {
-        document.cookie = "authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        router.push("/login");
+    async function handleLogout() {
+        try {
+            await signOut();
+        } finally {
+            // Clear non-HttpOnly cookies client-side and redirect regardless of API response
+            document.cookie = 'username=; Max-Age=0; path=/';
+            router.push("/login");
+        }
     }
 
     return (

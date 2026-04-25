@@ -16,4 +16,5 @@ export default interface Schedule {
     type: AttendanceTypeEnum;
     patient: PatientResume;
     rescheduledTo?: ScheduleRescheduledTo | null;
+    plan?: { id: string; title?: string; planTemplate?: { title: string } } | null;
 }

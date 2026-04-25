@@ -11,6 +11,7 @@ import {
     HelpCircle,
     BrainCircuit,
     LogOut,
+    Layers,
 } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -65,6 +66,7 @@ export default function SideLinks() {
                 <SideLink path="/schedules" icon={CalendarDays} label="Agendamentos"/>
                 <SideLink path="/reports" icon={FileText} label="Relatórios" implemented={false}/>
                 <SideLink path="/analytics" icon={BarChart3} label="Estatísticas" implemented={false}/>
+                <SideLink path="/settings/plan-templates" icon={Layers} label="Templates"/>
 
                 <div className="my-2 mx-4 border-t border-white/10"/>
 

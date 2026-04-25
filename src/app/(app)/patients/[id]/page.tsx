@@ -10,6 +10,7 @@ import PatientDocumentItem from "@/components/patient-document-item";
 import { compareDate } from "@/util/DateUtils";
 
 export const metadata = metadataFactory("Prontuário");
+export const dynamic = 'force-dynamic';
 
 type PageProps = {
     params: { id: string }

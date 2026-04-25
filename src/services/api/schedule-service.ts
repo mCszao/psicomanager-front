@@ -19,6 +19,10 @@ export function getSchedule(scheduleId: string): Promise<BaseResponse<Session>> 
     return get(`/schedules/${scheduleId}`);
 }
 
+export function getSchedulesByPatient(patientId: string): Promise<BaseResponse<Session[]>> {
+    return get(`/schedules/patient?id=${patientId}`);
+}
+
 export function registerSchedule(schedule: ScheduleDTO) {
     return post('/schedules/register', schedule);
 }

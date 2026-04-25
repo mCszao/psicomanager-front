@@ -27,6 +27,8 @@ export default function CreatePlanDialog({ patientId, externalFunc }: Props) {
         frequency, setFrequency,
         adherenceDate, setAdherenceDate,
         generateSessions, setGenerateSessions,
+        isContinuous, setIsContinuous,
+        continuousPlanMonths,
         sessionStartTime, setSessionStartTime,
         isLoading, submit,
     } = useCreatePlan({ patientId, onSuccess: externalFunc });
@@ -99,7 +101,33 @@ export default function CreatePlanDialog({ patientId, externalFunc }: Props) {
                     <Input id="adherenceDate" type="date" value={adherenceDate} onChange={e => setAdherenceDate(e.target.value)} />
                 </LabelContainer>
 
-                {frequency && sessionsCount && (
+                <LabelContainer title="Tipo de plano" labelFor="planType">
+                    <div className="flex rounded-lg border border-border-default overflow-hidden text-sm">
+                        <button
+                            type="button"
+                            onClick={() => setIsContinuous(true)}
+                            className={`flex-1 py-2.5 font-medium transition-colors border-r border-border-default
+                                ${isContinuous ? 'bg-royalBlue text-white' : 'text-content-secondary hover:bg-surface-raised'}`}
+                        >
+                            Contínuo
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setIsContinuous(false)}
+                            className={`flex-1 py-2.5 font-medium transition-colors
+                                ${!isContinuous ? 'bg-royalBlue text-white' : 'text-content-secondary hover:bg-surface-raised'}`}
+                        >
+                            Finito
+                        </button>
+                    </div>
+                    <p className="text-xs text-content-secondary mt-1.5">
+                        {isContinuous
+                            ? 'Sem fim definido — o plano fica ativo até ser encerrado manualmente.'
+                            : 'Com fim definido — encerra automaticamente ao concluir todas as sessões.'}
+                    </p>
+                </LabelContainer>
+
+                {frequency && (isContinuous || sessionsCount) && (
                     <div className="mb-5">
                         <label className="flex items-center gap-2 text-sm font-medium text-content-primary cursor-pointer">
                             <input
@@ -109,7 +137,9 @@ export default function CreatePlanDialog({ patientId, externalFunc }: Props) {
                                 className="rounded border-border-default"
                             />
                             <Repeat size={14} />
-                            Gerar {sessionsCount} sessões automaticamente
+                            {isContinuous
+                                ? `Gerar ~${continuousPlanMonths} meses de sessões automaticamente`
+                                : `Gerar ${sessionsCount} sessões automaticamente`}
                         </label>
                     </div>
                 )}

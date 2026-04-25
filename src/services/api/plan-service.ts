@@ -1,7 +1,7 @@
 import BaseResponse from "@/interface/IBaseResponse";
-import { Plan, PlanTemplate } from "@/interface/IPlan";
-import { PlanRegisterDTO, PlanTemplateDTO } from "@/types/plan.dto";
-import { get, post, patch, del } from "./http";
+import {Plan, PlanTemplate} from "@/interface/IPlan";
+import {PlanRegisterDTO, PlanTemplateDTO} from "@/types/plan.dto";
+import {del, get, patch, post} from "./http";
 
 export function getPlanTemplates(): Promise<BaseResponse<PlanTemplate[]>> {
     return get('/plans/templates');

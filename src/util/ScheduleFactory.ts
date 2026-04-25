@@ -1,18 +1,20 @@
-import { AttendanceTypeEnum } from "@/types/schedule.dto";
-import { normalizeDates } from "./DateUtils";
+import {AttendanceTypeEnum} from "@/types/schedule.dto";
+import {normalizeDates} from "./DateUtils";
 
 type ScheduleRegisterPayload = {
-  patientId: string;
-  dateStart: string;
-  dateEnd?: string;
-  type?: AttendanceTypeEnum;
+    patientId: string;
+    dateStart: string;
+    dateEnd?: string;
+    type?: AttendanceTypeEnum;
+    sessionValue?: number;
 };
 
 type ScheduleFormData = {
-  patientId?: string;
-  dateStart: string;
-  dateEnd?: string | null;
-  type?: AttendanceTypeEnum;
+    patientId?: string;
+    dateStart: string;
+    dateEnd?: string | null;
+    type?: AttendanceTypeEnum;
+    sessionValue?: string;
 };
 
 /**
@@ -26,18 +28,19 @@ type ScheduleFormData = {
  * @returns Payload pronto para envio à API
  */
 export default function ScheduleFactory(
-  formData: ScheduleFormData,
-  patientId: string
+    formData: ScheduleFormData,
+    patientId: string
 ): ScheduleRegisterPayload {
-  const { dateStart, dateEnd } = normalizeDates(formData.dateStart, formData.dateEnd);
+    const {dateStart, dateEnd} = normalizeDates(formData.dateStart, formData.dateEnd);
 
-  const payload: ScheduleRegisterPayload = {
-    patientId,
-    dateStart,
-    type: formData.type,
-  };
+    const payload: ScheduleRegisterPayload = {
+        patientId,
+        dateStart,
+        type: formData.type,
+    };
 
-  if (dateEnd != null) payload.dateEnd = dateEnd;
+    if (dateEnd != null) payload.dateEnd = dateEnd;
+    if (formData.sessionValue) payload.sessionValue = Number(formData.sessionValue);
 
-  return payload;
+    return payload;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import {X} from "lucide-react";
 import BaseForm from "./ui/base-form";
 import ButtonSubmit from "./ui/button-submit";
 import DialogHeader from "./ui/dialog-header";
@@ -8,20 +8,20 @@ import LabelContainer from "./ui/label-container";
 import Input from "./ui/input";
 import MaskedInput from "./ui/masked-input";
 import Dialog from "./ui/dialog";
-import { useCreatePatient } from "@/hooks/useCreatePatient";
-import { maskCpf, maskPhone, maskCep } from "@/util/masks";
+import {useCreatePatient} from "@/hooks/useCreatePatient";
+import {maskCep, maskCpf, maskPhone} from "@/util/masks";
 
 type Props = {
     externalFunc: () => void;
 }
 
-export default function CreatePatientDialog({ externalFunc }: Props) {
-    const { form, submit } = useCreatePatient({ onSuccess: externalFunc });
-    const { register, handleSubmit, formState: { errors } } = form;
+export default function CreatePatientDialog({externalFunc}: Props) {
+    const {form, submit} = useCreatePatient({onSuccess: externalFunc});
+    const {register, handleSubmit, formState: {errors}} = form;
 
     return (
         <Dialog>
-            <DialogHeader title="Novo paciente" textButton={<X />} functionButton={externalFunc} />
+            <DialogHeader title="Novo paciente" textButton={<X/>} functionButton={externalFunc}/>
             <BaseForm onSubmit={handleSubmit(submit)}>
 
                 <LabelContainer title="Nome completo *" labelFor="name">
@@ -77,7 +77,8 @@ export default function CreatePatientDialog({ externalFunc }: Props) {
                         id="birthdayDate"
                         {...register('birthdayDate')}
                     />
-                    {errors.birthdayDate && <span className="block text-xs text-red-500 mt-1">{errors.birthdayDate.message}</span>}
+                    {errors.birthdayDate &&
+                        <span className="block text-xs text-red-500 mt-1">{errors.birthdayDate.message}</span>}
                 </LabelContainer>
 
                 <LabelContainer title="CEP" labelFor="zipcode">
@@ -90,10 +91,11 @@ export default function CreatePatientDialog({ externalFunc }: Props) {
                         autoComplete="postal-code"
                         {...register('zipcode')}
                     />
-                    {errors.zipcode && <span className="block text-xs text-red-500 mt-1">{errors.zipcode.message}</span>}
+                    {errors.zipcode &&
+                        <span className="block text-xs text-red-500 mt-1">{errors.zipcode.message}</span>}
                 </LabelContainer>
 
-                <ButtonSubmit title="Adicionar paciente" />
+                <ButtonSubmit title="Adicionar paciente"/>
             </BaseForm>
         </Dialog>
     );

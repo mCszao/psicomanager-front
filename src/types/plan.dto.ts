@@ -23,6 +23,7 @@ export type PlanRegisterDTO = {
     frequency?: FrequencyEnum;
     adherenceDate: string;
     estimatedEndDate?: string;
+    isContinuous: boolean;
     generateSessions: boolean;
     sessionStartTime?: string;
 };

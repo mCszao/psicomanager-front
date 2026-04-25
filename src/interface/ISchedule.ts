@@ -17,4 +17,5 @@ export default interface Schedule {
     patient: PatientResume;
     rescheduledTo?: ScheduleRescheduledTo | null;
     plan?: { id: string; title?: string | null } | null;
+    sessionValue?: number | null;
 }

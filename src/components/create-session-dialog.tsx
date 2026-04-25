@@ -1,6 +1,6 @@
 "use client";
 
-import { X, UserPlus, Building2, Monitor, Repeat } from "lucide-react";
+import { X, UserPlus, Building2, Monitor } from "lucide-react";
 import BaseForm from "./ui/base-form";
 import ButtonSubmit from "./ui/button-submit";
 import Dialog from "./ui/dialog";
@@ -10,7 +10,6 @@ import LabelContainer from "./ui/label-container";
 import DialogPatientList from "./dialog-patients-list";
 import { useCreateSession } from "@/hooks/useCreateSession";
 import { AttendanceTypeEnum } from "@/types/schedule.dto";
-import { FrequencyEnum, FREQUENCY_LABEL } from "@/types/plan.dto";
 
 type Props = {
     externalFunc: () => void;
@@ -18,14 +17,7 @@ type Props = {
 
 const ATTENDANCE_OPTIONS: { value: AttendanceTypeEnum; label: string; icon: React.ReactNode }[] = [
     { value: 'PRESENTIAL', label: 'Presencial', icon: <Building2 size={15} /> },
-    { value: 'REMOTE',     label: 'Remoto',     icon: <Monitor size={15} /> },
-];
-
-const FREQUENCIES: { value: FrequencyEnum; label: string }[] = [
-    { value: 'DAILY',    label: FREQUENCY_LABEL['DAILY']    },
-    { value: 'WEEKLY',   label: FREQUENCY_LABEL['WEEKLY']   },
-    { value: 'BIWEEKLY', label: FREQUENCY_LABEL['BIWEEKLY'] },
-    { value: 'MONTHLY',  label: FREQUENCY_LABEL['MONTHLY']  },
+    { value: 'REMOTE',     label: 'Remoto',     icon: <Monitor size={15} />   },
 ];
 
 export default function CreateSessionDialog({ externalFunc }: Props) {
@@ -39,11 +31,7 @@ export default function CreateSessionDialog({ externalFunc }: Props) {
     } = useCreateSession({ onSuccess: externalFunc });
 
     const { register, handleSubmit, watch, setValue, formState: { errors } } = form;
-
     const selectedType = watch('type');
-    const selectedFrequency = watch('frequency' as any);
-    const sessionsCount = watch('sessionsCount' as any);
-    const isBatch = !!selectedFrequency && Number(sessionsCount) > 1;
 
     return (
         <Dialog>
@@ -65,6 +53,7 @@ export default function CreateSessionDialog({ externalFunc }: Props) {
                             type="button"
                             onClick={togglePatientList}
                             className="shrink-0 p-2.5 rounded-lg border border-border-default bg-surface-sunken hover:bg-surface-hover text-content-secondary transition-colors"
+                            title="Buscar paciente"
                         >
                             <UserPlus size={16} />
                         </button>
@@ -97,58 +86,23 @@ export default function CreateSessionDialog({ externalFunc }: Props) {
                     {errors.dateStart && <span className="block text-xs text-red-500 mt-1">{errors.dateStart.message}</span>}
                 </LabelContainer>
 
-                {!isBatch && (
-                    <LabelContainer title="Data de término" labelFor="dateEnd">
-                        <Input type="datetime-local" id="dateEnd" {...register('dateEnd')} />
-                        {errors.dateEnd && <span className="block text-xs text-red-500 mt-1">{errors.dateEnd.message}</span>}
-                    </LabelContainer>
-                )}
+                <LabelContainer title="Data de término" labelFor="dateEnd">
+                    <Input type="datetime-local" id="dateEnd" {...register('dateEnd')} />
+                    {errors.dateEnd && <span className="block text-xs text-red-500 mt-1">{errors.dateEnd.message}</span>}
+                </LabelContainer>
 
-                {/* Agendamento em lote */}
-                <div className="col-span-2 mb-5">
-                    <p className="flex items-center gap-1.5 text-sm font-medium text-content-primary mb-2">
-                        <Repeat size={14} /> Repetição (opcional)
-                    </p>
-                    <div className="flex rounded-lg border border-border-default overflow-hidden text-sm mb-3">
-                        <button
-                            type="button"
-                            onClick={() => setValue('frequency' as any, '', { shouldValidate: false })}
-                            className={`flex-1 py-2 font-medium transition-colors border-r border-border-default
-                                ${!selectedFrequency ? 'bg-royalBlue text-white' : 'text-content-secondary hover:bg-surface-raised'}`}
-                        >
-                            Sem repetição
-                        </button>
-                        {FREQUENCIES.map(({ value, label }) => (
-                            <button
-                                key={value}
-                                type="button"
-                                onClick={() => setValue('frequency' as any, value, { shouldValidate: false })}
-                                className={`flex-1 py-2 font-medium transition-colors border-r last:border-r-0 border-border-default
-                                    ${selectedFrequency === value ? 'bg-royalBlue text-white' : 'text-content-secondary hover:bg-surface-raised'}`}
-                            >
-                                {label}
-                            </button>
-                        ))}
-                    </div>
-                    {selectedFrequency && (
-                        <div>
-                            <label className="block mb-2 text-sm font-medium text-content-primary">Quantidade de sessões</label>
-                            <Input
-                                type="number"
-                                min="2"
-                                placeholder="Ex: 4"
-                                {...register('sessionsCount' as any, { valueAsNumber: true })}
-                            />
-                            {isBatch && (
-                                <p className="text-xs text-content-secondary mt-1.5">
-                                    Serão criadas {sessionsCount} sessões com frequência {FREQUENCY_LABEL[selectedFrequency as FrequencyEnum]} a partir da data de início.
-                                </p>
-                            )}
-                        </div>
-                    )}
-                </div>
+                <LabelContainer title="Valor da sessão (R$)" labelFor="sessionValue">
+                    <Input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        id="sessionValue"
+                        placeholder="Ex: 75,00"
+                        {...register('sessionValue')}
+                    />
+                </LabelContainer>
 
-                <ButtonSubmit title={isBatch ? `Agendar ${sessionsCount} sessões` : 'Adicionar sessão'} />
+                <ButtonSubmit title="Adicionar sessão" />
             </BaseForm>
 
             {isPatientListOpen && (

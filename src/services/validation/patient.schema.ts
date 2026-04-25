@@ -1,4 +1,4 @@
-import { z } from "zod";
+import {z} from "zod";
 
 export const createPatientSchema = z.object({
     name: z.string().min(3, 'O nome precisa ter no mínimo 3 caracteres'),

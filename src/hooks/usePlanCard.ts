@@ -1,13 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useToast } from "@/contexts/ToastContext";
-import { registerSchedule, getSchedulesByPatient } from "@/services/api";
-import { Plan } from "@/interface/IPlan";
+import {useState} from "react";
+import {useRouter} from "next/navigation";
+import {useToast} from "@/contexts/ToastContext";
+import {getSchedulesByPatient, registerSchedule} from "@/services/api";
+import {Plan} from "@/interface/IPlan";
 import Schedule from "@/interface/ISchedule";
 import BaseResponse from "@/interface/IBaseResponse";
-import { extractApiError } from "@/util/feedback";
+import {extractApiError} from "@/util/feedback";
+import {FrequencyEnum} from "@/types/plan.dto";
+
+// Quantidade de sessões geradas em lote para planos contínuos via botão "Lançar mais".
+// Futuramente configurável pelo painel de configurações.
+const CONTINUOUS_BATCH_MONTHS = 3;
 
 interface UsePlanCardProps {
     plan: Plan;
@@ -15,7 +20,7 @@ interface UsePlanCardProps {
     initialSchedules: Schedule[];
 }
 
-export function usePlanCard({ plan, patientId, initialSchedules }: UsePlanCardProps) {
+export function usePlanCard({plan, patientId, initialSchedules}: UsePlanCardProps) {
     const toast = useToast();
     const router = useRouter();
 
@@ -31,19 +36,40 @@ export function usePlanCard({ plan, patientId, initialSchedules }: UsePlanCardPr
         s.stage === 'OPENED' || s.stage === 'CONCLUDED'
     );
     const concluded = linkedSchedules.filter(s => s.stage === 'CONCLUDED').length;
-    const remaining = plan.sessionsCount && plan.frequency
+
+    // Para planos finitos calcula as restantes; para contínuos não há limite
+    const remaining = !plan.isContinuous && plan.sessionsCount
         ? Math.max(0, plan.sessionsCount - activeLinked.length)
         : 0;
 
     const displayTitle = plan.title ?? plan.planTemplate?.title ?? 'Plano sem título';
-    const canLaunchRemaining = remaining > 0 && plan.isActive && !!plan.frequency;
+
+    // Contínuos: botão sempre visível enquanto ativo e com frequência definida
+    // Finitos: botão visível enquanto houver sessões restantes
+    const canLaunchRemaining = plan.isActive && !!plan.frequency &&
+        (plan.isContinuous || remaining > 0);
+
+    const launchButtonLabel = plan.isContinuous
+        ? 'Lançar mais sessões'
+        : `${remaining} restantes`;
+
+    // Para planos contínuos calcula a quantidade de sessões equivalente a ~3 meses
+    function resolveBatchCount(): number {
+        if (!plan.isContinuous) return remaining;
+        if (!plan.frequency) return 0;
+        return ({
+            DAILY: CONTINUOUS_BATCH_MONTHS * 30,
+            WEEKLY: CONTINUOUS_BATCH_MONTHS * 4,
+            BIWEEKLY: CONTINUOUS_BATCH_MONTHS * 2,
+            MONTHLY: CONTINUOUS_BATCH_MONTHS,
+        } as Record<FrequencyEnum, number>)[plan.frequency];
+    }
 
     async function refreshLinkedSchedules() {
         const res = await getSchedulesByPatient(patientId) as BaseResponse<Schedule[]>;
         if (res.success && res.object) {
             setLinkedSchedules(res.object.filter(s => s.plan?.id === plan.id));
         }
-        console.log(linkedSchedules)
     }
 
     async function handleLaunch() {
@@ -52,7 +78,7 @@ export function usePlanCard({ plan, patientId, initialSchedules }: UsePlanCardPr
             return;
         }
 
-        const countToLaunch = remaining;
+        const countToLaunch = resolveBatchCount();
         if (countToLaunch <= 0) return;
 
         setIsLaunching(true);
@@ -90,6 +116,7 @@ export function usePlanCard({ plan, patientId, initialSchedules }: UsePlanCardPr
         remaining,
         displayTitle,
         canLaunchRemaining,
+        launchButtonLabel,
         handleLaunch,
     };
 }

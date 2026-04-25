@@ -9,6 +9,10 @@ import { PlanRegisterDTO, FrequencyEnum } from "@/types/plan.dto";
 import BaseResponse from "@/interface/IBaseResponse";
 import { extractApiError } from "@/util/feedback";
 
+// Quantidade de meses gerados automaticamente para planos contínuos.
+// Futuramente configurável pelo painel de configurações.
+const CONTINUOUS_PLAN_MONTHS = 3;
+
 interface UseCreatePlanProps {
     patientId: string;
     onSuccess: () => void;
@@ -26,6 +30,7 @@ export function useCreatePlan({ patientId, onSuccess }: UseCreatePlanProps) {
     const [frequency, setFrequency] = useState<FrequencyEnum | ''>('');
     const [adherenceDate, setAdherenceDate] = useState('');
     const [generateSessions, setGenerateSessions] = useState(false);
+    const [isContinuous, setIsContinuous] = useState(true);
     const [sessionStartTime, setSessionStartTime] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -49,8 +54,16 @@ export function useCreatePlan({ patientId, onSuccess }: UseCreatePlanProps) {
             toast.error('Data de adesão é obrigatória');
             return;
         }
+        if (!frequency) {
+            toast.error('A frequência é obrigatória para qualquer tipo de plano.');
+            return;
+        }
+        if (!isContinuous && (!sessionsCount || Number(sessionsCount) < 1)) {
+            toast.error('Planos finitos exigem o número de sessões informado.');
+            return;
+        }
         if (generateSessions && !sessionStartTime) {
-            toast.error('Informe o horário de início das sessões');
+            toast.error('Informe o horário de início das sessões.');
             return;
         }
 
@@ -63,6 +76,7 @@ export function useCreatePlan({ patientId, onSuccess }: UseCreatePlanProps) {
             sessionsCount: sessionsCount ? Number(sessionsCount) : undefined,
             frequency: frequency || undefined,
             adherenceDate,
+            isContinuous,
             generateSessions,
             sessionStartTime: generateSessions ? sessionStartTime : undefined,
         };
@@ -91,6 +105,8 @@ export function useCreatePlan({ patientId, onSuccess }: UseCreatePlanProps) {
         frequency, setFrequency,
         adherenceDate, setAdherenceDate,
         generateSessions, setGenerateSessions,
+        isContinuous, setIsContinuous,
+        continuousPlanMonths: CONTINUOUS_PLAN_MONTHS,
         sessionStartTime, setSessionStartTime,
         isLoading,
         submit,

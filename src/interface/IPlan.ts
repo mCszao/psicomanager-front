@@ -23,4 +23,5 @@ export interface Plan {
     startedAt?: string | null;
     endedAt?: string | null;
     isActive: boolean;
+    isContinuous: boolean;
 }

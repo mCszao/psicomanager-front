@@ -1,18 +1,18 @@
 'use client';
 
-import { useToasts, ToastType } from '@/contexts/ToastContext';
-import { CheckCircle2, XCircle, Info } from 'lucide-react';
+import {ToastType, useToasts} from '@/contexts/ToastContext';
+import {CheckCircle2, Info, XCircle} from 'lucide-react';
 
 const STYLES: Record<ToastType, string> = {
     success: 'bg-green-50 border-green-200 text-green-800',
-    error:   'bg-red-100  border-red-400   text-red-900',
-    info:    'bg-blue-50  border-blue-200  text-blue-800',
+    error: 'bg-red-100  border-red-400   text-red-900',
+    info: 'bg-blue-50  border-blue-200  text-blue-800',
 };
 
 const ICONS: Record<ToastType, React.ReactNode> = {
-    success: <CheckCircle2 size={18} className="text-green-600 shrink-0" />,
-    error:   <XCircle      size={20} className="text-red-600   shrink-0" />,
-    info:    <Info         size={18} className="text-blue-600  shrink-0" />,
+    success: <CheckCircle2 size={18} className="text-green-600 shrink-0"/>,
+    error: <XCircle size={20} className="text-red-600   shrink-0"/>,
+    info: <Info size={18} className="text-blue-600  shrink-0"/>,
 };
 
 export default function ToastContainer() {

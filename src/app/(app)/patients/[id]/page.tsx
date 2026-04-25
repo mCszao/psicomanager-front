@@ -1,11 +1,11 @@
 import BaseResponse from "@/interface/IBaseResponse";
 import Patient from "@/interface/IPatient";
+import { Plan } from "@/interface/IPlan";
 import metadataFactory from "@/util/metadataFactory";
 import { serverGet } from "@/services/api/http-server";
-import { Calendar, Download, FileX, CalendarX, Mail, MapPin, Phone } from "lucide-react";
-import PatientScheduleList from "@/components/patient-schedule-list";
+import { Calendar, Download, Mail, MapPin, Phone } from "lucide-react";
+import PatientTabbedPanel from "@/components/patient-tabbed-panel";
 import PatientScheduleItem from "@/components/patient-schedule-item";
-import PatientDocumentList from "@/components/patient-document-list";
 import PatientDocumentItem from "@/components/patient-document-item";
 import { compareDate } from "@/util/DateUtils";
 
@@ -17,8 +17,11 @@ type PageProps = {
 
 export default async function Page({ params }: PageProps) {
     const { object } = await serverGet<BaseResponse<Patient>>(`/patients/${params.id}`);
+    const plansRes = await serverGet<BaseResponse<Plan[]>>(`/plans/patient/${params.id}`);
+
     object?.schedules?.sort((a, b) => compareDate(a, b));
 
+    const plans = plansRes.object ?? [];
     const addr = object.address?.[0];
 
     return (
@@ -65,33 +68,14 @@ export default async function Page({ params }: PageProps) {
                 </a>
             </div>
 
-            {/* Body */}
-            <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
-                <PatientScheduleList>
-                    {!object.schedules?.length ? (
-                        <div className="flex flex-col items-center justify-center gap-2 py-12 text-content-secondary">
-                            <CalendarX size={36} strokeWidth={1.5} />
-                            <p className="text-sm font-medium">Sem acompanhamentos registrados.</p>
-                        </div>
-                    ) : (
-                        object.schedules.map((item, i) => (
-                            <PatientScheduleItem key={i} schedule={item} />
-                        ))
-                    )}
-                </PatientScheduleList>
-
-                <PatientDocumentList patientId={object.id}>
-                    {!object.documents?.length ? (
-                        <div className="flex flex-col items-center justify-center gap-2 py-12 text-content-secondary">
-                            <FileX size={36} strokeWidth={1.5} />
-                            <p className="text-sm font-medium">Nenhum documento enviado.</p>
-                        </div>
-                    ) : (
-                        object.documents.map((item, i) => (
-                            <PatientDocumentItem key={i} document={item} />
-                        ))
-                    )}
-                </PatientDocumentList>
+            {/* Body — tabbed panel ocupa toda a área */}
+            <div className="flex-1 min-h-0">
+                <PatientTabbedPanel
+                    patientId={object.id}
+                    schedules={object.schedules ?? []}
+                    plans={plans}
+                    documents={object.documents ?? []}
+                />
             </div>
         </div>
     );

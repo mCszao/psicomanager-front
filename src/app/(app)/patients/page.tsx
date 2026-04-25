@@ -1,8 +1,8 @@
 import BaseResponse from "@/interface/IBaseResponse";
-import { PatientResume } from "@/interface/IPatientResume";
+import {PatientResume} from "@/interface/IPatientResume";
 import metadataFactory from "@/util/metadataFactory";
 import FilterPatientList from "@/components/filter-patient-list";
-import { serverGet } from "@/services/api/http-server";
+import {serverGet} from "@/services/api/http-server";
 
 export const metadata = metadataFactory("Lista de pacientes");
 
@@ -14,8 +14,9 @@ export default async function Page() {
             <div className="shrink-0 rounded-2xl border border-border-default shadow-lg bg-surface-default px-5 py-4">
                 <h2 className="text-3xl font-semibold text-royalBlue">Pacientes</h2>
             </div>
-            <div className="flex-1 min-h-0 overflow-auto rounded-2xl border border-border-default shadow-lg bg-surface-default p-5">
-                <FilterPatientList data={response} />
+            <div
+                className="flex-1 min-h-0 overflow-auto rounded-2xl border border-border-default shadow-lg bg-surface-default p-5">
+                <FilterPatientList data={response}/>
             </div>
         </div>
     );

@@ -2,11 +2,12 @@
 
 import { Layers, Plus, Trash2, X, Building2 } from "lucide-react";
 import { PlanTemplate } from "@/interface/IPlan";
-import { FrequencyEnum, FREQUENCY_LABEL } from "@/types/plan.dto";
+import { AttendanceTypeEnum, FrequencyEnum, FREQUENCY_LABEL, ATTENDANCE_TYPE_LABEL } from "@/types/plan.dto";
 import { usePlanTemplates } from "@/hooks/usePlanTemplates";
 import Input from "@/components/ui/input";
 
 const FREQUENCIES: FrequencyEnum[] = ['DAILY', 'WEEKLY', 'BIWEEKLY', 'MONTHLY'];
+const ATTENDANCE_TYPES: AttendanceTypeEnum[] = ['PRESENTIAL', 'REMOTE'];
 
 interface Props {
     initialTemplates: PlanTemplate[];
@@ -19,6 +20,7 @@ export default function PlanTemplateList({ initialTemplates }: Props) {
         pricePerSession, setPricePerSession,
         sessionsCount, setSessionsCount,
         frequency, setFrequency,
+        attendanceType, setAttendanceType,
         totalValue,
         handleCreate,
         handleDelete,
@@ -92,6 +94,24 @@ export default function PlanTemplateList({ initialTemplates }: Props) {
                         </div>
                     </div>
 
+                    <div className="mb-4">
+                        <label className="block mb-2 text-sm font-medium text-content-primary">Tipo de atendimento *</label>
+                        <div className="flex rounded-lg border border-border-default overflow-hidden text-sm">
+                            {ATTENDANCE_TYPES.map((type, idx) => (
+                                <button
+                                    key={type}
+                                    type="button"
+                                    onClick={() => setAttendanceType(type)}
+                                    className={`flex-1 py-2.5 font-medium transition-colors border-border-default
+                                        ${idx < ATTENDANCE_TYPES.length - 1 ? 'border-r' : ''}
+                                        ${attendanceType === type ? 'bg-royalBlue text-white' : 'text-content-secondary hover:bg-surface-raised'}`}
+                                >
+                                    {ATTENDANCE_TYPE_LABEL[type]}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
                     {totalValue && (
                         <p className="text-sm text-content-secondary mb-4">
                             Valor total do plano: <strong className="text-content-primary">R$ {totalValue}</strong>
@@ -127,6 +147,15 @@ export default function PlanTemplateList({ initialTemplates }: Props) {
                             <span className="text-xs px-2.5 py-0.5 rounded-full border font-medium shrink-0 bg-blue-100 text-blue-700 border-blue-200">
                                 {FREQUENCY_LABEL[t.frequency]}
                             </span>
+                            {t.attendanceType && (
+                                <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium shrink-0
+                                    ${t.attendanceType === 'PRESENTIAL'
+                                        ? 'bg-green-100 text-green-700 border-green-200'
+                                        : 'bg-purple-100 text-purple-700 border-purple-200'}`}
+                                >
+                                    {ATTENDANCE_TYPE_LABEL[t.attendanceType]}
+                                </span>
+                            )}
                             <span className="hidden sm:block text-xs text-content-secondary shrink-0 min-w-[72px] text-right">
                                 {t.sessionsCount}x sessões
                             </span>

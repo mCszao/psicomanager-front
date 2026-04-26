@@ -27,33 +27,32 @@ export default async function Page({params}: PageProps) {
     const addr = object.address?.[0];
 
     return (
-        <div className="flex flex-col h-screen px-8 pt-8 pb-6 overflow-hidden gap-5">
+        <div className="flex flex-col h-screen px-4 pt-4 pb-2 md:px-8 md:pt-8 md:pb-6 overflow-hidden gap-3 md:gap-5">
 
             {/* Header */}
-            <div
-                className="shrink-0 rounded-2xl border border-border-default shadow-lg bg-surface-default px-5 py-4 flex items-start justify-between gap-6">
-                <div className="flex items-start gap-4 border-l-4 border-royalBlue pl-4">
-                    <div>
-                        <h1 className="text-3xl font-bold text-royalBlue leading-tight">{object.name}</h1>
-                        <div className="flex flex-wrap gap-x-5 gap-y-1.5 mt-2 text-sm text-content-secondary">
+            <div className="shrink-0 rounded-2xl border border-border-default shadow-lg bg-surface-default px-4 py-3 md:px-5 md:py-4 flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3 md:gap-4 border-l-4 border-royalBlue pl-3 md:pl-4 min-w-0">
+                    <div className="min-w-0">
+                        <h1 className="text-xl md:text-3xl font-bold text-royalBlue leading-tight truncate">{object.name}</h1>
+                        <div className="flex flex-wrap gap-x-3 md:gap-x-5 gap-y-1 mt-1 md:mt-2 text-xs md:text-sm text-content-secondary">
                             {object.email && (
-                                <span className="flex items-center gap-1.5">
-                                    <Mail size={14} className="shrink-0"/> {object.email}
+                                <span className="hidden sm:flex items-center gap-1.5">
+                                    <Mail size={13} className="shrink-0"/> {object.email}
                                 </span>
                             )}
                             {object.phone && (
                                 <span className="flex items-center gap-1.5">
-                                    <Phone size={14} className="shrink-0"/> {object.phone}
+                                    <Phone size={13} className="shrink-0"/> {object.phone}
                                 </span>
                             )}
                             {object.birthdayDate && (
                                 <span className="flex items-center gap-1.5">
-                                    <Calendar size={14} className="shrink-0"/> {object.birthdayDate}
+                                    <Calendar size={13} className="shrink-0"/> {object.birthdayDate}
                                 </span>
                             )}
                             {addr && (
-                                <span className="flex items-center gap-1.5">
-                                    <MapPin size={14} className="shrink-0"/>
+                                <span className="hidden md:flex items-center gap-1.5">
+                                    <MapPin size={13} className="shrink-0"/>
                                     {[addr.street, addr.district, addr.city, addr.abbreviation]
                                         .filter(Boolean)
                                         .join(', ')}
@@ -65,13 +64,13 @@ export default async function Page({params}: PageProps) {
 
                 <a
                     href={`http://localhost:8080/documents/generate-contract?patientId=${object.id}`}
-                    className="flex items-center gap-2 shrink-0 text-sm px-4 py-2 rounded-lg bg-royalBlue text-white hover:opacity-90 transition-opacity font-medium"
+                    className="flex items-center gap-1.5 shrink-0 text-xs md:text-sm px-3 md:px-4 py-2 rounded-lg bg-royalBlue text-white hover:opacity-90 transition-opacity font-medium"
                 >
-                    <Download size={16}/> Gerar contrato
+                    <Download size={14}/> <span className="hidden sm:inline">Gerar contrato</span>
                 </a>
             </div>
 
-            {/* Body — tabbed panel ocupa toda a área */}
+            {/* Tabbed panel */}
             <div className="flex-1 min-h-0">
                 <PatientTabbedPanel
                     patientId={object.id}
@@ -81,8 +80,8 @@ export default async function Page({params}: PageProps) {
                 />
             </div>
 
-            {/* Avisos do paciente */}
-            <div className="px-5 pb-4 border-t border-border-default pt-3">
+            {/* Avisos */}
+            <div className="shrink-0 px-4 py-3 md:px-5 border border-border-default rounded-2xl bg-surface-default shadow-lg">
                 <div className="flex items-center gap-2 mb-2">
                     <Bell size={13} className="text-amber-500"/>
                     <span className="text-xs font-medium text-content-secondary">Avisos</span>

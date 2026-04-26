@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { X, Repeat } from "lucide-react";
+import { Repeat, X } from "lucide-react";
 import Dialog from "./ui/dialog";
 import DialogHeader from "./ui/dialog-header";
 import BaseForm from "./ui/base-form";
@@ -9,9 +9,10 @@ import ButtonSubmit from "./ui/button-submit";
 import LabelContainer from "./ui/label-container";
 import Input from "./ui/input";
 import { useCreatePlan } from "@/hooks/useCreatePlan";
-import { FrequencyEnum, FREQUENCY_LABEL } from "@/types/plan.dto";
+import { ATTENDANCE_TYPE_LABEL, AttendanceTypeEnum, FREQUENCY_LABEL, FrequencyEnum } from "@/types/plan.dto";
 
 const FREQUENCIES: FrequencyEnum[] = ['DAILY', 'WEEKLY', 'BIWEEKLY', 'MONTHLY'];
+const ATTENDANCE_TYPES: AttendanceTypeEnum[] = ['PRESENTIAL', 'REMOTE'];
 
 type Props = {
     patientId: string;
@@ -28,8 +29,8 @@ export default function CreatePlanDialog({ patientId, externalFunc }: Props) {
         adherenceDate, setAdherenceDate,
         generateSessions, setGenerateSessions,
         isContinuous, setIsContinuous,
-        continuousPlanMonths,
         sessionStartTime, setSessionStartTime,
+        attendanceType, setAttendanceType,
         isLoading, submit,
     } = useCreatePlan({ patientId, onSuccess: externalFunc });
 
@@ -59,17 +60,20 @@ export default function CreatePlanDialog({ patientId, externalFunc }: Props) {
                 )}
 
                 <LabelContainer title="Título (opcional)" labelFor="title">
-                    <Input id="title" value={title} onChange={e => setTitle(e.target.value)} placeholder="Ex: Acompanhamento semanal" />
+                    <Input id="title" value={title} onChange={e => setTitle(e.target.value)}
+                           placeholder="Ex: Acompanhamento semanal" />
                 </LabelContainer>
 
                 <div className="grid grid-cols-2 gap-3 mb-5">
                     <div>
                         <label className="block mb-2 text-sm font-medium text-content-primary">Valor/sessão (R$)</label>
-                        <Input type="number" step="0.01" value={pricePerSession} onChange={e => setPricePerSession(e.target.value)} placeholder="75,00" />
+                        <Input type="number" step="0.01" value={pricePerSession}
+                               onChange={e => setPricePerSession(e.target.value)} placeholder="75,00" />
                     </div>
                     <div>
                         <label className="block mb-2 text-sm font-medium text-content-primary">Nº de sessões</label>
-                        <Input type="number" min="1" value={sessionsCount} onChange={e => setSessionsCount(e.target.value)} placeholder="4" />
+                        <Input type="number" min="1" value={sessionsCount}
+                               onChange={e => setSessionsCount(e.target.value)} placeholder="4" />
                     </div>
                 </div>
 
@@ -98,7 +102,8 @@ export default function CreatePlanDialog({ patientId, externalFunc }: Props) {
                 </LabelContainer>
 
                 <LabelContainer title="Data de adesão *" labelFor="adherenceDate">
-                    <Input id="adherenceDate" type="date" value={adherenceDate} onChange={e => setAdherenceDate(e.target.value)} />
+                    <Input id="adherenceDate" type="date" value={adherenceDate}
+                           onChange={e => setAdherenceDate(e.target.value)} />
                 </LabelContainer>
 
                 <LabelContainer title="Tipo de plano" labelFor="planType">
@@ -127,7 +132,8 @@ export default function CreatePlanDialog({ patientId, externalFunc }: Props) {
                     </p>
                 </LabelContainer>
 
-                {frequency && (isContinuous || sessionsCount) && (
+                {/* Geração automática só disponível quando há frequência e sessionsCount definidos */}
+                {frequency && sessionsCount && Number(sessionsCount) > 0 && (
                     <div className="mb-5">
                         <label className="flex items-center gap-2 text-sm font-medium text-content-primary cursor-pointer">
                             <input
@@ -137,17 +143,35 @@ export default function CreatePlanDialog({ patientId, externalFunc }: Props) {
                                 className="rounded border-border-default"
                             />
                             <Repeat size={14} />
-                            {isContinuous
-                                ? `Gerar ~${continuousPlanMonths} meses de sessões automaticamente`
-                                : `Gerar ${sessionsCount} sessões automaticamente`}
+                            Gerar {sessionsCount} sessões automaticamente
                         </label>
                     </div>
                 )}
 
                 {generateSessions && (
-                    <LabelContainer title="Horário de início das sessões *" labelFor="sessionStartTime">
-                        <Input id="sessionStartTime" type="time" value={sessionStartTime} onChange={e => setSessionStartTime(e.target.value)} />
-                    </LabelContainer>
+                    <>
+                        <LabelContainer title="Tipo de atendimento *" labelFor="attendanceType">
+                            <div className="flex rounded-lg border border-border-default overflow-hidden text-sm">
+                                {ATTENDANCE_TYPES.map((type, idx) => (
+                                    <button
+                                        key={type}
+                                        type="button"
+                                        onClick={() => setAttendanceType(type)}
+                                        className={`flex-1 py-2.5 font-medium transition-colors border-border-default
+                                            ${idx < ATTENDANCE_TYPES.length - 1 ? 'border-r' : ''}
+                                            ${attendanceType === type ? 'bg-royalBlue text-white' : 'text-content-secondary hover:bg-surface-raised'}`}
+                                    >
+                                        {ATTENDANCE_TYPE_LABEL[type]}
+                                    </button>
+                                ))}
+                            </div>
+                        </LabelContainer>
+
+                        <LabelContainer title="Horário de início das sessões *" labelFor="sessionStartTime">
+                            <Input id="sessionStartTime" type="time" value={sessionStartTime}
+                                   onChange={e => setSessionStartTime(e.target.value)} />
+                        </LabelContainer>
+                    </>
                 )}
 
                 <ButtonSubmit title={isLoading ? 'Criando...' : 'Criar plano'} />

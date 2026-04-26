@@ -37,11 +37,11 @@ export default function SessionActions({ scheduleId, stage, dateEnd, rescheduled
                 />
             )}
 
-            <div className="border border-border-default rounded-xl shadow-sm overflow-hidden">
-                <div className="px-5 py-4 border-b border-border-default bg-surface-raised shrink-0">
+            <div className="border border-border-default rounded-xl shadow-sm overflow-hidden shrink-0">
+                <div className="px-4 py-3 md:px-5 md:py-4 border-b border-border-default bg-surface-raised">
                     <h2 className="text-base font-semibold text-content-primary">Ações</h2>
                 </div>
-                <div className="p-4 flex flex-col gap-2">
+                <div className="p-3 md:p-4">
                     {isClosed
                         ? <SessionClosedState stage={stage} dateEnd={dateEnd} rescheduledTo={rescheduledTo} />
                         : <SessionActionButtons loading={loading} onAction={setPendingAction} onReschedule={() => setRescheduleDate('')} />

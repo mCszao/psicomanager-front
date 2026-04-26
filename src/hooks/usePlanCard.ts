@@ -1,18 +1,13 @@
 "use client";
 
-import {useState} from "react";
-import {useRouter} from "next/navigation";
-import {useToast} from "@/contexts/ToastContext";
-import {getSchedulesByPatient, registerSchedule} from "@/services/api";
-import {Plan} from "@/interface/IPlan";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/contexts/ToastContext";
+import { getSchedulesByPatient, registerSchedule } from "@/services/api";
+import { Plan } from "@/interface/IPlan";
 import Schedule from "@/interface/ISchedule";
 import BaseResponse from "@/interface/IBaseResponse";
-import {extractApiError} from "@/util/feedback";
-import {FrequencyEnum} from "@/types/plan.dto";
-
-// Quantidade de sessões geradas em lote para planos contínuos via botão "Lançar mais".
-// Futuramente configurável pelo painel de configurações.
-const CONTINUOUS_BATCH_MONTHS = 3;
+import { extractApiError } from "@/util/feedback";
 
 interface UsePlanCardProps {
     plan: Plan;
@@ -20,13 +15,14 @@ interface UsePlanCardProps {
     initialSchedules: Schedule[];
 }
 
-export function usePlanCard({plan, patientId, initialSchedules}: UsePlanCardProps) {
+export function usePlanCard({ plan, patientId, initialSchedules }: UsePlanCardProps) {
     const toast = useToast();
     const router = useRouter();
 
     const [expanded, setExpanded] = useState(false);
     const [showLaunch, setShowLaunch] = useState(false);
     const [startDateTime, setStartDateTime] = useState('');
+    const [sessionsToLaunch, setSessionsToLaunch] = useState('');
     const [isLaunching, setIsLaunching] = useState(false);
     const [linkedSchedules, setLinkedSchedules] = useState<Schedule[]>(
         initialSchedules.filter(s => s.plan?.id === plan.id)
@@ -37,7 +33,7 @@ export function usePlanCard({plan, patientId, initialSchedules}: UsePlanCardProp
     );
     const concluded = linkedSchedules.filter(s => s.stage === 'CONCLUDED').length;
 
-    // Para planos finitos calcula as restantes; para contínuos não há limite
+    // Para planos finitos calcula as restantes; para contínuos não há limite definido
     const remaining = !plan.isContinuous && plan.sessionsCount
         ? Math.max(0, plan.sessionsCount - activeLinked.length)
         : 0;
@@ -53,18 +49,6 @@ export function usePlanCard({plan, patientId, initialSchedules}: UsePlanCardProp
         ? 'Lançar mais sessões'
         : `${remaining} restantes`;
 
-    // Para planos contínuos calcula a quantidade de sessões equivalente a ~3 meses
-    function resolveBatchCount(): number {
-        if (!plan.isContinuous) return remaining;
-        if (!plan.frequency) return 0;
-        return ({
-            DAILY: CONTINUOUS_BATCH_MONTHS * 30,
-            WEEKLY: CONTINUOUS_BATCH_MONTHS * 4,
-            BIWEEKLY: CONTINUOUS_BATCH_MONTHS * 2,
-            MONTHLY: CONTINUOUS_BATCH_MONTHS,
-        } as Record<FrequencyEnum, number>)[plan.frequency];
-    }
-
     async function refreshLinkedSchedules() {
         const res = await getSchedulesByPatient(patientId) as BaseResponse<Schedule[]>;
         if (res.success && res.object) {
@@ -78,8 +62,14 @@ export function usePlanCard({plan, patientId, initialSchedules}: UsePlanCardProp
             return;
         }
 
-        const countToLaunch = resolveBatchCount();
-        if (countToLaunch <= 0) return;
+        const count = plan.isContinuous
+            ? Number(sessionsToLaunch)
+            : remaining;
+
+        if (!count || count <= 0) {
+            toast.error('Informe a quantidade de sessões a lançar');
+            return;
+        }
 
         setIsLaunching(true);
         setShowLaunch(false);
@@ -89,7 +79,8 @@ export function usePlanCard({plan, patientId, initialSchedules}: UsePlanCardProp
             dateStart: startDateTime,
             planId: plan.id,
             frequency: plan.frequency!,
-            sessionsCount: countToLaunch,
+            sessionsCount: count,
+            type: plan.attendanceType ?? undefined,
         }) as BaseResponse<string>;
 
         if (!res.success) {
@@ -99,8 +90,9 @@ export function usePlanCard({plan, patientId, initialSchedules}: UsePlanCardProp
             return;
         }
 
-        toast.success(`${countToLaunch} sessões lançadas com sucesso!`);
+        toast.success(`${count} sessões lançadas com sucesso!`);
         setStartDateTime('');
+        setSessionsToLaunch('');
         await refreshLinkedSchedules();
         setIsLaunching(false);
         router.refresh();
@@ -110,6 +102,7 @@ export function usePlanCard({plan, patientId, initialSchedules}: UsePlanCardProp
         expanded, setExpanded,
         showLaunch, setShowLaunch,
         startDateTime, setStartDateTime,
+        sessionsToLaunch, setSessionsToLaunch,
         isLaunching,
         linkedSchedules,
         concluded,

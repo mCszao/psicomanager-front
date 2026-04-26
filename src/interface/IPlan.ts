@@ -1,4 +1,4 @@
-import { FrequencyEnum } from "@/types/plan.dto";
+import { AttendanceTypeEnum, FrequencyEnum } from "@/types/plan.dto";
 
 export interface PlanTemplate {
     id: string;
@@ -7,6 +7,7 @@ export interface PlanTemplate {
     sessionsCount: number;
     frequency: FrequencyEnum;
     totalValue: number;
+    attendanceType?: AttendanceTypeEnum | null;
 }
 
 export interface Plan {
@@ -18,6 +19,7 @@ export interface Plan {
     sessionsCount: number;
     frequency?: FrequencyEnum | null;
     totalValue: number;
+    attendanceType?: AttendanceTypeEnum | null;
     adherenceDate: string;
     estimatedEndDate?: string | null;
     startedAt?: string | null;

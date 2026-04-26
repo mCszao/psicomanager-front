@@ -11,7 +11,8 @@ export default function AppLayout({
     <ThemeProvider>
       <AuthGuard />
       <SideLinks />
-      <main className="pl-20 min-h-screen">
+      {/* pl-20 só em desktop (sidebar lateral). pb-16 em mobile (bottom nav). */}
+      <main className="md:pl-20 pb-16 md:pb-0 h-screen overflow-hidden">
         {children}
       </main>
     </ThemeProvider>

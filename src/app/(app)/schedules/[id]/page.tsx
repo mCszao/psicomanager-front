@@ -39,32 +39,27 @@ export default async function Page({params}: PageProps) {
         : formatTime(start);
 
     return (
-        <div className="flex flex-col h-screen px-8 pt-8 pb-6 overflow-hidden gap-5">
+        <div className="flex flex-col h-screen px-4 pt-4 pb-2 md:px-8 md:pt-8 md:pb-6 overflow-hidden gap-3 md:gap-5">
 
             {/* Header */}
-            <div
-                className="shrink-0 rounded-2xl border border-border-default shadow-lg bg-surface-default px-5 py-4 flex items-start justify-between gap-6">
-                <div className="border-l-4 border-royalBlue pl-4">
-                    <div className="flex items-center gap-3 flex-wrap">
+            <div className="shrink-0 rounded-2xl border border-border-default shadow-lg bg-surface-default px-4 py-3 md:px-5 md:py-4">
+                <div className="border-l-4 border-royalBlue pl-3 md:pl-4">
+                    <div className="flex items-center gap-2 md:gap-3 flex-wrap">
                         <Link
                             href={`/patients/${object.patient?.id}`}
-                            className="text-3xl font-bold text-royalBlue hover:underline leading-tight"
+                            className="text-xl md:text-3xl font-bold text-royalBlue hover:underline leading-tight"
                         >
                             {object.patient?.name}
                         </Link>
-                        <span
-                            className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${TYPE_STYLES[typeColor]}`}>
+                        <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${TYPE_STYLES[typeColor]}`}>
                             {ptType}
                         </span>
-                        <span
-                            className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${STAGE_STYLES[color ?? 'yellow']}`}>
+                        <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${STAGE_STYLES[color ?? 'yellow']}`}>
                             {ptStage}
                         </span>
                     </div>
-                    <div className="flex items-center gap-4 mt-2 text-sm text-content-secondary flex-wrap">
-                        <span className="flex items-center gap-1.5 capitalize">
-                            {fullDate}
-                        </span>
+                    <div className="flex items-center gap-3 md:gap-4 mt-1 md:mt-2 text-sm text-content-secondary flex-wrap">
+                        <span className="capitalize">{fullDate}</span>
                         <span className="flex items-center gap-1.5">
                             <Clock size={14} className="shrink-0"/>
                             {timeRange}
@@ -73,22 +68,23 @@ export default async function Page({params}: PageProps) {
                 </div>
             </div>
 
-            {/* Body */}
-            <div className="flex-1 min-h-0 flex gap-5">
+            {/* Body — coluna única em mobile, duas colunas em desktop */}
+            <div className="flex-1 min-h-0 flex flex-col md:flex-row gap-3 md:gap-5 overflow-y-auto md:overflow-hidden">
 
-                {/* Left — Annotations */}
-                <AnnotationsPanel
-                    scheduleId={object.id}
-                    initialAnnotations={object.annotations ?? null}
-                />
+                {/* Annotations — cresce em desktop, altura automática em mobile */}
+                <div className="md:flex-1 md:min-h-0 min-h-64">
+                    <AnnotationsPanel
+                        scheduleId={object.id}
+                        initialAnnotations={object.annotations ?? null}
+                    />
+                </div>
 
-                {/* Right — Details + Actions */}
-                <div className="w-72 shrink-0 flex flex-col gap-5 overflow-y-auto">
+                {/* Coluna lateral — linha abaixo em mobile, coluna fixa em desktop */}
+                <div className="w-full md:w-72 md:shrink-0 flex flex-col gap-3 md:gap-5 md:min-h-0 md:overflow-y-auto">
 
-                    {/* Details card */}
-                    <div
-                        className="rounded-2xl border border-border-default shadow-lg bg-surface-default overflow-hidden">
-                        <div className="px-5 py-4 border-b border-border-default bg-surface-raised shrink-0">
+                    {/* Details */}
+                    <div className="rounded-2xl border border-border-default shadow-lg bg-surface-default overflow-hidden shrink-0">
+                        <div className="px-4 py-3 md:px-5 md:py-4 border-b border-border-default bg-surface-raised">
                             <h2 className="text-base font-semibold text-content-primary">Detalhes</h2>
                         </div>
                         <div className="p-4 flex flex-col gap-3 text-sm">
@@ -103,15 +99,13 @@ export default async function Page({params}: PageProps) {
                             </div>
                             <div className="flex items-center justify-between gap-2">
                                 <span className="text-content-secondary shrink-0">Modalidade</span>
-                                <span
-                                    className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${TYPE_STYLES[typeColor]}`}>
+                                <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${TYPE_STYLES[typeColor]}`}>
                                     {ptType}
                                 </span>
                             </div>
                             <div className="flex items-center justify-between gap-2">
                                 <span className="text-content-secondary shrink-0">Status</span>
-                                <span
-                                    className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${STAGE_STYLES[color ?? 'yellow']}`}>
+                                <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${STAGE_STYLES[color ?? 'yellow']}`}>
                                     {ptStage}
                                 </span>
                             </div>
@@ -134,15 +128,12 @@ export default async function Page({params}: PageProps) {
                         rescheduledTo={object.rescheduledTo}
                     />
 
-                    {/* Avisos da sessão */}
-                    <div
-                        className="rounded-2xl border border-border-default shadow-lg bg-surface-default overflow-hidden">
-                        <div
-                            className="px-5 py-3.5 border-b border-border-default bg-surface-raised flex items-center gap-2">
+                    {/* Alerts */}
+                    <div className="rounded-2xl border border-border-default shadow-lg bg-surface-default overflow-hidden shrink-0">
+                        <div className="px-4 py-3 md:px-5 border-b border-border-default bg-surface-raised flex items-center gap-2">
                             <span className="text-sm font-semibold text-content-primary">Avisos</span>
                             {sessionAlerts.filter(a => a.isActive).length > 0 && (
-                                <span
-                                    className="text-xs px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700 font-medium border border-amber-200">
+                                <span className="text-xs px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700 font-medium border border-amber-200">
                                     {sessionAlerts.filter(a => a.isActive).length}
                                 </span>
                             )}

@@ -5,13 +5,9 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/contexts/ToastContext";
 import { createPlan, getPlanTemplates } from "@/services/api";
 import { PlanTemplate } from "@/interface/IPlan";
-import { PlanRegisterDTO, FrequencyEnum } from "@/types/plan.dto";
+import { AttendanceTypeEnum, FrequencyEnum, PlanRegisterDTO } from "@/types/plan.dto";
 import BaseResponse from "@/interface/IBaseResponse";
 import { extractApiError } from "@/util/feedback";
-
-// Quantidade de meses gerados automaticamente para planos contínuos.
-// Futuramente configurável pelo painel de configurações.
-const CONTINUOUS_PLAN_MONTHS = 3;
 
 interface UseCreatePlanProps {
     patientId: string;
@@ -32,6 +28,7 @@ export function useCreatePlan({ patientId, onSuccess }: UseCreatePlanProps) {
     const [generateSessions, setGenerateSessions] = useState(false);
     const [isContinuous, setIsContinuous] = useState(true);
     const [sessionStartTime, setSessionStartTime] = useState('');
+    const [attendanceType, setAttendanceType] = useState<AttendanceTypeEnum>('PRESENTIAL');
     const [isLoading, setIsLoading] = useState(false);
 
     async function loadTemplates() {
@@ -47,6 +44,9 @@ export function useCreatePlan({ patientId, onSuccess }: UseCreatePlanProps) {
         setSessionsCount(String(tpl.sessionsCount));
         setFrequency(tpl.frequency);
         setTitle(tpl.title);
+        if (tpl.attendanceType) {
+            setAttendanceType(tpl.attendanceType);
+        }
     }
 
     async function submit() {
@@ -62,9 +62,15 @@ export function useCreatePlan({ patientId, onSuccess }: UseCreatePlanProps) {
             toast.error('Planos finitos exigem o número de sessões informado.');
             return;
         }
-        if (generateSessions && !sessionStartTime) {
-            toast.error('Informe o horário de início das sessões.');
-            return;
+        if (generateSessions) {
+            if (!sessionsCount || Number(sessionsCount) < 1) {
+                toast.error('Para gerar sessões automaticamente é necessário informar o número de sessões.');
+                return;
+            }
+            if (!sessionStartTime) {
+                toast.error('Informe o horário de início das sessões.');
+                return;
+            }
         }
 
         setIsLoading(true);
@@ -79,6 +85,7 @@ export function useCreatePlan({ patientId, onSuccess }: UseCreatePlanProps) {
             isContinuous,
             generateSessions,
             sessionStartTime: generateSessions ? sessionStartTime : undefined,
+            attendanceType: generateSessions ? attendanceType : undefined,
         };
 
         const res = await createPlan(dto) as BaseResponse<string>;
@@ -106,8 +113,8 @@ export function useCreatePlan({ patientId, onSuccess }: UseCreatePlanProps) {
         adherenceDate, setAdherenceDate,
         generateSessions, setGenerateSessions,
         isContinuous, setIsContinuous,
-        continuousPlanMonths: CONTINUOUS_PLAN_MONTHS,
         sessionStartTime, setSessionStartTime,
+        attendanceType, setAttendanceType,
         isLoading,
         submit,
     };

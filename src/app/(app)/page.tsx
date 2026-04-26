@@ -12,12 +12,12 @@ export default async function Home() {
     const sessions = response.object ?? [];
 
     return (
-        <div className="flex flex-col h-screen px-8 pt-8 pb-6 overflow-hidden gap-5">
-            <div className="shrink-0 rounded-2xl border border-border-default shadow-lg bg-surface-default px-5 py-4">
+        <div className="flex flex-col h-screen px-4 pt-4 pb-2 md:px-8 md:pt-8 md:pb-6 overflow-hidden gap-3 md:gap-5">
+            <div className="shrink-0 rounded-2xl border border-border-default shadow-lg bg-surface-default px-4 py-3 md:px-5 md:py-4">
                 <Greeting />
             </div>
-            <div className="flex-1 min-h-0 rounded-2xl border border-border-default shadow-lg bg-surface-default p-5 overflow-hidden flex flex-col">
-                <h2 className="text-3xl font-semibold text-royalBlue mb-5 shrink-0">Calendário de Consultas</h2>
+            <div className="flex-1 min-h-0 rounded-2xl border border-border-default shadow-lg bg-surface-default p-4 md:p-5 overflow-hidden flex flex-col">
+                <h2 className="text-xl md:text-3xl font-semibold text-royalBlue mb-3 md:mb-5 shrink-0">Calendário de Consultas</h2>
                 <div className="flex-1 min-h-0">
                     <NextSessions sessions={sessions} views={['month', 'week']} />
                 </div>

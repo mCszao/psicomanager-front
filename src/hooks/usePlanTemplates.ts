@@ -1,19 +1,19 @@
 "use client";
 
-import {useState} from "react";
-import {useRouter} from "next/navigation";
-import {useToast} from "@/contexts/ToastContext";
-import {createPlanTemplate, deletePlanTemplate} from "@/services/api";
-import {PlanTemplate} from "@/interface/IPlan";
-import {FrequencyEnum, PlanTemplateDTO} from "@/types/plan.dto";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/contexts/ToastContext";
+import { createPlanTemplate, deletePlanTemplate } from "@/services/api";
+import { PlanTemplate } from "@/interface/IPlan";
+import { AttendanceTypeEnum, FrequencyEnum, PlanTemplateDTO } from "@/types/plan.dto";
 import BaseResponse from "@/interface/IBaseResponse";
-import {extractApiError} from "@/util/feedback";
+import { extractApiError } from "@/util/feedback";
 
 interface UsePlanTemplatesProps {
     initialTemplates: PlanTemplate[];
 }
 
-export function usePlanTemplates({initialTemplates}: UsePlanTemplatesProps) {
+export function usePlanTemplates({ initialTemplates }: UsePlanTemplatesProps) {
     const toast = useToast();
     const router = useRouter();
 
@@ -22,6 +22,7 @@ export function usePlanTemplates({initialTemplates}: UsePlanTemplatesProps) {
     const [pricePerSession, setPricePerSession] = useState('');
     const [sessionsCount, setSessionsCount] = useState('');
     const [frequency, setFrequency] = useState<FrequencyEnum>('WEEKLY');
+    const [attendanceType, setAttendanceType] = useState<AttendanceTypeEnum>('PRESENTIAL');
 
     const totalValue = pricePerSession && sessionsCount
         ? (Number(pricePerSession) * Number(sessionsCount)).toFixed(2)
@@ -32,6 +33,7 @@ export function usePlanTemplates({initialTemplates}: UsePlanTemplatesProps) {
         setPricePerSession('');
         setSessionsCount('');
         setFrequency('WEEKLY');
+        setAttendanceType('PRESENTIAL');
         setIsCreating(false);
     }
 
@@ -46,6 +48,7 @@ export function usePlanTemplates({initialTemplates}: UsePlanTemplatesProps) {
             pricePerSession: Number(pricePerSession),
             sessionsCount: Number(sessionsCount),
             frequency,
+            attendanceType,
         };
 
         const res = await createPlanTemplate(dto) as BaseResponse<string>;
@@ -76,6 +79,7 @@ export function usePlanTemplates({initialTemplates}: UsePlanTemplatesProps) {
         pricePerSession, setPricePerSession,
         sessionsCount, setSessionsCount,
         frequency, setFrequency,
+        attendanceType, setAttendanceType,
         totalValue,
         handleCreate,
         handleDelete,

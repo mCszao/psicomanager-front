@@ -16,7 +16,7 @@ import {
 import {Plan} from "@/interface/IPlan";
 import Schedule from "@/interface/ISchedule";
 import Document from "@/interface/IDocument";
-import {FREQUENCY_LABEL} from "@/types/plan.dto";
+import {ATTENDANCE_TYPE_LABEL, FREQUENCY_LABEL} from "@/types/plan.dto";
 import {formatTime, getStagePresentation, parseDate, STAGE_STYLES} from "@/util/calendarUtils";
 import {usePlanCard} from "@/hooks/usePlanCard";
 import PatientScheduleItem from "./patient-schedule-item";
@@ -43,7 +43,7 @@ function PlanSessionRow({schedule}: { schedule: Schedule }) {
     return (
         <Link
             href={`/schedules/${schedule.id}`}
-            className="flex items-center gap-3 px-4 py-2.5 bg-surface-sunken border-t border-border-default hover:bg-surface-hover transition-colors"
+            className="flex items-center gap-3 px-5 py-4 bg-surface-sunken border-t border-border-default hover:bg-surface-hover transition-colors"
         >
             <div
                 className="w-1.5 h-1.5 rounded-full shrink-0"
@@ -72,6 +72,7 @@ function PlanCard({plan, initialSchedules, patientId}: {
         expanded, setExpanded,
         showLaunch, setShowLaunch,
         startDateTime, setStartDateTime,
+        sessionsToLaunch, setSessionsToLaunch,
         isLaunching,
         linkedSchedules,
         concluded,
@@ -82,10 +83,14 @@ function PlanCard({plan, initialSchedules, patientId}: {
         handleLaunch,
     } = usePlanCard({plan, patientId, initialSchedules});
 
-    return (
-        <div className="border border-border-default rounded-xl overflow-hidden">
+    const countToLaunch = plan.isContinuous ? Number(sessionsToLaunch) : remaining;
 
-            <div className="flex items-start gap-3 px-4 py-3 bg-surface-default">
+    return (
+        // overflow-hidden removido — a lista de sessões cresce livremente e o scroll fica no container pai da aba
+        <div className="border border-border-default rounded-xl">
+
+            {/* Cabeçalho do plano */}
+            <div className="flex items-start gap-3 px-4 py-3 bg-surface-default rounded-t-xl">
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                         <p className="text-sm font-medium text-content-primary">{displayTitle}</p>
@@ -94,9 +99,16 @@ function PlanCard({plan, initialSchedules, patientId}: {
                             {plan.isActive ? 'Ativo' : 'Encerrado'}
                         </span>
                         {plan.frequency && (
-                            <span
-                                className="text-xs px-2 py-0.5 rounded-full font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                            <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-blue-50 text-blue-700 border border-blue-200">
                                 {FREQUENCY_LABEL[plan.frequency]}
+                            </span>
+                        )}
+                        {plan.attendanceType && (
+                            <span className={`text-xs px-2 py-0.5 rounded-full font-medium border
+                                ${plan.attendanceType === 'PRESENTIAL'
+                                    ? 'bg-green-50 text-green-700 border-green-200'
+                                    : 'bg-purple-50 text-purple-700 border-purple-200'}`}>
+                                {ATTENDANCE_TYPE_LABEL[plan.attendanceType]}
                             </span>
                         )}
                     </div>
@@ -144,31 +156,59 @@ function PlanCard({plan, initialSchedules, patientId}: {
                 </div>
             </div>
 
+            {/* Painel de lançamento de sessões */}
             {showLaunch && (
-                <div className="flex items-center gap-3 px-4 py-3 bg-surface-raised border-t border-border-default">
-                    <span className="text-xs text-content-secondary shrink-0">
-                        Início das {remaining} sessões:
-                    </span>
-                    <input
-                        type="datetime-local"
-                        value={startDateTime}
-                        onChange={e => setStartDateTime(e.target.value)}
-                        className="bg-surface-sunken border border-border-default text-content-primary text-sm rounded-lg focus:ring-royalBlue focus:border-royalBlue p-1.5"
-                    />
+                <div className="flex items-center gap-3 px-4 py-3 bg-surface-raised border-t border-border-default flex-wrap">
+
+                    {plan.isContinuous && (
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs text-content-secondary shrink-0">Quantidade:</span>
+                            <input
+                                type="number"
+                                min="1"
+                                value={sessionsToLaunch}
+                                onChange={e => setSessionsToLaunch(e.target.value)}
+                                placeholder="Ex: 8"
+                                className="w-20 bg-surface-sunken border border-border-default text-content-primary text-sm rounded-lg focus:ring-royalBlue focus:border-royalBlue p-1.5"
+                            />
+                        </div>
+                    )}
+
+                    {!plan.isContinuous && (
+                        <span className="text-xs text-content-secondary shrink-0">
+                            {remaining} {remaining === 1 ? 'sessão restante' : 'sessões restantes'}:
+                        </span>
+                    )}
+
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs text-content-secondary shrink-0">Início:</span>
+                        <input
+                            type="datetime-local"
+                            value={startDateTime}
+                            onChange={e => setStartDateTime(e.target.value)}
+                            className="bg-surface-sunken border border-border-default text-content-primary text-sm rounded-lg focus:ring-royalBlue focus:border-royalBlue p-1.5"
+                        />
+                    </div>
+
                     <button
                         type="button"
                         onClick={handleLaunch}
-                        disabled={isLaunching}
+                        disabled={isLaunching || countToLaunch <= 0}
                         className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-royalBlue text-white hover:opacity-90 transition-opacity font-medium disabled:opacity-60"
                     >
                         {isLaunching ? <Loader2 size={12} className="animate-spin"/> : <CalendarPlus size={12}/>}
-                        {isLaunching ? 'Lançando...' : 'Lançar'}
+                        {isLaunching
+                            ? 'Lançando...'
+                            : countToLaunch > 0
+                                ? `Lançar ${countToLaunch} ${countToLaunch === 1 ? 'sessão' : 'sessões'}`
+                                : 'Lançar'}
                     </button>
                 </div>
             )}
 
+            {/* Lista de sessões — cresce livremente, scroll gerenciado pelo container pai da aba */}
             {expanded && linkedSchedules.length > 0 && (
-                <div>
+                <div className="border-t border-border-default rounded-b-xl overflow-hidden">
                     {[...linkedSchedules]
                         .sort((a, b) => parseDate(a.dateStart).getTime() - parseDate(b.dateStart).getTime())
                         .map(s => <PlanSessionRow key={s.id} schedule={s}/>)
@@ -194,8 +234,7 @@ export default function PatientTabbedPanel({patientId, schedules, plans, documen
     ];
 
     return (
-        <section
-            className="flex flex-col rounded-2xl border border-border-default shadow-lg bg-surface-default overflow-hidden">
+        <section className="flex flex-col h-full rounded-2xl border border-border-default shadow-lg bg-surface-default overflow-hidden">
 
             <div className="flex items-center border-b border-border-default bg-surface-raised shrink-0">
                 {tabs.map(tab => (
@@ -229,12 +268,12 @@ export default function PatientTabbedPanel({patientId, schedules, plans, documen
                 </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2">
+            {/* Área de conteúdo — scroll único no container pai, cards de plano expandem naturalmente */}
+            <div className="flex-1 min-h-0 overflow-y-auto p-4 flex flex-col gap-2">
                 {activeTab === 'schedules' && (
                     <>
                         {!schedules.length ? (
-                            <div
-                                className="flex flex-col items-center justify-center gap-2 py-12 text-content-secondary">
+                            <div className="flex flex-col items-center justify-center gap-2 py-12 text-content-secondary">
                                 <CalendarX size={36} strokeWidth={1.5}/>
                                 <p className="text-sm font-medium">Sem acompanhamentos registrados.</p>
                             </div>
@@ -247,8 +286,7 @@ export default function PatientTabbedPanel({patientId, schedules, plans, documen
                 {activeTab === 'plans' && (
                     <>
                         {!plans.length ? (
-                            <div
-                                className="flex flex-col items-center justify-center gap-2 py-12 text-content-secondary">
+                            <div className="flex flex-col items-center justify-center gap-2 py-12 text-content-secondary">
                                 <Layers size={36} strokeWidth={1.5}/>
                                 <p className="text-sm font-medium">Nenhum plano cadastrado.</p>
                             </div>
@@ -268,8 +306,7 @@ export default function PatientTabbedPanel({patientId, schedules, plans, documen
                 {activeTab === 'documents' && (
                     <>
                         {!documents.length ? (
-                            <div
-                                className="flex flex-col items-center justify-center gap-2 py-12 text-content-secondary">
+                            <div className="flex flex-col items-center justify-center gap-2 py-12 text-content-secondary">
                                 <FileX size={36} strokeWidth={1.5}/>
                                 <p className="text-sm font-medium">Nenhum documento enviado.</p>
                             </div>

@@ -2,32 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Light theme (default) ──────────────────────────────────────────────── */
+/* ── Light theme (default) ─────────────────────────────────────────────── */
 :root {
   --color-surface:           #ffffff;
-  --color-surface-raised:    #f9fafb;   /* gray-50  */
-  --color-surface-sunken:    #f3f4f6;   /* gray-100 */
-  --color-surface-hover:     #e5e7eb;   /* gray-200 */
+  --color-surface-raised:    #f9fafb;
+  --color-surface-sunken:    #f3f4f6;
+  --color-surface-hover:     #e5e7eb;
 
-  --color-content-primary:   #111827;   /* gray-900 */
-  --color-content-secondary: #6b7280;   /* gray-500 */
-  --color-content-disabled:  #9ca3af;   /* gray-400 */
+  --color-content-primary:   #111827;
+  --color-content-secondary: #6b7280;
+  --color-content-disabled:  #9ca3af;
 
-  --color-border-default:    #e5e7eb;   /* gray-200 */
+  --color-border-default:    #e5e7eb;
+
+  /* Sidebar */
+  --sidebar-width-expanded:  240px;
+  --sidebar-width-collapsed: 64px;
+
+  /* Scrollbar */
+  --scrollbar-size:        5px;
+  --scrollbar-track:       transparent;
+  --scrollbar-thumb:       rgba(0, 0, 0, 0.15);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.28);
 }
 
 /* ── Dark theme ─────────────────────────────────────────────────────────── */
 .dark {
-  --color-surface:           #111827;   /* gray-900 */
-  --color-surface-raised:    #1f2937;   /* gray-800 */
-  --color-surface-sunken:    #374151;   /* gray-700 */
-  --color-surface-hover:     #4b5563;   /* gray-600 */
+  --color-surface:           #111827;
+  --color-surface-raised:    #1f2937;
+  --color-surface-sunken:    #374151;
+  --color-surface-hover:     #4b5563;
 
-  --color-content-primary:   #f9fafb;   /* gray-50  */
-  --color-content-secondary: #9ca3af;   /* gray-400 */
-  --color-content-disabled:  #6b7280;   /* gray-500 */
+  --color-content-primary:   #f9fafb;
+  --color-content-secondary: #9ca3af;
+  --color-content-disabled:  #6b7280;
 
-  --color-border-default:    #374151;   /* gray-700 */
+  --color-border-default:    #374151;
+
+  --scrollbar-thumb:       rgba(255, 255, 255, 0.15);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.28);
 }
 
 abbr[title] {
@@ -36,6 +49,76 @@ abbr[title] {
 
 @layer utilities {
   .text-balance { text-wrap: balance; }
+}
+
+/* ── Scrollbar personalizado ────────────────────────────────────────────── */
+/* Webkit: Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width:  var(--scrollbar-size);
+  height: var(--scrollbar-size);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background:    var(--scrollbar-thumb);
+  border-radius: 999px;
+  transition:    background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* ── Sidebar colapsável ─────────────────────────────────────────────────── */
+.psico-sidebar {
+  width:      var(--sidebar-width-collapsed);
+  transition: width 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: width;
+  overflow:   hidden;
+}
+
+.psico-sidebar.expanded {
+  width: var(--sidebar-width-expanded);
+}
+
+/* Label: visível apenas quando expandida */
+.psico-sidebar .nav-label {
+  opacity:     0;
+  max-width:   0;
+  overflow:    hidden;
+  white-space: nowrap;
+  transition:  opacity 0.18s ease, max-width 0.18s ease;
+}
+
+.psico-sidebar.expanded .nav-label {
+  opacity:   1;
+  max-width: 200px;
+}
+
+/* Section header: oculto quando colapsado */
+.psico-sidebar .nav-section {
+  opacity:    0;
+  max-height: 0;
+  overflow:   hidden;
+  transition: opacity 0.18s ease, max-height 0.18s ease;
+}
+
+.psico-sidebar.expanded .nav-section {
+  opacity:    1;
+  max-height: 32px;
 }
 
 /* ── Toast animation ────────────────────────────────────────────────────── */

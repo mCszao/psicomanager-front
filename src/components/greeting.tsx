@@ -1,15 +1,13 @@
-"use client";
+'use client';
 
-import { buildGreeting } from "@/util/greeting";
+import { buildGreeting } from '@/util/greeting';
 
-function getUsername(): string {
-    const match = document.cookie.match(/(?:^|;\s*)username=([^;]*)/);
-    return match ? decodeURIComponent(match[1]) : "usuário";
-}
+type Props = {
+    username: string;
+};
 
-export default function Greeting() {
+export default function Greeting({ username }: Props) {
     const hour = new Date().getHours();
-    const username = getUsername();
     const segments = buildGreeting(hour, username);
 
     return (

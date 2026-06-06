@@ -18,11 +18,11 @@ export default function DialogPatientList({ onSelect, externalFunc }: Props) {
     const { list, setSearch, selectPatient } = usePatientList({ onSelect, onClose: externalFunc });
 
     return (
-        <Dialog>
+        <Dialog onClose={externalFunc}>
             <DialogHeader title="Pesquisar paciente" textButton={<X />} functionButton={externalFunc} />
-            <div className="p-4">
+            <div className="px-5 py-4 flex flex-col gap-3 overflow-y-auto flex-1">
                 <Input placeholder="Digite o nome do paciente" onChange={(e) => setSearch(e.target.value)} />
-                <nav className="mt-3 flex flex-col gap-2">
+                <nav className="flex flex-col gap-2">
                     {list?.map((patient) => (
                         <abbr key={patient.id} title={patient.email}>
                             <div onClick={() => selectPatient(patient)} className={patientItemClass}>

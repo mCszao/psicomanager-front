@@ -25,7 +25,8 @@ export function useAuth() {
      */
     function saveSession(username: string) {
         document.cookie = `username=${username}; path=/`;
-        router.push("/");
+        // Hard navigation — força o servidor a re-renderizar com os novos cookies
+        window.location.href = '/';
     }
 
     function clearSession() {
@@ -55,9 +56,9 @@ export function useAuth() {
         try {
             await signOut();
         } finally {
-            // Always clear client-side state and redirect, even if the request fails
             clearSession();
-            router.push("/login");
+            // Hard navigation — limpa todo o estado React e o Router cache do Next.js
+            window.location.href = '/login';
         }
     }
 

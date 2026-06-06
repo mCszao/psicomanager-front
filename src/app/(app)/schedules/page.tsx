@@ -8,7 +8,7 @@ export const metadata = metadataFactory("Agendamentos");
 
 export default async function SchedulesPage() {
     const response = await serverGet<BaseResponse<Session[]>>('/schedules?order=desc');
-    const sessions = response.object ?? [];
+    const sessions = Array.isArray(response.object) ? response.object : [];
 
     return (
         <div className="flex flex-col h-screen px-4 pt-4 pb-2 md:px-8 md:pt-8 md:pb-6 overflow-hidden gap-3 md:gap-5">

@@ -20,7 +20,7 @@ export default function CreatePatientDialog({externalFunc}: Props) {
     const {register, handleSubmit, formState: {errors}} = form;
 
     return (
-        <Dialog>
+        <Dialog onClose={externalFunc}>
             <DialogHeader title="Novo paciente" textButton={<X/>} functionButton={externalFunc}/>
             <BaseForm onSubmit={handleSubmit(submit)}>
 

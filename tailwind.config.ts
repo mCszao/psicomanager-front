@@ -20,18 +20,22 @@ const config: Config = {
         royalBlue: '#4169e1',
 
         // Semantic surface tokens (background layers)
-        surface:           'var(--color-surface)',           // page background
-        'surface-raised':  'var(--color-surface-raised)',   // cards, dialogs
-        'surface-sunken':  'var(--color-surface-sunken)',   // inputs, code blocks
-        'surface-hover':   'var(--color-surface-hover)',    // hover states
+        surface:           'var(--color-surface)',
+        'surface-raised':  'var(--color-surface-raised)',
+        'surface-sunken':  'var(--color-surface-sunken)',
+        'surface-hover':   'var(--color-surface-hover)',
 
         // Semantic content tokens (text)
-        'content-primary':   'var(--color-content-primary)',   // headings, body
-        'content-secondary': 'var(--color-content-secondary)', // muted / labels
-        'content-disabled':  'var(--color-content-disabled)',  // placeholders
+        'content-primary':   'var(--color-content-primary)',
+        'content-secondary': 'var(--color-content-secondary)',
+        'content-disabled':  'var(--color-content-disabled)',
 
         // Semantic border token
         'border-default': 'var(--color-border-default)',
+      },
+      spacing: {
+        'sidebar':          'var(--sidebar-width-collapsed)',
+        'sidebar-expanded': 'var(--sidebar-width-expanded)',
       },
     },
   },

@@ -4,20 +4,20 @@ type Props = {
     functionButton: () => void;
 }
 
-export default function DialogHeader(props: Props) {
+export default function DialogHeader({ title, textButton, functionButton }: Props) {
     return (
-        <div className="flex items-center justify-between p-4 md:p-5 border-b border-border-default rounded-t">
-            <h3 className="text-lg font-semibold text-content-primary">
-                {props.title}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border-default shrink-0">
+            <h3 className="text-base font-semibold text-content-primary">
+                {title}
             </h3>
             <button
                 type="button"
-                className="text-content-secondary bg-transparent hover:bg-surface-hover hover:text-content-primary rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center transition-colors"
-                onClick={props.functionButton}
+                onClick={functionButton}
+                className="w-8 h-8 flex items-center justify-center rounded-lg text-content-secondary hover:text-content-primary hover:bg-surface-hover transition-colors"
             >
-                {props.textButton}
+                {textButton}
                 <span className="sr-only">Fechar</span>
             </button>
         </div>
-    )
+    );
 }

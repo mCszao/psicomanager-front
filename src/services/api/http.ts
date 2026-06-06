@@ -36,7 +36,11 @@ async function parseResponse<T>(response: Response): Promise<T> {
 
     const text = await response.text();
     if (!text) return { object: null } as T;
-    return JSON.parse(text) as T;
+    const parsed = JSON.parse(text);
+    // Se success: false, preserva o object original pois contém a mensagem de erro
+    // Apenas respostas de DADOS (listas, entidades) com erro devem virar null
+    // — tratado pelos callers com `?? []` ou `?? null`
+    return parsed as T;
 }
 
 // endregion

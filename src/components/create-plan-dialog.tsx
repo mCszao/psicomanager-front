@@ -37,7 +37,7 @@ export default function CreatePlanDialog({ patientId, externalFunc }: Props) {
     useEffect(() => { loadTemplates(); }, []);
 
     return (
-        <Dialog>
+        <Dialog onClose={externalFunc}>
             <DialogHeader title="Novo plano" textButton={<X />} functionButton={externalFunc} />
             <BaseForm onSubmit={async (e) => { e.preventDefault(); await submit(); }}>
 

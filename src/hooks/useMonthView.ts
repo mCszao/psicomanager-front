@@ -13,7 +13,8 @@ interface UseMonthViewProps {
 export function useMonthView({ sessions, viewMonth, viewYear, today, selectedDay }: UseMonthViewProps) {
     const sessionsByDay = useMemo(() => {
         const map: Record<number, Session[]> = {};
-        sessions.forEach(s => {
+        const safeSessions = Array.isArray(sessions) ? sessions : [];
+        safeSessions.forEach(s => {
             const d = parseDate(s.dateStart);
             if (d.getMonth() === viewMonth && d.getFullYear() === viewYear) {
                 map[d.getDate()] = [...(map[d.getDate()] ?? []), s];

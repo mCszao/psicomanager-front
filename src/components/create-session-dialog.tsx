@@ -34,7 +34,7 @@ export default function CreateSessionDialog({ externalFunc }: Props) {
     const selectedType = watch('type');
 
     return (
-        <Dialog>
+        <Dialog onClose={externalFunc}>
             <DialogHeader title="Nova sessão" textButton={<X />} functionButton={externalFunc} />
             <BaseForm onSubmit={handleSubmit(submit)}>
 

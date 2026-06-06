@@ -3,7 +3,8 @@ import Patient from "@/interface/IPatient";
 import {Plan} from "@/interface/IPlan";
 import metadataFactory from "@/util/metadataFactory";
 import {serverGet} from "@/services/api/http-server";
-import {Bell, Calendar, Download, Mail, MapPin, Phone} from "lucide-react";
+import {Bell, Calendar, Download, DollarSign, Mail, MapPin, Phone} from "lucide-react";
+import Link from "next/link";
 import PatientTabbedPanel from "@/components/patient-tabbed-panel";
 import AlertsPanel from "@/components/alerts-panel";
 import {IAlert} from "@/interface/IAlert";
@@ -62,12 +63,20 @@ export default async function Page({params}: PageProps) {
                     </div>
                 </div>
 
-                <a
-                    href={`http://localhost:8080/documents/generate-contract?patientId=${object.id}`}
-                    className="flex items-center gap-1.5 shrink-0 text-xs md:text-sm px-3 md:px-4 py-2 rounded-lg bg-royalBlue text-white hover:opacity-90 transition-opacity font-medium"
-                >
-                    <Download size={14}/> <span className="hidden sm:inline">Gerar contrato</span>
-                </a>
+                <div className="flex items-center gap-2 shrink-0">
+                    <Link
+                        href={`/patients/${object.id}/financial`}
+                        className="flex items-center gap-1.5 text-xs md:text-sm px-3 md:px-4 py-2 rounded-lg border border-border-default text-content-secondary hover:bg-surface-hover transition-colors font-medium"
+                    >
+                        <DollarSign size={14}/> <span className="hidden sm:inline">Financeiro</span>
+                    </Link>
+                    <a
+                        href={`http://localhost:8080/documents/generate-contract?patientId=${object.id}`}
+                        className="flex items-center gap-1.5 text-xs md:text-sm px-3 md:px-4 py-2 rounded-lg bg-royalBlue text-white hover:opacity-90 transition-opacity font-medium"
+                    >
+                        <Download size={14}/> <span className="hidden sm:inline">Gerar contrato</span>
+                    </a>
+                </div>
             </div>
 
             {/* Tabbed panel */}

@@ -112,5 +112,5 @@ function DateTimeBuilder(date: string ){
   const dateArr = dateAndTimeArr[0].split("-");
   const timeArr = dateAndTimeArr[1].split(":")
 
-  return new Date(dateArr[2],dateArr[1], dateArr[0], timeArr[0], timeArr[1], timeArr[2]);
+  return new Date(Number(dateArr[2]), Number(dateArr[1]), Number(dateArr[0]), Number(timeArr[0]), Number(timeArr[1]), Number(timeArr[2]));
 }

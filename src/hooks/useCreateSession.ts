@@ -47,7 +47,11 @@ export function useCreateSession({ onSuccess }: UseCreateSessionProps) {
     }
 
     async function submit(data: CreateScheduleFormData) {
-        const schedule = ScheduleFactory(data as any, selectedPatient?.id);
+        if (!selectedPatient) {
+            toast.error('Selecione um paciente para agendar a sessão.');
+            return;
+        }
+        const schedule = ScheduleFactory(data as any, selectedPatient.id);
         const response = await registerSchedule(schedule) as BaseResponse<unknown>;
 
         if (!response.success) {

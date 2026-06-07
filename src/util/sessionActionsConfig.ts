@@ -21,4 +21,10 @@ export const CONFIRM_CONFIG: ConfirmConfigMap = {
         confirmLabel: "Marcar falta",
         confirmClassName: "bg-orange-500 hover:bg-orange-600 text-white",
     },
+    reschedule: {
+        title: "Reagendar sessão",
+        description: "Selecione a nova data e horário para esta sessão.",
+        confirmLabel: "Reagendar",
+        confirmClassName: "bg-royalBlue hover:bg-royalBlue/90 text-white",
+    },
 };

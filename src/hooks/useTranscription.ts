@@ -42,7 +42,7 @@ export function useTranscription(): UseTranscriptionReturn {
     const [isDragging, setIsDragging] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    const recognitionRef = useRef<SpeechRecognition | null>(null);
+    const recognitionRef = useRef<any>(null);
     const accumulatedRef = useRef<string>("");
 
     // ─── Gravação ao vivo (Web Speech API) ───────────────────────────────────
@@ -59,12 +59,12 @@ export function useTranscription(): UseTranscriptionReturn {
         }
 
         accumulatedRef.current = "";
-        const recognition: SpeechRecognition = new SpeechRecognition();
+        const recognition: any = new SpeechRecognition();
         recognition.lang = "pt-BR";
         recognition.continuous = true;
         recognition.interimResults = false;
 
-        recognition.onresult = (event: SpeechRecognitionEvent) => {
+        recognition.onresult = (event: any) => {
             for (let i = event.resultIndex; i < event.results.length; i++) {
                 if (event.results[i].isFinal) {
                     accumulatedRef.current += event.results[i][0].transcript + " ";

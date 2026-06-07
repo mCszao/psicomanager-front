@@ -29,7 +29,7 @@ export default async function Page() {
                 <h1 className="text-2xl md:text-3xl font-bold text-content-primary">Financeiro</h1>
                 <p className="text-sm text-content-secondary mt-1">Controle de cobranças, pagamentos e adiantamentos</p>
             </div>
-            <div className="flex-1 min-h-0 overflow-auto">
+            <div className="flex-1 min-h-0 overflow-hidden">
                 <FinancialDashboard
                     summary={summary}
                     transactions={transactions}

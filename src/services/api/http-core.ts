@@ -8,6 +8,22 @@ export class UnauthorizedError extends Error {
     }
 }
 
+/**
+ * Lançada quando o `fetch` rejeita antes de obter uma resposta — ou seja, o
+ * servidor está indisponível/offline (ECONNREFUSED, DNS, timeout de rede).
+ *
+ * O `digest` é preservado pelo Next ao propagar o erro de um Server Component
+ * para o `error.tsx`, permitindo distinguir falha de conexão de outros erros
+ * mesmo em produção (onde a `message` é omitida).
+ */
+export class ConnectionError extends Error {
+    digest = 'CONNECTION_ERROR';
+    constructor(message = 'Não foi possível conectar ao servidor.') {
+        super(message);
+        this.name = 'ConnectionError';
+    }
+}
+
 // endregion
 
 // region Shared fetch builder

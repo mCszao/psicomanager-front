@@ -27,6 +27,7 @@ const FILTERS: { key: Filter; label: string }[] = [
     { key: 'ALL', label: 'Todos' },
     { key: 'PENDING', label: 'Pendentes' },
     { key: 'PAID', label: 'Pagos' },
+    { key: 'PARTIALLY_PAID', label: 'Parc. pagos' },
     { key: 'OVERDUE', label: 'Vencidos' },
     { key: 'ADVANCE', label: 'Adiantamentos' },
 ];
@@ -39,9 +40,9 @@ export default function FinancialDashboard({ summary, transactions, patients }: 
     const filtered = filter === 'ALL' ? transactions : transactions.filter(t => t.status === filter);
 
     return (
-        <div className="flex flex-col gap-5 h-full overflow-auto">
+        <div className="flex flex-col gap-5 h-full overflow-hidden">
             {/* Summary cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 shrink-0">
                 <SummaryCard
                     label="A receber"
                     value={formatCurrency(summary.totalReceivable)}
@@ -70,7 +71,7 @@ export default function FinancialDashboard({ summary, transactions, patients }: 
             </div>
 
             {/* Header + filters */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
                 <div className="flex flex-wrap gap-2">
                     {FILTERS.map(f => (
                         <button
@@ -95,7 +96,7 @@ export default function FinancialDashboard({ summary, transactions, patients }: 
             </div>
 
             {/* Transaction list */}
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 flex-1 min-h-0 overflow-y-auto pr-1">
                 {filtered.length === 0 && (
                     <p className="text-sm text-content-secondary text-center py-8">Nenhuma transação encontrada.</p>
                 )}

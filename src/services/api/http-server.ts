@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { buildUrl, UnauthorizedError } from './http-core';
+import { buildUrl, ConnectionError, UnauthorizedError } from './http-core';
 
 // region Response parsing
 
@@ -37,12 +37,21 @@ async function buildServerHeaders(withBody = false): Promise<HeadersInit> {
 // region Request executor
 
 /**
- * Executes a server-side fetch. On 401, redirects immediately to /login —
- * token refresh is not possible in Server Components.
+ * Executes a server-side fetch.
+ * - Se o `fetch` rejeitar (servidor indisponível), lança `ConnectionError`,
+ *   capturada pelo `error.tsx` do grupo (app) para exibir a tela de offline.
+ * - Em 401, redireciona para /login — refresh de token não é possível em
+ *   Server Components.
  */
 async function executeServer<T>(requestFn: () => Promise<Response>): Promise<T> {
+    let response: Response;
     try {
-        const response = await requestFn();
+        response = await requestFn();
+    } catch {
+        throw new ConnectionError();
+    }
+
+    try {
         return await parseResponse<T>(response);
     } catch (err) {
         if (err instanceof UnauthorizedError) {

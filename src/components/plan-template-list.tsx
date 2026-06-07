@@ -27,10 +27,10 @@ export default function PlanTemplateList({ initialTemplates }: Props) {
     } = usePlanTemplates({ initialTemplates });
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col gap-3 w-full h-full">
 
             {/* Barra de ação */}
-            <div className="flex items-center justify-between px-5 py-3 border-b border-border-default bg-surface-raised shrink-0">
+            <div className="flex items-center justify-between shrink-0">
                 <span className="text-sm text-content-secondary">
                     {initialTemplates.length} {initialTemplates.length === 1 ? 'template' : 'templates'}
                 </span>
@@ -45,7 +45,7 @@ export default function PlanTemplateList({ initialTemplates }: Props) {
 
             {/* Formulário de criação */}
             {isCreating && (
-                <div className="p-5 border-b border-border-default bg-surface-default shrink-0">
+                <div className="shrink-0 rounded-xl border border-border-default bg-surface-default p-5">
                     <div className="grid grid-cols-2 gap-4 mb-4">
                         <div className="col-span-2">
                             <label className="block mb-2 text-sm font-medium text-content-primary">Título *</label>
@@ -129,13 +129,14 @@ export default function PlanTemplateList({ initialTemplates }: Props) {
             )}
 
             {/* Lista */}
+            <div className="flex-1 min-h-0 overflow-y-auto pr-1">
             {!initialTemplates.length ? (
-                <div className="flex flex-col items-center justify-center gap-2 flex-1 text-content-secondary">
+                <div className="flex flex-col items-center justify-center gap-2 h-full text-content-secondary">
                     <Building2 size={36} strokeWidth={1.5} />
                     <p className="text-sm font-medium">Nenhum template criado ainda.</p>
                 </div>
             ) : (
-                <ul className="flex flex-col gap-2 p-4 overflow-y-auto">
+                <ul className="flex flex-col gap-2">
                     {initialTemplates.map(t => (
                         <li
                             key={t.id}
@@ -168,14 +169,15 @@ export default function PlanTemplateList({ initialTemplates }: Props) {
                             <button
                                 type="button"
                                 onClick={() => handleDelete(t.id)}
-                                className="p-2 rounded-lg text-content-secondary hover:text-red-500 hover:bg-red-50 transition-colors shrink-0"
+                                className="p-1.5 rounded-lg text-content-disabled hover:text-red-500 hover:bg-red-50 transition-colors shrink-0"
                             >
-                                <Trash2 size={16} />
+                                <Trash2 size={14} />
                             </button>
                         </li>
                     ))}
                 </ul>
             )}
+            </div>
         </div>
     );
 }

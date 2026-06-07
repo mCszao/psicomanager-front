@@ -3,6 +3,7 @@ import BaseResponse from '@/interface/IBaseResponse';
 import { FinancialSummary, FinancialTransaction } from '@/interface/IFinancial';
 import metadataFactory from '@/util/metadataFactory';
 import FinancialDashboard from '@/components/financial/financial-dashboard';
+import HelpButton from '@/components/ui/help-button';
 
 export const metadata = metadataFactory('Financeiro');
 export const dynamic = 'force-dynamic';
@@ -36,6 +37,30 @@ export default async function Page() {
                     patients={patients}
                 />
             </div>
+            <HelpButton title="Como usar o financeiro">
+                <div className="flex flex-col gap-4">
+                    <p>
+                        Aqui você acompanha as <strong className="font-semibold text-content-primary">cobranças, pagamentos e adiantamentos</strong> dos seus pacientes.
+                    </p>
+
+                    <div className="flex flex-col gap-2">
+                        <p className="font-medium text-content-primary">Totalizadores (no topo)</p>
+                        <ul className="flex flex-col gap-1.5 list-disc list-inside">
+                            <li><strong className="font-semibold text-content-primary">A receber</strong>, <strong className="font-semibold text-content-primary">Recebido</strong> e <strong className="font-semibold text-content-primary">Vencido</strong> somam os valores por situação.</li>
+                            <li><strong className="font-semibold text-content-primary">Pendentes</strong> mostra quantas cobranças ainda aguardam pagamento.</li>
+                        </ul>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <p className="font-medium text-content-primary">Como usar</p>
+                        <ul className="flex flex-col gap-1.5 list-disc list-inside">
+                            <li>Use os <strong className="font-semibold text-content-primary">filtros</strong> (Todos, Pendentes, Pagos, Vencidos…) para filtrar as transações.</li>
+                            <li>Clique em <strong className="font-semibold text-content-primary">Pagar</strong> em uma cobrança para registrar o pagamento.</li>
+                            <li>Use <strong className="font-semibold text-content-primary">Adiantamento</strong> para registrar um valor adiantado por um paciente.</li>
+                        </ul>
+                    </div>
+                </div>
+            </HelpButton>
         </div>
     );
 }

@@ -1,4 +1,5 @@
 import NextSessions from "@/components/next-sessions";
+import HelpButton from "@/components/ui/help-button";
 import metadataFactory from "@/util/metadataFactory";
 import {serverGet} from "@/services/api/http-server";
 import BaseResponse from "@/interface/IBaseResponse";
@@ -19,6 +20,28 @@ export default async function SchedulesPage() {
             <div className="flex-1 min-h-0 rounded-2xl border border-border-default shadow-lg bg-surface-default p-4 md:p-5 overflow-y-auto">
                 <NextSessions sessions={sessions} views={['list']}/>
             </div>
+            <HelpButton title="Como usar os agendamentos">
+                <div className="flex flex-col gap-4">
+                    <p>
+                        Esta tela lista as suas <strong className="font-semibold text-content-primary">sessões</strong>,
+                        das mais recentes para as mais antigas, com o status de cada uma.
+                    </p>
+
+                    <div className="flex flex-col gap-2">
+                        <p className="font-medium text-content-primary">Como usar</p>
+                        <ul className="flex flex-col gap-1.5 list-disc list-inside">
+                            <li>Clique em uma sessão para ver os <strong className="font-semibold text-content-primary">detalhes</strong> e as ações disponíveis.</li>
+                            <li>Em sessões abertas você pode <strong className="font-semibold text-content-primary">concluir</strong>, <strong className="font-semibold text-content-primary">cancelar</strong>, <strong className="font-semibold text-content-primary">marcar falta</strong> ou <strong className="font-semibold text-content-primary">reagendar</strong>.</li>
+                            <li>A etiqueta colorida indica o status da sessão (aberta, concluída, cancelada, falta, reagendada).</li>
+                        </ul>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <p className="font-medium text-content-primary">Dica</p>
+                        <p>Para criar uma nova sessão, use a opção de adicionar na barra lateral.</p>
+                    </div>
+                </div>
+            </HelpButton>
         </div>
     );
 }

@@ -8,12 +8,12 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  build-and-deploy:
+  # Build + push da imagem no runner do GitHub (rápido, recursos gratuitos)
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,15 +40,15 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
-      - name: Deploy na VPS via SSH
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            cd /opt/psicomanager
-            echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker compose pull front
-            docker compose up -d front
-            docker image prune -f
+  # Deploy roda DENTRO da VPS (runner self-hosted) — sem SSH, sem abrir a porta 22
+  deploy:
+    needs: build
+    runs-on: [self-hosted, vps]
+    steps:
+      - name: Atualizar container do Front na VPS
+        run: |
+          cd /opt/psicomanager
+          echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u mcszao --password-stdin
+          docker compose pull front
+          docker compose up -d front
+          docker image prune -f

@@ -1,0 +1,43 @@
+name: 🐞 Bug
+description: Relatar um comportamento incorreto
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: onde
+    attributes:
+      label: Onde ocorre?
+      options:
+        - Frontend (psicomanager-front)
+        - Backend (psicomanager-api)
+        - Ambos / não sei
+    validations:
+      required: true
+  - type: textarea
+    id: descricao
+    attributes:
+      label: Descrição
+      description: O que está acontecendo?
+    validations:
+      required: true
+  - type: textarea
+    id: passos
+    attributes:
+      label: Passos para reproduzir
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+  - type: textarea
+    id: esperado
+    attributes:
+      label: Comportamento esperado
+  - type: textarea
+    id: atual
+    attributes:
+      label: Comportamento atual
+  - type: dropdown
+    id: severidade
+    attributes:
+      label: Severidade
+      options: ["Baixa", "Média", "Alta", "Crítica"]

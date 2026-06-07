@@ -1,0 +1,30 @@
+name: CI
+
+# Validação executada em todo Pull Request para master — protege a produção.
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Testes (vitest)
+        run: npm run test
+
+      # `next build` faz type-check estrito + lint + compilação (pega os erros
+      # que o `npm run dev` não pega). Não precisa da URL real da API aqui.
+      - name: Build de produção
+        run: npm run build

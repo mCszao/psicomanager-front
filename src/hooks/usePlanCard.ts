@@ -8,6 +8,7 @@ import { Plan } from "@/interface/IPlan";
 import Schedule from "@/interface/ISchedule";
 import BaseResponse from "@/interface/IBaseResponse";
 import { extractApiError } from "@/util/feedback";
+import { normalizeDates } from "@/util/DateUtils";
 
 interface UsePlanCardProps {
     plan: Plan;
@@ -74,9 +75,12 @@ export function usePlanCard({ plan, patientId, initialSchedules }: UsePlanCardPr
         setIsLaunching(true);
         setShowLaunch(false);
 
+        // datetime-local retorna "yyyy-MM-ddTHH:mm" — normaliza para "dd-MM-yyyy HH:mm:ss" exigido pela API
+        const { dateStart } = normalizeDates(startDateTime, null);
+
         const res = await registerSchedule({
             patientId,
-            dateStart: startDateTime,
+            dateStart,
             planId: plan.id,
             frequency: plan.frequency!,
             sessionsCount: count,

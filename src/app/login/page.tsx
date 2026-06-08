@@ -3,11 +3,14 @@
 import { BrainCog, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
+import { maskPhone } from "@/util/masks";
 
 export default function LoginPage() {
     const { isRegistering, setIsRegistering, signInForm, signUpForm, onSignIn, onSignUp } = useAuth();
     const [showSignInPassword, setShowSignInPassword] = useState(false);
     const [showSignUpPassword, setShowSignUpPassword] = useState(false);
+
+    const phoneField = signUpForm.register("phone");
 
     return (
         <section className="bg-gray-50 dark:bg-gray-900">
@@ -63,7 +66,18 @@ export default function LoginPage() {
                                 </div>
                                 <div>
                                     <label htmlFor="phone-register" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Telefone</label>
-                                    <input type="tel" id="phone-register" placeholder="11999999999" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" {...signUpForm.register("phone")} />
+                                    <input
+                                        type="tel"
+                                        inputMode="numeric"
+                                        id="phone-register"
+                                        placeholder="(11) 99999-9999"
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                        {...phoneField}
+                                        onChange={(e) => {
+                                            e.target.value = maskPhone(e.target.value);
+                                            phoneField.onChange(e);
+                                        }}
+                                    />
                                     {signUpForm.formState.errors.phone && <span className="text-sm text-red-500">{signUpForm.formState.errors.phone.message}</span>}
                                 </div>
                                 <div>

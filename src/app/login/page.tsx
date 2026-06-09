@@ -47,9 +47,9 @@ export default function LoginPage() {
                                 </button>
                                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                                     Não tem uma conta?{" "}
-                                    <button type="button" onClick={() => setIsRegistering(true)} className="font-medium text-royalBlue hover:underline">
-                                        Cadastre-se
-                                    </button>
+                                    <a href="mailto:contatomcs.khk@gmail.com" className="font-medium text-royalBlue hover:underline">
+                                        Entre em contato
+                                    </a>
                                 </p>
                             </form>
                         ) : (

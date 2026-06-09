@@ -55,6 +55,11 @@ export default function LoginPage() {
                         ) : (
                             <form method="post" className="space-y-4 md:space-y-6" onSubmit={signUpForm.handleSubmit(onSignUp)}>
                                 <div>
+                                    <label htmlFor="name-register" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome</label>
+                                    <input type="text" id="name-register" placeholder="Seu nome" autoComplete="name" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" {...signUpForm.register("name")} />
+                                    {signUpForm.formState.errors.name && <span className="text-sm text-red-500">{signUpForm.formState.errors.name.message}</span>}
+                                </div>
+                                <div>
                                     <label htmlFor="username-register" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Usuário</label>
                                     <input type="text" id="username-register" placeholder="Seu usuário" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" {...signUpForm.register("username")} />
                                     {signUpForm.formState.errors.username && <span className="text-sm text-red-500">{signUpForm.formState.errors.username.message}</span>}

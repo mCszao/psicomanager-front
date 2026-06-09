@@ -6,7 +6,11 @@ export const signInSchema = z.object({
 });
 
 export const signUpSchema = z.object({
-    username: z.string().min(3, 'O usuário precisa ter no mínimo 3 caracteres'),
+    username: z
+        .string()
+        .min(3, 'O usuário precisa ter no mínimo 3 caracteres')
+        .regex(/^[a-zA-Z0-9._-]+$/, 'Use apenas letras, números, ponto, hífen ou underscore — sem espaços'),
+    name: z.string().min(2, 'Informe o nome'),
     password: z.string().min(6, 'A senha precisa ter no mínimo 6 caracteres'),
     phone: z
         .string()

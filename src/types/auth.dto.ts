@@ -5,6 +5,7 @@ export interface SignInDTO {
 
 export interface SignUpDTO {
     username: string;
+    name: string;
     password: string;
     phone: string;
     email: string;

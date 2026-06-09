@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { FinancialSummary, FinancialTransaction, TransactionStatus } from '@/interface/IFinancial';
+import { FinancialSummary, FinancialTransaction } from '@/interface/IFinancial';
+import { useFinancialFilters, StatusFilter } from '@/hooks/useFinancialFilters';
 import {
     TRANSACTION_STATUS_STYLES,
     TRANSACTION_TYPE_LABELS,
@@ -21,9 +22,7 @@ type Props = {
     patients: PatientOption[];
 };
 
-type Filter = TransactionStatus | 'ALL';
-
-const FILTERS: { key: Filter; label: string }[] = [
+const FILTERS: { key: StatusFilter; label: string }[] = [
     { key: 'ALL', label: 'Todos' },
     { key: 'PENDING', label: 'Pendentes' },
     { key: 'PAID', label: 'Pagos' },
@@ -33,46 +32,15 @@ const FILTERS: { key: Filter; label: string }[] = [
 ];
 
 export default function FinancialDashboard({ summary, transactions, patients }: Props) {
-    const [filter, setFilter] = useState<Filter>('ALL');
-    const [dateFrom, setDateFrom] = useState('');
-    const [dateTo, setDateTo] = useState('');
+    const {
+        status, setStatus,
+        dateFrom, setDateFrom,
+        dateTo, setDateTo,
+        applyPreset, clearDates,
+        filtered,
+    } = useFinancialFilters(transactions);
     const [payingTransaction, setPayingTransaction] = useState<FinancialTransaction | null>(null);
     const [showAdvance, setShowAdvance] = useState(false);
-
-    // Presets preenchem os campos de data; o usuário ainda pode ajustá-los manualmente
-    function applyPreset(preset: 'thisMonth' | 'lastMonth' | 'last7' | 'last30') {
-        const now = new Date();
-        const pad = (n: number) => String(n).padStart(2, '0');
-        const ymd = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-        let from: Date;
-        let to: Date;
-        if (preset === 'thisMonth') {
-            from = new Date(now.getFullYear(), now.getMonth(), 1);
-            to = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-        } else if (preset === 'lastMonth') {
-            from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-            to = new Date(now.getFullYear(), now.getMonth(), 0);
-        } else if (preset === 'last7') {
-            to = now;
-            from = new Date(now);
-            from.setDate(now.getDate() - 6);
-        } else {
-            to = now;
-            from = new Date(now);
-            from.setDate(now.getDate() - 29);
-        }
-        setDateFrom(ymd(from));
-        setDateTo(ymd(to));
-    }
-
-    // Filtra por status e por período (createdAt entre dateFrom e dateTo, inclusive)
-    const filtered = transactions.filter(t => {
-        if (filter !== 'ALL' && t.status !== filter) return false;
-        const day = t.createdAt.slice(0, 10);
-        if (dateFrom && day < dateFrom) return false;
-        if (dateTo && day > dateTo) return false;
-        return true;
-    });
 
     return (
         <div className="flex flex-col gap-5 h-full overflow-hidden">
@@ -111,9 +79,9 @@ export default function FinancialDashboard({ summary, transactions, patients }: 
                     {FILTERS.map(f => (
                         <button
                             key={f.key}
-                            onClick={() => setFilter(f.key)}
+                            onClick={() => setStatus(f.key)}
                             className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors border ${
-                                filter === f.key
+                                status === f.key
                                     ? 'bg-royalBlue text-white border-royalBlue'
                                     : 'bg-surface-raised text-content-secondary border-border-default hover:bg-surface-hover'
                             }`}
@@ -166,7 +134,7 @@ export default function FinancialDashboard({ summary, transactions, patients }: 
                 </div>
                 {(dateFrom || dateTo) && (
                     <button
-                        onClick={() => { setDateFrom(''); setDateTo(''); }}
+                        onClick={clearDates}
                         className="text-xs text-content-secondary hover:text-royalBlue transition-colors"
                     >
                         Limpar

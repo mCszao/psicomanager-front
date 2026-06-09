@@ -107,7 +107,10 @@ export default function FinancialDashboard({ summary, transactions, patients }: 
                     >
                         <div className="flex flex-col gap-0.5 min-w-0">
                             <span className="text-sm font-medium text-content-primary truncate">{t.patient.name}</span>
-                            <span className="text-xs text-content-secondary">{TRANSACTION_TYPE_LABELS[t.type]}</span>
+                            <span className="text-xs text-content-secondary">
+                                {TRANSACTION_TYPE_LABELS[t.type]}
+                                {t.sessionDate && ` · ${formatDateBR(t.sessionDate)}`}
+                            </span>
                         </div>
                         <div className="flex items-center gap-3 flex-wrap">
                             <span className="text-sm font-semibold text-content-primary">{formatCurrency(t.amount)}</span>

@@ -111,6 +111,11 @@ function PlanCard({plan, initialSchedules, patientId}: {
                                 {ATTENDANCE_TYPE_LABEL[plan.attendanceType]}
                             </span>
                         )}
+                        {plan.isContinuous && (
+                            <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-royalBlue/10 text-royalBlue border border-royalBlue/30">
+                                Contínuo
+                            </span>
+                        )}
                     </div>
                     <div className="flex flex-wrap gap-x-4 gap-y-0.5 mt-1">
                         {plan.sessionsCount && (
@@ -121,7 +126,9 @@ function PlanCard({plan, initialSchedules, patientId}: {
                         <span className="text-xs text-content-secondary">
                             Adesão: {plan.adherenceDate}
                         </span>
-                        {plan.estimatedEndDate && (
+                        {/* Data prevista só faz sentido para planos finitos —
+                            contínuos não têm fim estimado (sessões lançadas indefinidamente) */}
+                        {!plan.isContinuous && plan.estimatedEndDate && (
                             <span className="text-xs text-content-secondary">
                                 Est. fim: {plan.estimatedEndDate}
                             </span>

@@ -34,10 +34,45 @@ const FILTERS: { key: Filter; label: string }[] = [
 
 export default function FinancialDashboard({ summary, transactions, patients }: Props) {
     const [filter, setFilter] = useState<Filter>('ALL');
+    const [dateFrom, setDateFrom] = useState('');
+    const [dateTo, setDateTo] = useState('');
     const [payingTransaction, setPayingTransaction] = useState<FinancialTransaction | null>(null);
     const [showAdvance, setShowAdvance] = useState(false);
 
-    const filtered = filter === 'ALL' ? transactions : transactions.filter(t => t.status === filter);
+    // Presets preenchem os campos de data; o usuário ainda pode ajustá-los manualmente
+    function applyPreset(preset: 'thisMonth' | 'lastMonth' | 'last7' | 'last30') {
+        const now = new Date();
+        const pad = (n: number) => String(n).padStart(2, '0');
+        const ymd = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+        let from: Date;
+        let to: Date;
+        if (preset === 'thisMonth') {
+            from = new Date(now.getFullYear(), now.getMonth(), 1);
+            to = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        } else if (preset === 'lastMonth') {
+            from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            to = new Date(now.getFullYear(), now.getMonth(), 0);
+        } else if (preset === 'last7') {
+            to = now;
+            from = new Date(now);
+            from.setDate(now.getDate() - 6);
+        } else {
+            to = now;
+            from = new Date(now);
+            from.setDate(now.getDate() - 29);
+        }
+        setDateFrom(ymd(from));
+        setDateTo(ymd(to));
+    }
+
+    // Filtra por status e por período (createdAt entre dateFrom e dateTo, inclusive)
+    const filtered = transactions.filter(t => {
+        if (filter !== 'ALL' && t.status !== filter) return false;
+        const day = t.createdAt.slice(0, 10);
+        if (dateFrom && day < dateFrom) return false;
+        if (dateTo && day > dateTo) return false;
+        return true;
+    });
 
     return (
         <div className="flex flex-col gap-5 h-full overflow-hidden">
@@ -93,6 +128,50 @@ export default function FinancialDashboard({ summary, transactions, patients }: 
                 >
                     <Plus size={15} /> Adiantamento
                 </button>
+            </div>
+
+            {/* Date filter */}
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+                <span className="text-xs text-content-secondary">Período:</span>
+                {([
+                    { key: 'thisMonth', label: 'Mês atual' },
+                    { key: 'lastMonth', label: 'Mês passado' },
+                    { key: 'last7', label: 'Últimos 7 dias' },
+                    { key: 'last30', label: 'Últimos 30 dias' },
+                ] as const).map(p => (
+                    <button
+                        key={p.key}
+                        onClick={() => applyPreset(p.key)}
+                        className="px-3 py-1.5 rounded-full text-xs font-medium border bg-surface-raised text-content-secondary border-border-default hover:bg-surface-hover transition-colors"
+                    >
+                        {p.label}
+                    </button>
+                ))}
+                <div className="flex items-center gap-1.5">
+                    <input
+                        type="date"
+                        value={dateFrom}
+                        onChange={e => setDateFrom(e.target.value)}
+                        aria-label="Data inicial"
+                        className="text-xs px-2 py-1.5 rounded-lg border border-border-default bg-surface-raised text-content-primary"
+                    />
+                    <span className="text-xs text-content-disabled">até</span>
+                    <input
+                        type="date"
+                        value={dateTo}
+                        onChange={e => setDateTo(e.target.value)}
+                        aria-label="Data final"
+                        className="text-xs px-2 py-1.5 rounded-lg border border-border-default bg-surface-raised text-content-primary"
+                    />
+                </div>
+                {(dateFrom || dateTo) && (
+                    <button
+                        onClick={() => { setDateFrom(''); setDateTo(''); }}
+                        className="text-xs text-content-secondary hover:text-royalBlue transition-colors"
+                    >
+                        Limpar
+                    </button>
+                )}
             </div>
 
             {/* Transaction list */}

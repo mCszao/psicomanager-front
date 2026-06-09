@@ -29,6 +29,7 @@ export interface FinancialTransaction {
     patient: { id: string; name: string };
     planId: string | null;
     sessionId: string | null;
+    sessionDate: string | null;
 }
 
 export interface FinancialSummary {

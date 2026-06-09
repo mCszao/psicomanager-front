@@ -79,6 +79,7 @@ export default function PatientFinancialPanel({
                                 </span>
                             </div>
                             <div className="flex gap-3 flex-wrap text-xs text-content-disabled">
+                                {t.sessionDate && <span>Sessão {formatDateBR(t.sessionDate)}</span>}
                                 {t.dueDate && <span>Venc. {formatDateBR(t.dueDate)}</span>}
                                 {t.paymentMethod && <span>{PAYMENT_METHOD_LABELS[t.paymentMethod]}</span>}
                                 <span>Criado em {formatDateBR(t.createdAt)}</span>

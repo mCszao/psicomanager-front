@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { FinancialSummary, FinancialTransaction } from '@/interface/IFinancial';
 import { useFinancialFilters, StatusFilter } from '@/hooks/useFinancialFilters';
 import {
@@ -12,7 +13,7 @@ import {
 } from '@/util/financialUtils';
 import PaymentDialog from '@/components/financial/payment-dialog';
 import AdvanceDialog from '@/components/financial/advance-dialog';
-import { DollarSign, TrendingUp, AlertTriangle, Clock, Plus } from 'lucide-react';
+import { DollarSign, TrendingUp, AlertTriangle, Clock, Plus, ArrowUpRight } from 'lucide-react';
 
 type PatientOption = { id: string; name: string };
 
@@ -153,10 +154,27 @@ export default function FinancialDashboard({ summary, transactions, patients }: 
                         className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-4 py-3 rounded-xl border border-border-default bg-surface-raised"
                     >
                         <div className="flex flex-col gap-0.5 min-w-0">
-                            <span className="text-sm font-medium text-content-primary truncate">{t.patient.name}</span>
+                            <Link
+                                href={`/patients/${t.patient.id}`}
+                                className="inline-block max-w-full truncate text-sm font-medium text-content-primary hover:text-royalBlue hover:underline transition-colors"
+                            >
+                                {t.patient.name}
+                            </Link>
                             <span className="text-xs text-content-secondary">
                                 {TRANSACTION_TYPE_LABELS[t.type]}
-                                {t.sessionDate && ` · ${formatDateBR(t.sessionDate)}`}
+                                {t.sessionId && t.sessionDate && (
+                                    <>
+                                        {' · '}
+                                        <Link
+                                            href={`/schedules/${t.sessionId}`}
+                                            title="Ir para a sessão"
+                                            className="group inline-flex items-center gap-0.5 hover:text-royalBlue transition-colors"
+                                        >
+                                            {formatDateBR(t.sessionDate)}
+                                            <ArrowUpRight size={11} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        </Link>
+                                    </>
+                                )}
                             </span>
                         </div>
                         <div className="flex items-center gap-3 flex-wrap">

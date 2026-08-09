@@ -31,6 +31,10 @@ export function concludeSession(scheduleId: string): Promise<BaseResponse<string
     return patch(`/schedules/${scheduleId}/conclude`);
 }
 
+export function concludeAndPaySession(scheduleId: string, paymentMethod: string): Promise<BaseResponse<string>> {
+    return patch(`/schedules/${scheduleId}/conclude-and-pay`, { paymentMethod });
+}
+
 export function cancelSession(scheduleId: string): Promise<BaseResponse<string>> {
     return patch(`/schedules/${scheduleId}/cancel`);
 }

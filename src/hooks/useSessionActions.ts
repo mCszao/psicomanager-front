@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { concludeSession, cancelSession, markAsAbsent, rescheduleSession } from "@/services/api";
+import { concludeSession, concludeAndPaySession, cancelSession, markAsAbsent, rescheduleSession } from "@/services/api";
 import { useToast } from "@/contexts/ToastContext";
 import { extractApiError } from "@/util/feedback";
 import { formatDate } from "@/util/DateUtils";
 import { PendingAction } from "@/types/session-action.types";
 import { CLOSED_STAGES } from "@/util/sessionActionsConfig";
+import { PaymentMethod } from "@/interface/IFinancial";
 
 export function useSessionActions(scheduleId: string, stage: string) {
     const router = useRouter();
@@ -59,6 +60,24 @@ export function useSessionActions(scheduleId: string, stage: string) {
         }
     }
 
+    async function handleConcludeAndPay(paymentMethod: PaymentMethod) {
+        setPendingAction(null);
+        setLoading(true);
+        try {
+            const response = await concludeAndPaySession(scheduleId, paymentMethod);
+            if (response.success) {
+                toast.success("Sessão concluída e paga com sucesso!");
+                router.refresh();
+            } else {
+                toast.error(extractApiError(response));
+            }
+        } catch {
+            toast.error("Ocorreu um erro inesperado. Tente novamente.");
+        } finally {
+            setLoading(false);
+        }
+    }
+
     async function handleRescheduleConfirm(dateStart: string, dateEnd?: string) {
         setRescheduleDate(null);
         setLoading(true);
@@ -86,6 +105,7 @@ export function useSessionActions(scheduleId: string, stage: string) {
         pendingAction,
         setPendingAction,
         handleConfirm,
+        handleConcludeAndPay,
         rescheduleDate,
         setRescheduleDate,
         handleRescheduleConfirm,

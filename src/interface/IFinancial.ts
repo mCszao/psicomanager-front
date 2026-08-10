@@ -20,6 +20,8 @@ export interface FinancialTransaction {
     id: string;
     type: TransactionType;
     amount: number;
+    amountPaid: number;
+    creditApplied: number;
     status: TransactionStatus;
     dueDate: string | null;
     paidAt: string | null;

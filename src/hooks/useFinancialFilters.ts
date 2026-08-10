@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FinancialTransaction, TransactionStatus } from '@/interface/IFinancial';
+import { FinancialTransaction, TransactionStatus, FinancialSummary } from '@/interface/IFinancial';
 
 export type StatusFilter = TransactionStatus | 'ALL';
 export type DatePreset = 'thisMonth' | 'lastMonth' | 'last7' | 'last30';
@@ -64,6 +64,20 @@ export function useFinancialFilters(transactions: FinancialTransaction[]) {
         return true;
     });
 
+    const isFiltered = status !== 'ALL' || dateFrom !== '' || dateTo !== '';
+
+    // Totais só do que está sendo filtrado — mesma semântica do getSummary do servidor
+    const outstanding = (t: FinancialTransaction) =>
+        Math.max(0, t.amount - (t.amountPaid ?? 0) - (t.creditApplied ?? 0));
+    const OPEN: TransactionStatus[] = ['PENDING', 'OVERDUE', 'PARTIALLY_PAID'];
+
+    const filteredSummary: FinancialSummary = {
+        totalReceivable: filtered.filter(t => OPEN.includes(t.status)).reduce((s, t) => s + outstanding(t), 0),
+        totalReceived: filtered.reduce((s, t) => s + (t.status === 'ADVANCE' ? t.amount : (t.amountPaid ?? 0)), 0),
+        totalOverdue: filtered.filter(t => t.status === 'OVERDUE').reduce((s, t) => s + outstanding(t), 0),
+        totalPendingCount: filtered.filter(t => t.status === 'PENDING').length,
+    };
+
     return {
         status,
         setStatus,
@@ -74,5 +88,7 @@ export function useFinancialFilters(transactions: FinancialTransaction[]) {
         applyPreset,
         clearDates,
         filtered,
+        isFiltered,
+        filteredSummary,
     };
 }

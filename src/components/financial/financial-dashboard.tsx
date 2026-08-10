@@ -38,7 +38,7 @@ export default function FinancialDashboard({ summary, transactions, patients }: 
         dateFrom, setDateFrom,
         dateTo, setDateTo,
         applyPreset, clearDates,
-        filtered,
+        filtered, isFiltered, filteredSummary,
     } = useFinancialFilters(transactions);
     const [payingTransaction, setPayingTransaction] = useState<FinancialTransaction | null>(null);
     const [showAdvance, setShowAdvance] = useState(false);
@@ -73,6 +73,17 @@ export default function FinancialDashboard({ summary, transactions, patients }: 
                     suffix=" cobranças"
                 />
             </div>
+
+            {/* Resumo do que está filtrado (mantém os cards gerais intactos acima) */}
+            {isFiltered && (
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs shrink-0 -mt-2 px-1">
+                    <span className="font-medium text-content-secondary">No filtro atual:</span>
+                    <span className="text-content-secondary">A receber <b className="text-blue-600">{formatCurrency(filteredSummary.totalReceivable)}</b></span>
+                    <span className="text-content-secondary">Recebido <b className="text-green-600">{formatCurrency(filteredSummary.totalReceived)}</b></span>
+                    <span className="text-content-secondary">Vencido <b className="text-red-600">{formatCurrency(filteredSummary.totalOverdue)}</b></span>
+                    <span className="text-content-secondary">Pendentes <b className="text-amber-600">{filteredSummary.totalPendingCount}</b></span>
+                </div>
+            )}
 
             {/* Header + filters */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">

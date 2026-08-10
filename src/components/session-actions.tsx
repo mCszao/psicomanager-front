@@ -4,6 +4,7 @@ import { SessionActionsProps } from "@/interface/ISessionActions";
 import { CONFIRM_CONFIG } from "@/util/sessionActionsConfig";
 import { useSessionActions } from "@/hooks/useSessionActions";
 import ConfirmDialog from "@/components/ui/confirm-dialog";
+import ConcludeSessionDialog from "@/components/conclude-session-dialog";
 import RescheduleDialog from "@/components/reschedule-dialog";
 import SessionClosedState from "@/components/session-closed-state";
 import SessionActionButtons from "@/components/session-action-buttons";
@@ -15,6 +16,7 @@ export default function SessionActions({ scheduleId, stage, dateEnd, rescheduled
         pendingAction,
         setPendingAction,
         handleConfirm,
+        handleConcludeAndPay,
         rescheduleDate,
         setRescheduleDate,
         handleRescheduleConfirm,
@@ -22,7 +24,16 @@ export default function SessionActions({ scheduleId, stage, dateEnd, rescheduled
 
     return (
         <>
-            {pendingAction && (
+            {pendingAction === 'conclude' && (
+                <ConcludeSessionDialog
+                    loading={loading}
+                    onConcludeOnly={handleConfirm}
+                    onConcludeAndPay={handleConcludeAndPay}
+                    onCancel={() => setPendingAction(null)}
+                />
+            )}
+
+            {pendingAction && pendingAction !== 'conclude' && (
                 <ConfirmDialog
                     {...CONFIRM_CONFIG[pendingAction]}
                     onConfirm={handleConfirm}
